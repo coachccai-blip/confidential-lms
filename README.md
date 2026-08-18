@@ -217,10 +217,12 @@ Node 20+ et pnpm 10 requis.
 
 ### Déploiement
 
-`.github/workflows/deploy.yml` exécute types → tests → build, puis publie `apps/web/dist` sur
-GitHub Pages. La variable `VITE_BASE` est renseignée automatiquement avec `/<nom-du-dépôt>/`.
+`.github/workflows/deploy.yml` s'exécute à chaque push sur `main` : vérification des types, tests,
+build avec `VITE_BASE=/<nom-du-dépôt>/`, puis publication du contenu de `apps/web/dist` sur la
+branche **`gh-pages`** (avec `404.html` en filet de sécurité SPA et `.nojekyll`).
 
-Prérequis côté dépôt : **Settings → Pages → Source = GitHub Actions**.
+Prérequis côté dépôt, à faire une fois : **Settings → Pages → Source = « Deploy from a branch »,
+branche `gh-pages`, dossier `/ (root)`**.
 
 ### Tests des protections (vérification manuelle)
 

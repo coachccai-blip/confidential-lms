@@ -1,6 +1,10 @@
-import type { LessonBlock } from '@lms/core';
-import { Figure } from '../content/figures';
+import { Fragment, type ReactNode } from 'react';
+import type { LessonBlock, Locale, LocalizedText } from '@lms/core';
+import { Figure } from '../content';
+import { getGlossaryEntry } from '../content';
 import { ProtectedText } from '../protection';
+import { useI18n } from '../i18n';
+import { useGlossary } from './GlossaryProvider';
 import { IconAlert, IconCheck, IconInfo, IconShield } from './Icons';
 
 export function slugify(text: string): string {
@@ -12,6 +16,43 @@ export function slugify(text: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+/**
+ * Balisage en ligne du contenu :
+ *   `[[id|texte]]` → mot difficile cliquable, défini dans le glossaire ;
+ *   `**texte**`    → mise en évidence.
+ * Tout le reste est du texte, filigrané par apprenant.
+ */
+const INLINE = /(\[\[[^\]]+\]\]|\*\*[^*]+\*\*)/g;
+
+function RichText({ text, fingerprint }: { readonly text: string; readonly fingerprint: string }): ReactNode {
+  const { open } = useGlossary();
+  const parts = text.split(INLINE).filter((part) => part.length > 0);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('[[') && part.endsWith(']]')) {
+          const inner = part.slice(2, -2);
+          const separator = inner.indexOf('|');
+          const id = separator === -1 ? inner : inner.slice(0, separator);
+          const entry = getGlossaryEntry(id);
+          const label = separator === -1 ? (entry?.term ?? inner) : inner.slice(separator + 1);
+          if (!entry) return <Fragment key={index}>{label}</Fragment>;
+          return (
+            <button type="button" className="gloss" key={index} onClick={() => open(id)}>
+              {label}
+            </button>
+          );
+        }
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={index}>{part.slice(2, -2)}</strong>;
+        }
+        return <ProtectedText fingerprint={fingerprint} key={index}>{part}</ProtectedText>;
+      })}
+    </>
+  );
+}
+
 const CALLOUT_ICONS = {
   info: IconInfo,
   warning: IconShield,
@@ -19,19 +60,26 @@ const CALLOUT_ICONS = {
   success: IconCheck,
 } as const;
 
-function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; readonly fingerprint: string }) {
+interface BlockProps {
+  readonly block: LessonBlock;
+  readonly fingerprint: string;
+  readonly locale: Locale;
+  readonly l: (text: LocalizedText) => string;
+}
+
+function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
   switch (block.type) {
     case 'heading':
       return (
-        <h2 id={slugify(block.text)}>
-          <ProtectedText fingerprint={fingerprint}>{block.text}</ProtectedText>
+        <h2 id={slugify(l(block.text))}>
+          <RichText text={l(block.text)} fingerprint={fingerprint} />
         </h2>
       );
 
     case 'paragraph':
       return (
         <p>
-          <ProtectedText fingerprint={fingerprint}>{block.text}</ProtectedText>
+          <RichText text={l(block.text)} fingerprint={fingerprint} />
         </p>
       );
 
@@ -42,7 +90,7 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
           {block.items.map((item, index) => (
             <li key={index}>
               <span>
-                <ProtectedText fingerprint={fingerprint}>{item}</ProtectedText>
+                <RichText text={l(item)} fingerprint={fingerprint} />
               </span>
             </li>
           ))}
@@ -59,10 +107,10 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
           </span>
           <div>
             <div className="callout__title">
-              <ProtectedText fingerprint={fingerprint}>{block.title}</ProtectedText>
+              <RichText text={l(block.title)} fingerprint={fingerprint} />
             </div>
             <div>
-              <ProtectedText fingerprint={fingerprint}>{block.text}</ProtectedText>
+              <RichText text={l(block.text)} fingerprint={fingerprint} />
             </div>
           </div>
         </aside>
@@ -72,9 +120,9 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
     case 'figure':
       return (
         <figure className="figure">
-          <Figure figureId={block.figureId} />
+          <Figure figureId={block.figureId} locale={locale} />
           <figcaption>
-            <ProtectedText fingerprint={fingerprint}>{block.caption}</ProtectedText>
+            <RichText text={l(block.caption)} fingerprint={fingerprint} />
           </figcaption>
         </figure>
       );
@@ -83,13 +131,13 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
       return (
         <div className="table-wrap">
           <table className="table">
-            {block.caption ? (
-              <caption className="sr-only">{block.caption}</caption>
-            ) : null}
+            {block.caption ? <caption className="sr-only">{l(block.caption)}</caption> : null}
             <thead>
               <tr>
-                {block.headers.map((header) => (
-                  <th key={header}>{header}</th>
+                {block.headers.map((header, index) => (
+                  <th key={index}>
+                    <RichText text={l(header)} fingerprint={fingerprint} />
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -100,10 +148,10 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
                     <td key={cellIndex}>
                       {cellIndex === 0 ? (
                         <strong>
-                          <ProtectedText fingerprint={fingerprint}>{cell}</ProtectedText>
+                          <RichText text={l(cell)} fingerprint={fingerprint} />
                         </strong>
                       ) : (
-                        <ProtectedText fingerprint={fingerprint}>{cell}</ProtectedText>
+                        <RichText text={l(cell)} fingerprint={fingerprint} />
                       )}
                     </td>
                   ))}
@@ -117,9 +165,9 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
     case 'quote':
       return (
         <blockquote>
-          <ProtectedText fingerprint={fingerprint}>{block.text}</ProtectedText>
+          <RichText text={l(block.text)} fingerprint={fingerprint} />
           <footer>
-            <ProtectedText fingerprint={fingerprint}>{block.source}</ProtectedText>
+            <RichText text={l(block.source)} fingerprint={fingerprint} />
           </footer>
         </blockquote>
       );
@@ -127,19 +175,70 @@ function BlockRenderer({ block, fingerprint }: { readonly block: LessonBlock; re
     case 'keyvalues':
       return (
         <div className="keyvalues">
-          <div className="keyvalues__title">{block.title}</div>
+          <div className="keyvalues__title">{l(block.title)}</div>
           <dl>
-            {block.entries.map((entry) => (
-              <div className="keyvalues__row" key={entry.label}>
+            {block.entries.map((entry, index) => (
+              <div className="keyvalues__row" key={index}>
                 <dt>
-                  <ProtectedText fingerprint={fingerprint}>{entry.label}</ProtectedText>
+                  <RichText text={l(entry.label)} fingerprint={fingerprint} />
                 </dt>
                 <dd>
-                  <ProtectedText fingerprint={fingerprint}>{entry.value}</ProtectedText>
+                  <RichText text={l(entry.value)} fingerprint={fingerprint} />
                 </dd>
               </div>
             ))}
           </dl>
+        </div>
+      );
+
+    case 'examples':
+      return (
+        <div className="examples">
+          <div className="examples__title">{l(block.title)}</div>
+          {block.items.map((item, index) => (
+            <div className={item.incorrect ? 'examples__item examples__item--incorrect' : 'examples__item'} key={index}>
+              <span className="examples__fr">
+                <ProtectedText fingerprint={fingerprint}>{item.fr}</ProtectedText>
+              </span>
+              <span className="examples__gloss">
+                <RichText text={l(item.gloss)} fingerprint={fingerprint} />
+              </span>
+            </div>
+          ))}
+        </div>
+      );
+
+    case 'conjugation':
+      return (
+        <div className="conj">
+          <div className="conj__title">{l(block.title)}</div>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th />
+                  {block.columns.map((column, index) => (
+                    <th key={index}>{l(column)}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {block.rows.map((row) => (
+                  <tr key={row.pronoun}>
+                    <td className="conj__pronoun">{row.pronoun}</td>
+                    {row.forms.map((form, index) => (
+                      <td key={index}>{form}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {block.note ? (
+            <div className="conj__note">
+              <RichText text={l(block.note)} fingerprint={fingerprint} />
+            </div>
+          ) : null}
         </div>
       );
 
@@ -155,10 +254,11 @@ export function LessonBlocks({
   readonly blocks: readonly LessonBlock[];
   readonly fingerprint: string;
 }) {
+  const { l, locale } = useI18n();
   return (
     <div className="prose">
       {blocks.map((block, index) => (
-        <BlockRenderer block={block} fingerprint={fingerprint} key={index} />
+        <BlockRenderer block={block} fingerprint={fingerprint} locale={locale} l={l} key={index} />
       ))}
     </div>
   );

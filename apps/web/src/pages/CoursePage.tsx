@@ -5,7 +5,7 @@ import { AppShell } from '../components/AppShell';
 import { ProgressBar, ProgressRing } from '../components/Progress';
 import { getCourseBySlug } from '../content';
 import { useApp } from '../state/app-context';
-import { LEVEL_LABEL, formatDuration } from '../lib/format';
+import { D, formatDuration, useI18n } from '../i18n';
 import {
   IconAward,
   IconCheck,
@@ -20,6 +20,7 @@ import {
 export function CoursePage() {
   const { slug } = useParams();
   const { state } = useApp();
+  const { l, locale } = useI18n();
   const course = getCourseBySlug(slug);
   const [collapsed, setCollapsed] = useState<readonly string[]>([]);
 
@@ -40,7 +41,7 @@ export function CoursePage() {
   }
 
   return (
-    <AppShell title={course.title} crumb="Mes formations" wide>
+    <AppShell title={l(course.title)} crumb={l(D.categories[course.category])} wide>
       <section className="hero">
         <div
           className="hero__glow"
@@ -49,24 +50,26 @@ export function CoursePage() {
         <div className="hero__content">
           <div className="hero__text">
             <div className="wrap">
-              {course.tags.map((tag) => (
-                <span className="badge badge--accent" key={tag}>
-                  {tag}
+              {course.tags.map((tag, index) => (
+                <span className="badge badge--accent" key={index}>
+                  {l(tag)}
                 </span>
               ))}
-              <span className="badge">Niveau {LEVEL_LABEL[course.level]}</span>
+              <span className="badge">
+                {l(D.common.level)} {course.level}
+              </span>
             </div>
-            <h1>{course.title}</h1>
-            <p>{course.description}</p>
+            <h1>{l(course.title)}</h1>
+            <p>{l(course.description)}</p>
             <div className="hero__actions">
               <Link className="btn btn--primary btn--lg" to={resumeHref}>
-                <IconPlay size={15} /> {progress.started ? 'Reprendre le parcours' : 'Commencer le module 1'}
+                <IconPlay size={15} /> {progress.started ? l(D.course.resume) : l(D.course.startFirst)}
               </Link>
               <span className="badge">
-                <IconClock size={12} /> {formatDuration(remaining)} restantes
+                <IconClock size={12} /> {l(D.common.remaining(formatDuration(remaining, locale)))}
               </span>
               <span className="badge">
-                <IconList size={12} /> {progress.total} étapes
+                <IconList size={12} /> {l(D.course.steps(progress.total))}
               </span>
             </div>
           </div>
@@ -74,12 +77,11 @@ export function CoursePage() {
           <aside className="hero__aside">
             <ProgressRing value={progress.percentage} size={124} />
             <span className="muted" style={{ fontSize: '0.8rem', textAlign: 'center' }}>
-              {progress.completed} étape{progress.completed > 1 ? 's' : ''} terminée{progress.completed > 1 ? 's' : ''} sur{' '}
-              {progress.total}
+              {l(D.course.completedSteps(progress.completed, progress.total))}
             </span>
             {progress.finished ? (
               <span className="badge badge--success">
-                <IconAward size={12} /> Parcours terminé
+                <IconAward size={12} /> {l(D.course.finished)}
               </span>
             ) : null}
           </aside>
@@ -88,9 +90,9 @@ export function CoursePage() {
 
       <div className="shield-bar" style={{ marginBottom: 'var(--space-6)' }}>
         <IconShieldCheck size={14} />
-        Contenu protégé : filigrane nominatif, copie et impression désactivées, journalisation des accès.
+        {l(D.course.protectedBanner)}
         <span className="shield-bar__pill" style={{ marginLeft: 'auto' }}>
-          Traçabilité active
+          {l(D.course.tracingOn)}
         </span>
       </div>
 
@@ -105,9 +107,9 @@ export function CoursePage() {
                 <span className="module__index">{moduleIndex + 1}</span>
                 <span style={{ minWidth: 0 }}>
                   <span className="module__title" style={{ display: 'block' }}>
-                    {module.title}
+                    {l(module.title)}
                   </span>
-                  <span className="module__summary">{module.summary}</span>
+                  <span className="module__summary">{l(module.summary)}</span>
                 </span>
                 <span className="module__meta">
                   <span className="muted tabnum" style={{ fontSize: '0.78rem' }}>
@@ -138,9 +140,9 @@ export function CoursePage() {
                         </span>
                         <span style={{ minWidth: 0 }}>
                           <span className="lesson-row__title" style={{ display: 'block' }}>
-                            {lesson.title}
+                            {l(lesson.title)}
                           </span>
-                          <span className="lesson-row__sub">{lesson.summary}</span>
+                          <span className="lesson-row__sub">{l(lesson.summary)}</span>
                         </span>
                         <span className="lesson-row__meta">
                           {lesson.kind === 'quiz' ? (
@@ -149,11 +151,11 @@ export function CoursePage() {
                                 {quizScore}%
                               </span>
                             ) : (
-                              <span className="badge badge--accent">Quiz</span>
+                              <span className="badge badge--accent">{l(D.common.quiz)}</span>
                             )
                           ) : null}
                           <span className="row" style={{ gap: 5 }}>
-                            <IconClock size={12} /> {lesson.durationMin} min
+                            <IconClock size={12} /> {l(D.common.minutes(lesson.durationMin))}
                           </span>
                           <IconChevronRight size={15} />
                         </span>

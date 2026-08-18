@@ -1,12 +1,12 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { attemptsLeft, createId, gradeQuiz, type QuizAttempt, type QuizResult } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar } from '../components/Progress';
 import { getCourseBySlug, getQuiz } from '../content';
-import { Shield, Watermark, useContentProtection } from '../protection';
+import { Shield, Watermark, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
-import { formatNumber } from '../lib/format';
+import { D, useI18n } from '../i18n';
 import {
   IconAlert,
   IconAward,
@@ -19,15 +19,15 @@ import {
   IconX,
 } from '../components/Icons';
 
-const KIND_LABEL = {
-  single: 'Une seule bonne réponse',
-  multiple: 'Plusieurs bonnes réponses',
-  boolean: 'Vrai ou faux',
-} as const;
-
 export function QuizPage() {
   const { slug, quizId } = useParams();
-  const { user, state, fingerprint, logEvent, pushToast, recordAttempt, completeLesson } = useApp();
+  const { user, state, pushToast, recordAttempt, completeLesson } = useApp();
+  const { l, formatNumber, formatDate } = useI18n();
+  const KIND_LABEL = {
+    single: l(D.quiz.kindSingle),
+    multiple: l(D.quiz.kindMultiple),
+    boolean: l(D.quiz.kindBoolean),
+  } as const;
   const course = getCourseBySlug(slug);
   const quiz = getQuiz(quizId ?? '');
 
@@ -35,13 +35,7 @@ export function QuizPage() {
   const [result, setResult] = useState<QuizResult | null>(null);
   const [startedAt] = useState(() => new Date().toISOString());
 
-  const onNotice = useCallback(
-    (notice: { tone: 'warning' | 'danger' | 'info'; title: string; text: string }) =>
-      pushToast({ tone: notice.tone, title: notice.title, text: notice.text }),
-    [pushToast],
-  );
-
-  const { shieldReason } = useContentProtection({ enabled: true, fingerprint, onEvent: logEvent, onNotice });
+  const { shieldReason } = useProtectedScreen();
 
   const history = useMemo(
     () => state.attempts.filter((attempt) => attempt.quizId === quizId),
@@ -85,13 +79,13 @@ export function QuizPage() {
       responses,
     };
     setResult(graded);
-    recordAttempt(attempt, quiz.title);
-    if (lesson) completeLesson(lesson.id, lesson.title);
+    recordAttempt(attempt, l(quiz.title));
+    if (lesson) completeLesson(lesson.id, l(lesson.title));
     window.scrollTo({ top: 0, behavior: 'smooth' });
     pushToast({
       tone: graded.passed ? 'success' : 'warning',
-      title: graded.passed ? 'Quiz réussi' : 'Seuil non atteint',
-      text: `Score : ${graded.percentage} % (seuil ${quiz.passingScore} %).`,
+      title: graded.passed ? l(D.quiz.toastPassed) : l(D.quiz.toastFailed),
+      text: l(D.quiz.toastScore(graded.percentage, quiz.passingScore)),
     });
   }
 
@@ -105,11 +99,11 @@ export function QuizPage() {
 
   return (
     <AppShell
-      title={quiz.title}
-      crumb={course.title}
+      title={l(quiz.title)}
+      crumb={l(course.title)}
       actions={
         <span className="badge badge--success">
-          <IconShieldCheck size={12} /> Protégé
+          <IconShieldCheck size={12} /> {l(D.common.protected)}
         </span>
       }
     >
@@ -117,29 +111,27 @@ export function QuizPage() {
       {user ? <Watermark email={user.email} phone={user.phone} fixed repeat={18} /> : null}
 
       <div className="quiz protected">
-        <header className="quiz__head">
-          <div style={{ flex: '1 1 320px' }}>
-            <h1>{quiz.title}</h1>
-            <p className="secondary" style={{ marginTop: 'var(--space-2)', maxWidth: '62ch' }}>
-              {quiz.description}
-            </p>
+        <header className="pagehead pagehead--reader">
+          <div className="pagehead__text">
+            <span className="pagehead__eyebrow">{l(D.common.quiz)}</span>
+            <h1>{l(quiz.title)}</h1>
+            <p>{l(quiz.description)}</p>
+            <div className="quiz__rules" style={{ marginTop: 'var(--space-5)' }}>
+              <span className="badge">
+                <IconAward size={12} /> {l(D.quiz.passing(quiz.passingScore))}
+              </span>
+              <span className="badge">
+                <IconClock size={12} /> {l(D.quiz.questions(quiz.questions.length))}
+              </span>
+              <span className="badge">
+                {quiz.maxAttempts === 0
+                  ? l(D.quiz.attemptsUnlimited)
+                  : l(D.quiz.attemptsLeft(Number.isFinite(left) ? left : quiz.maxAttempts, quiz.maxAttempts))}
+              </span>
+              <span className="badge">{quiz.partialCredit ? l(D.quiz.partialOn) : l(D.quiz.partialOff)}</span>
+            </div>
           </div>
         </header>
-
-        <div className="quiz__rules">
-          <span className="badge">
-            <IconAward size={12} /> Seuil de réussite {quiz.passingScore} %
-          </span>
-          <span className="badge">
-            <IconClock size={12} /> {quiz.questions.length} questions
-          </span>
-          <span className="badge">
-            {quiz.maxAttempts === 0
-              ? 'Tentatives illimitées'
-              : `${Number.isFinite(left) ? left : quiz.maxAttempts} tentative${left > 1 ? 's' : ''} restante${left > 1 ? 's' : ''} sur ${quiz.maxAttempts}`}
-          </span>
-          <span className="badge">{quiz.partialCredit ? 'Crédit partiel activé' : 'Sans crédit partiel'}</span>
-        </div>
 
         {result ? (
           <section className={result.passed ? 'result result--passed' : 'result result--failed'}>
@@ -152,59 +144,56 @@ export function QuizPage() {
               }}
             />
             <span className={result.passed ? 'badge badge--success' : 'badge badge--warning'}>
-              {result.passed ? 'Quiz validé' : 'Seuil non atteint'}
+              {result.passed ? l(D.quiz.passed) : l(D.quiz.failed)}
             </span>
             <div className="result__score">{result.percentage}%</div>
             <p className="result__label">
               {result.passed
-                ? `Vous avez répondu correctement à ${result.correctCount} question${result.correctCount > 1 ? 's' : ''} sur ${result.total}. Le détail des corrections figure ci-dessous.`
-                : `Il fallait atteindre ${quiz.passingScore} %. Relisez les corrections ci-dessous avant de retenter.`}
+                ? l(D.quiz.passedText(result.correctCount, result.total))
+                : l(D.quiz.failedText(quiz.passingScore))}
             </p>
             <div className="result__stats">
               <span className="result__stat">
                 <span>
                   {formatNumber(result.score)} / {result.maxScore}
                 </span>
-                <span>Points</span>
+                <span>{l(D.quiz.statPoints)}</span>
               </span>
               <span className="result__stat">
                 <span>
                   {result.correctCount} / {result.total}
                 </span>
-                <span>Questions justes</span>
+                <span>{l(D.quiz.statCorrect)}</span>
               </span>
               <span className="result__stat">
                 <span>{Number.isFinite(left) ? Math.max(0, left) : '∞'}</span>
-                <span>Tentatives restantes</span>
+                <span>{l(D.quiz.statAttempts)}</span>
               </span>
             </div>
             <div className="row" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
               {left > 0 ? (
                 <button type="button" className="btn btn--secondary" onClick={retry}>
-                  Refaire le quiz
+                  {l(D.quiz.retry)}
                 </button>
               ) : null}
               <Link className="btn btn--primary" to={`/app/cours/${course.slug}`}>
-                Retour au sommaire <IconChevronRight size={15} />
+                {l(D.lesson.backToSyllabus)} <IconChevronRight size={15} />
               </Link>
             </div>
           </section>
         ) : exhausted ? (
           <section className="empty">
             <IconAlert size={22} />
-            <strong style={{ color: 'var(--text)' }}>Nombre de tentatives épuisé</strong>
-            <span>
-              Vous avez utilisé les {quiz.maxAttempts} tentatives autorisées pour ce quiz. Contactez votre formateur pour
-              en obtenir une supplémentaire.
-            </span>
+            <strong style={{ color: 'var(--text)' }}>{l(D.quiz.exhausted)}</strong>
+            <span>{l(D.quiz.exhaustedText(quiz.maxAttempts))}</span>
             <Link className="btn btn--secondary" to={`/app/cours/${course.slug}`}>
-              Retour au sommaire
+              {l(D.lesson.backToSyllabus)}
             </Link>
           </section>
         ) : (
           <div className="quiz__progress">
             <span className="muted tabnum" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              {answeredCount} / {quiz.questions.length} répondues
+              {l(D.quiz.answered(answeredCount, quiz.questions.length))}
             </span>
             <ProgressBar value={(answeredCount / quiz.questions.length) * 100} thin />
             <button
@@ -213,7 +202,7 @@ export function QuizPage() {
               disabled={answeredCount < quiz.questions.length}
               onClick={submit}
             >
-              Valider mes réponses
+              {l(D.quiz.submit)}
             </button>
           </div>
         )}
@@ -235,12 +224,10 @@ export function QuizPage() {
                   <div className="question__head">
                     <span className="question__num">{index + 1}</span>
                     <div style={{ minWidth: 0 }}>
-                      <div className="question__prompt">{question.prompt}</div>
+                      <div className="question__prompt">{l(question.prompt)}</div>
                       <div className="question__meta">
                         <span>{KIND_LABEL[question.kind]}</span>
-                        <span>
-                          {question.points} point{question.points > 1 ? 's' : ''}
-                        </span>
+                        <span>{l(D.quiz.points(question.points))}</span>
                         {graded ? (
                           <span className={graded.correct ? 'severity severity--info' : 'severity severity--critical'}>
                             {formatNumber(graded.earned)} / {graded.possible}
@@ -282,7 +269,7 @@ export function QuizPage() {
                               <IconCheck size={11} />
                             )}
                           </span>
-                          <span>{answer.text}</span>
+                          <span>{l(answer.text)}</span>
                         </button>
                       );
                     })}
@@ -294,8 +281,8 @@ export function QuizPage() {
                         <IconInfo size={16} />
                       </span>
                       <span>
-                        <strong>Correction. </strong>
-                        {question.explanation}
+                        <strong>{l(D.quiz.correction)} </strong>
+                        {l(question.explanation)}
                       </span>
                     </div>
                   ) : null}
@@ -311,15 +298,15 @@ export function QuizPage() {
             disabled={answeredCount < quiz.questions.length}
             onClick={submit}
           >
-            Valider mes réponses ({answeredCount}/{quiz.questions.length})
+            {l(D.quiz.submitCount(answeredCount, quiz.questions.length))}
           </button>
         ) : null}
 
         {history.length > 0 ? (
           <section className="card card--flush">
             <div className="card__header">
-              <h3>Historique des tentatives</h3>
-              <span className="card__hint">{history.length} enregistrée(s)</span>
+              <h3>{l(D.quiz.history)}</h3>
+              <span className="card__hint">{l(D.quiz.historyCount(history.length))}</span>
             </div>
             {history.map((attempt, index) => (
               <div className="attempt-row" key={attempt.id}>
@@ -329,11 +316,9 @@ export function QuizPage() {
                 <span className={attempt.passed ? 'badge badge--success' : 'badge badge--danger'}>
                   {attempt.percentage}%
                 </span>
-                <span className="muted">
-                  {formatNumber(attempt.score)} / {attempt.maxScore} points
-                </span>
+                <span className="muted">{l(D.quiz.pointsOf(formatNumber(attempt.score), attempt.maxScore))}</span>
                 <span className="muted" style={{ marginLeft: 'auto', fontSize: '0.78rem' }}>
-                  {new Date(attempt.submittedAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}
+                  {formatDate(attempt.submittedAt)}
                 </span>
               </div>
             ))}

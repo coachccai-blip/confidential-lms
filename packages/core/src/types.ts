@@ -1,3 +1,5 @@
+import type { LocalizedText } from './locale';
+
 /**
  * Modele de donnees du LMS (brief section 6).
  *
@@ -46,46 +48,80 @@ export interface SessionToken {
 
 export type LessonKind = 'text' | 'video' | 'quiz';
 
+/** Bloc de titre de section. */
 export interface LessonBlockHeading {
   readonly type: 'heading';
-  readonly text: string;
+  readonly text: LocalizedText;
 }
+
 export interface LessonBlockParagraph {
   readonly type: 'paragraph';
-  readonly text: string;
+  readonly text: LocalizedText;
 }
+
 export interface LessonBlockList {
   readonly type: 'list';
   readonly ordered?: boolean;
-  readonly items: readonly string[];
+  readonly items: readonly LocalizedText[];
 }
+
 export interface LessonBlockCallout {
   readonly type: 'callout';
   readonly tone: 'info' | 'warning' | 'danger' | 'success';
-  readonly title: string;
-  readonly text: string;
+  readonly title: LocalizedText;
+  readonly text: LocalizedText;
 }
+
 export interface LessonBlockFigure {
   readonly type: 'figure';
   /** Identifiant d'une illustration SVG rendue par le client. */
   readonly figureId: string;
-  readonly caption: string;
+  readonly caption: LocalizedText;
 }
+
 export interface LessonBlockTable {
   readonly type: 'table';
-  readonly caption?: string;
-  readonly headers: readonly string[];
-  readonly rows: readonly (readonly string[])[];
+  readonly caption?: LocalizedText;
+  readonly headers: readonly LocalizedText[];
+  readonly rows: readonly (readonly LocalizedText[])[];
 }
+
 export interface LessonBlockQuote {
   readonly type: 'quote';
-  readonly text: string;
-  readonly source: string;
+  readonly text: LocalizedText;
+  readonly source: LocalizedText;
 }
+
 export interface LessonBlockKeyValues {
   readonly type: 'keyvalues';
-  readonly title: string;
-  readonly entries: readonly { readonly label: string; readonly value: string }[];
+  readonly title: LocalizedText;
+  readonly entries: readonly { readonly label: LocalizedText; readonly value: LocalizedText }[];
+}
+
+/**
+ * Série d'exemples en français.
+ *
+ * La phrase reste en français — c'est la langue enseignée — tandis que la
+ * glose (traduction ou explication) suit la langue d'interface.
+ */
+export interface LessonBlockExamples {
+  readonly type: 'examples';
+  readonly title: LocalizedText;
+  readonly items: readonly {
+    readonly fr: string;
+    readonly gloss: LocalizedText;
+    /** Marque une tournure fautive à ne pas reproduire. */
+    readonly incorrect?: boolean;
+  }[];
+}
+
+/** Tableau de conjugaison : les formes verbales ne sont jamais traduites. */
+export interface LessonBlockConjugation {
+  readonly type: 'conjugation';
+  readonly title: LocalizedText;
+  readonly note?: LocalizedText;
+  readonly columns: readonly LocalizedText[];
+  readonly rows: readonly { readonly pronoun: string; readonly forms: readonly string[] }[];
 }
 
 export type LessonBlock =
@@ -96,74 +132,103 @@ export type LessonBlock =
   | LessonBlockFigure
   | LessonBlockTable
   | LessonBlockQuote
-  | LessonBlockKeyValues;
+  | LessonBlockKeyValues
+  | LessonBlockExamples
+  | LessonBlockConjugation;
 
 export interface Lesson {
   readonly id: string;
   readonly moduleId: string;
   readonly kind: LessonKind;
-  readonly title: string;
-  readonly summary: string;
-  /** Duree de lecture estimee, en minutes. */
+  readonly title: LocalizedText;
+  readonly summary: LocalizedText;
+  /** Durée de lecture estimée, en minutes. */
   readonly durationMin: number;
   readonly blocks?: readonly LessonBlock[];
-  /** Renseigne pour kind === 'quiz'. */
+  /** Renseigné pour kind === 'quiz'. */
   readonly quizId?: string;
-  /** Renseigne pour kind === 'video' (playlist HLS chiffree AES-128, phase 2). */
+  /** Renseigné pour kind === 'video' (playlist HLS chiffrée AES-128, phase 2). */
   readonly hlsPlaylistId?: string;
 }
 
 export interface CourseModule {
   readonly id: string;
   readonly courseId: string;
-  readonly title: string;
-  readonly summary: string;
+  readonly title: LocalizedText;
+  readonly summary: LocalizedText;
   readonly lessons: readonly Lesson[];
 }
 
 export type CourseStatus = 'draft' | 'published';
 
+/** Catégories du catalogue de français. */
+export type CourseCategory = 'grammaire' | 'conjugaison' | 'delf-b1' | 'delf-b2' | 'dalf-c1' | 'dalf-c2';
+
+/** Niveaux du Cadre européen commun de référence. */
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
 export interface Course {
   readonly id: string;
   readonly slug: string;
-  readonly title: string;
-  readonly subtitle: string;
-  readonly description: string;
-  readonly level: 'debutant' | 'intermediaire' | 'avance';
+  readonly category: CourseCategory;
+  readonly level: CefrLevel;
+  readonly title: LocalizedText;
+  readonly subtitle: LocalizedText;
+  readonly description: LocalizedText;
   readonly status: CourseStatus;
   readonly accentFrom: string;
   readonly accentTo: string;
-  readonly tags: readonly string[];
+  readonly tags: readonly LocalizedText[];
   readonly modules: readonly CourseModule[];
+}
+
+/**
+ * Entrée de glossaire (mot difficile cliquable dans les leçons).
+ *
+ * Le terme est en français ; la définition et l'exemple sont fournis dans
+ * les trois langues pour que l'apprenant comprenne sans quitter la leçon.
+ */
+export interface GlossaryEntry {
+  readonly id: string;
+  readonly term: string;
+  /** Transcription phonétique (API). */
+  readonly ipa?: string;
+  /** Nature grammaticale, déjà localisée. */
+  readonly partOfSpeech: LocalizedText;
+  readonly definition: LocalizedText;
+  readonly example?: {
+    readonly fr: string;
+    readonly gloss: LocalizedText;
+  };
 }
 
 export type QuestionKind = 'single' | 'multiple' | 'boolean';
 
 export interface Answer {
   readonly id: string;
-  readonly text: string;
+  readonly text: LocalizedText;
   readonly correct: boolean;
 }
 
 export interface Question {
   readonly id: string;
   readonly kind: QuestionKind;
-  readonly prompt: string;
+  readonly prompt: LocalizedText;
   readonly points: number;
   readonly answers: readonly Answer[];
-  /** Correction affichee apres validation (brief section 5). */
-  readonly explanation: string;
+  /** Correction affichée après validation. */
+  readonly explanation: LocalizedText;
 }
 
 export interface Quiz {
   readonly id: string;
-  readonly title: string;
-  readonly description: string;
-  /** Pourcentage minimal de reussite, 0-100. */
+  readonly title: LocalizedText;
+  readonly description: LocalizedText;
+  /** Pourcentage minimal de réussite, 0-100. */
   readonly passingScore: number;
-  /** 0 = illimite. */
+  /** 0 = illimité. */
   readonly maxAttempts: number;
-  /** Credit partiel sur les questions a choix multiples. */
+  /** Crédit partiel sur les questions à choix multiples. */
   readonly partialCredit: boolean;
   readonly questions: readonly Question[];
 }

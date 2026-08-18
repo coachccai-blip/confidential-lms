@@ -3,65 +3,69 @@ import { summarizeEvents, type SecuritySeverity } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar } from '../components/Progress';
 import { useApp } from '../state/app-context';
+import { D, useI18n } from '../i18n';
 import { IconAlert, IconInfo, IconShieldCheck } from '../components/Icons';
-
-const FILTERS: readonly { readonly id: 'all' | SecuritySeverity; readonly label: string }[] = [
-  { id: 'all', label: 'Tous' },
-  { id: 'critical', label: 'Critiques' },
-  { id: 'warning', label: 'Avertissements' },
-  { id: 'info', label: 'Informations' },
-];
 
 export function SecurityPage() {
   const { state } = useApp();
+  const { l, formatDate } = useI18n();
   const [filter, setFilter] = useState<'all' | SecuritySeverity>('all');
+
   const summary = useMemo(() => summarizeEvents(state.events), [state.events]);
   const events = useMemo(
     () => (filter === 'all' ? state.events : state.events.filter((event) => event.severity === filter)),
     [state.events, filter],
   );
 
+  const filters = [
+    { id: 'all' as const, label: l(D.security.filterAll) },
+    { id: 'critical' as const, label: l(D.security.filterCritical) },
+    { id: 'warning' as const, label: l(D.security.filterWarning) },
+    { id: 'info' as const, label: l(D.security.filterInfo) },
+  ];
+
+  const severityLabel = (severity: SecuritySeverity) =>
+    severity === 'critical' ? l(D.security.sevCritical) : severity === 'warning' ? l(D.security.sevWarning) : l(D.security.sevInfo);
+
   return (
-    <AppShell title="Journal de sécurité" crumb="Compte" wide>
-      <div className="page__header">
-        <div>
-          <h1>Journal de sécurité</h1>
-          <p>
-            Chaque tentative de copie, d’impression ou de capture est horodatée et rattachée à votre compte et à votre
-            appareil. Ce journal est consultable par l’administrateur de la formation.
-          </p>
+    <AppShell title={l(D.nav.security)} crumb={l(D.nav.account)} wide>
+      <header className="pagehead">
+        <div className="pagehead__text">
+          <span className="pagehead__eyebrow">{l(D.security.eyebrow)}</span>
+          <h1>{l(D.security.title)}</h1>
+          <p>{l(D.security.intro)}</p>
         </div>
-      </div>
+      </header>
 
       <div className="grid grid--4" style={{ marginBottom: 'var(--space-6)' }}>
         <div className="stat">
-          <span className="stat__label">Score de risque</span>
+          <span className="stat__label">{l(D.security.riskScore)}</span>
           <span className="stat__value">{summary.riskScore}</span>
           <ProgressBar value={summary.riskScore} thin />
         </div>
         <div className="stat">
-          <span className="stat__label">Événements</span>
+          <span className="stat__label">{l(D.security.events)}</span>
           <span className="stat__value">{summary.total}</span>
-          <span className="stat__hint">journal borné aux 200 derniers</span>
+          <span className="stat__hint">{l(D.security.eventsHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Critiques</span>
+          <span className="stat__label">{l(D.security.critical)}</span>
           <span className="stat__value" style={{ color: summary.critical > 0 ? 'var(--danger)' : undefined }}>
             {summary.critical}
           </span>
-          <span className="stat__hint">impression, capture, devtools</span>
+          <span className="stat__hint">{l(D.security.criticalHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Avertissements</span>
+          <span className="stat__label">{l(D.security.warning)}</span>
           <span className="stat__value" style={{ color: summary.warning > 0 ? 'var(--warning)' : undefined }}>
             {summary.warning}
           </span>
-          <span className="stat__hint">copie, session révoquée</span>
+          <span className="stat__hint">{l(D.security.warningHint)}</span>
         </div>
       </div>
 
       <div className="row" style={{ marginBottom: 'var(--space-4)', flexWrap: 'wrap' }}>
-        {FILTERS.map((item) => (
+        {filters.map((item) => (
           <button
             type="button"
             key={item.id}
@@ -76,44 +80,40 @@ export function SecurityPage() {
       <section className="card card--flush">
         <div className="card__header">
           <IconShieldCheck size={17} />
-          <h3>Événements enregistrés</h3>
-          <span className="card__hint">{events.length} affiché(s)</span>
+          <h3>{l(D.security.recorded)}</h3>
+          <span className="card__hint">{l(D.security.shown(events.length))}</span>
         </div>
 
         {events.length === 0 ? (
           <div className="empty" style={{ border: 'none' }}>
             <IconInfo size={20} />
-            <span>Aucun événement pour ce filtre.</span>
+            <span>{l(D.security.empty)}</span>
           </div>
         ) : (
           <div className="table-wrap">
             <table className="table">
               <thead>
                 <tr>
-                  <th>Horodatage</th>
-                  <th>Événement</th>
-                  <th>Gravité</th>
-                  <th>Appareil</th>
-                  <th>Détails</th>
+                  <th>{l(D.security.thTime)}</th>
+                  <th>{l(D.security.thEvent)}</th>
+                  <th>{l(D.security.thSeverity)}</th>
+                  <th>{l(D.security.thDevice)}</th>
+                  <th>{l(D.security.thDetails)}</th>
                 </tr>
               </thead>
               <tbody>
                 {events.map((event) => (
                   <tr key={event.id}>
                     <td className="mono" style={{ whiteSpace: 'nowrap' }}>
-                      {new Date(event.at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'medium' })}
+                      {formatDate(event.at, { dateStyle: 'short', timeStyle: 'medium' })}
                     </td>
                     <td>
-                      <strong>{event.label}</strong>
+                      <strong>{l(D.securityEvents[event.type])}</strong>
                     </td>
                     <td>
                       <span className={`severity severity--${event.severity}`}>
                         {event.severity === 'critical' ? <IconAlert size={13} /> : <span className="dot" />}
-                        {event.severity === 'critical'
-                          ? 'Critique'
-                          : event.severity === 'warning'
-                            ? 'Avertissement'
-                            : 'Information'}
+                        {severityLabel(event.severity)}
                       </span>
                     </td>
                     <td className="mono">{event.deviceId}</td>
@@ -122,7 +122,7 @@ export function SecurityPage() {
                         ? Object.entries(event.metadata)
                             .map(([key, value]) => `${key} : ${value}`)
                             .join(' · ')
-                        : '—'}
+                        : l(D.common.none)}
                     </td>
                   </tr>
                 ))}
@@ -133,9 +133,7 @@ export function SecurityPage() {
       </section>
 
       <p className="muted" style={{ fontSize: '0.8rem', marginTop: 'var(--space-5)', maxWidth: '78ch' }}>
-        En production, ces événements sont transmis au serveur en temps réel et déclenchent des alertes administrateur
-        (connexions depuis des IP très éloignées en peu de temps, répétition de tentatives de capture, partage de
-        compte suspecté). Dans cette démonstration statique, ils restent dans votre navigateur.
+        {l(D.security.footnote)}
       </p>
     </AppShell>
   );

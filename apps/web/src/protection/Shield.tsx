@@ -1,27 +1,18 @@
+import { D, useI18n } from '../i18n';
 import { IconEyeOff, IconLock, IconShieldCheck } from '../components/Icons';
 import type { ShieldReason } from './useContentProtection';
 
-const MESSAGES: Record<Exclude<ShieldReason, null>, { title: string; text: string; icon: 'eye' | 'lock' }> = {
-  blur: {
-    title: 'Contenu masqué',
-    text: "La fenêtre a perdu le focus. Revenez sur l'application pour réafficher la leçon.",
-    icon: 'eye',
-  },
-  hidden: {
-    title: 'Onglet en arrière-plan',
-    text: 'Le contenu est masqué tant que cet onglet n’est pas au premier plan.',
-    icon: 'eye',
-  },
-  print: {
-    title: 'Impression désactivée',
-    text: 'Le contenu de formation ne peut être ni imprimé ni exporté. Tentative enregistrée.',
-    icon: 'lock',
-  },
-};
-
+/** Écran de garde affiché quand le contenu doit être masqué. */
 export function Shield({ reason }: { readonly reason: ShieldReason }) {
+  const { l } = useI18n();
   if (!reason) return null;
-  const message = MESSAGES[reason];
+
+  const message =
+    reason === 'print'
+      ? { title: l(D.shield.printTitle), text: l(D.shield.printText), icon: 'lock' as const }
+      : reason === 'hidden'
+        ? { title: l(D.shield.hiddenTitle), text: l(D.shield.hiddenText), icon: 'eye' as const }
+        : { title: l(D.shield.blurTitle), text: l(D.shield.blurText), icon: 'eye' as const };
 
   return (
     <div className="shield" role="status" aria-live="polite">
@@ -30,7 +21,7 @@ export function Shield({ reason }: { readonly reason: ShieldReason }) {
         <div className="shield__title">{message.title}</div>
         <p className="shield__text">{message.text}</p>
         <div className="shield-bar__pill">
-          <IconShieldCheck size={13} /> Protection active
+          <IconShieldCheck size={13} /> {l(D.shield.active)}
         </div>
       </div>
     </div>

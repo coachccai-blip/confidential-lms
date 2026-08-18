@@ -1,66 +1,54 @@
 import { useMemo, useState } from 'react';
-import {
-  computeCourseProgress,
-  parseFingerprint,
-  readFingerprint,
-  stripInvisible,
-  summarizeEvents,
-  watermarkText,
-} from '@lms/core';
+import { parseFingerprint, readFingerprint, stripInvisible, summarizeEvents, watermarkText } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar } from '../components/Progress';
-import { volcansCourse } from '../content';
+import { allLessons } from '../content';
 import { useApp } from '../state/app-context';
+import { D, useI18n } from '../i18n';
 import { IconAlert, IconFingerprint, IconSearch, IconShieldCheck, IconUser } from '../components/Icons';
 
-/** Cohorte de demonstration : ces lignes illustrent la vue de pilotage admin. */
+/** Cohorte de démonstration : ces lignes illustrent la vue de pilotage admin. */
 const COHORT = [
   { name: 'Thomas Bertrand', email: 'thomas.bertrand@exemple.fr', progress: 100, quiz: 92, risk: 4, devices: 2 },
   { name: 'Aïcha Ndiaye', email: 'aicha.ndiaye@exemple.fr', progress: 76, quiz: 88, risk: 0, devices: 1 },
-  { name: 'Julien Marchand', email: 'julien.marchand@exemple.fr', progress: 61, quiz: 71, risk: 28, devices: 3 },
+  { name: 'Chen Wei', email: 'chen.wei@exemple.cn', progress: 61, quiz: 71, risk: 28, devices: 3 },
   { name: 'Léa Fontaine', email: 'lea.fontaine@exemple.fr', progress: 45, quiz: 64, risk: 8, devices: 1 },
   { name: 'Karim Haddad', email: 'karim.haddad@exemple.fr', progress: 32, quiz: 0, risk: 56, devices: 3 },
   { name: 'Sophie Vernier', email: 'sophie.vernier@exemple.fr', progress: 18, quiz: 0, risk: 0, devices: 1 },
 ] as const;
 
-const PROTECTION_MATRIX = [
-  { measure: 'Blocage des captures d’écran', web: 'Impossible', desktop: 'Oui — setContentProtection', mobile: 'Android : FLAG_SECURE · iOS : détection seule' },
-  { measure: 'Blocage copier / couper', web: 'Oui', desktop: 'Oui', mobile: 'Oui' },
-  { measure: 'Blocage impression / PDF', web: 'Oui', desktop: 'Oui', mobile: 'Sans objet' },
-  { measure: 'Filigrane nominatif visible', web: 'Oui', desktop: 'Oui', mobile: 'Oui' },
-  { measure: 'Empreinte invisible dans le texte', web: 'Oui', desktop: 'Oui', mobile: 'Oui' },
-  { measure: 'Détection d’enregistrement d’écran', web: 'Non', desktop: 'Best-effort (processus)', mobile: 'iOS : capturedDidChange' },
-  { measure: 'Photo de l’écran par un tiers', web: 'Impossible à bloquer', desktop: 'Impossible à bloquer', mobile: 'Impossible à bloquer' },
-] as const;
-
 const SAMPLE_TEXT =
-  'Un écoulement pyroclastique est un mélange de gaz, de cendres et de blocs, plus dense que l’air, ' +
-  'qui dévale les flancs du volcan à des vitesses de 100 à 700 km/h et à des températures de 200 à 700 °C. ' +
-  'Aucun bâtiment civil ne lui résiste : la seule mesure efficace reste l’évacuation préventive.';
+  'Le subjonctif n’exprime pas un temps mais un regard : celui de la subjectivité. ' +
+  'L’indicatif présente les faits comme réels ; le subjonctif les présente comme voulus, ' +
+  'redoutés, souhaités ou mis en doute. On ne le choisit presque jamais librement.';
 
 export function AdminPage() {
   const { user, state, fingerprint } = useApp();
+  const { l, formatDate } = useI18n();
   const [sample, setSample] = useState('');
 
-  const myProgress = computeCourseProgress(volcansCourse, state.progress);
+  const lessons = allLessons();
+  const completed = lessons.filter((lesson) => state.progress[lesson.id]?.completed).length;
+  const myPercentage = lessons.length === 0 ? 0 : Math.round((completed / lessons.length) * 100);
   const summary = summarizeEvents(state.events);
 
   const decoded = useMemo(() => {
     if (!sample.trim()) return null;
-    const fingerprint = readFingerprint(sample);
+    const found = readFingerprint(sample);
+    const visible = stripInvisible(sample);
     return {
-      fingerprint,
-      parsed: fingerprint ? parseFingerprint(fingerprint) : null,
-      visibleLength: stripInvisible(sample).length,
-      hiddenChars: sample.length - stripInvisible(sample).length,
+      fingerprint: found,
+      parsed: found ? parseFingerprint(found) : null,
+      visibleLength: visible.length,
+      hiddenChars: sample.length - visible.length,
     };
   }, [sample]);
 
   const rows = [
     {
-      name: user?.displayName ?? 'Vous',
+      name: user?.displayName ?? '—',
       email: user?.email ?? '',
-      progress: myProgress.percentage,
+      progress: myPercentage,
       quiz: state.attempts[0]?.percentage ?? 0,
       risk: summary.riskScore,
       devices: state.devices.length,
@@ -72,59 +60,66 @@ export function AdminPage() {
   const averageProgress = Math.round(rows.reduce((sum, row) => sum + row.progress, 0) / rows.length);
   const atRisk = rows.filter((row) => row.risk >= 25).length;
 
+  const matrix = [
+    { measure: l(D.account.protections[7]), values: ['—', 'setContentProtection', 'FLAG_SECURE / iOS'] },
+    { measure: l(D.account.protections[2]), values: ['Oui', 'Oui', 'Oui'] },
+    { measure: l(D.account.protections[3]), values: ['Oui', 'Oui', '—'] },
+    { measure: l(D.account.protections[0]), values: ['Oui', 'Oui', 'Oui'] },
+    { measure: l(D.account.protections[1]), values: ['Oui', 'Oui', 'Oui'] },
+    { measure: l(D.account.protections[5]), values: ['Best-effort', 'Best-effort', 'iOS : capturedDidChange'] },
+  ];
+
   return (
-    <AppShell title="Pilotage & traçabilité" crumb="Administration" wide>
-      <div className="page__header">
-        <div>
-          <h1>Espace administrateur</h1>
-          <p>
-            Suivi des apprenants, journal de sécurité consolidé et vérification d’empreinte. Cette vue reproduit le
-            tableau de bord prévu au brief ; les lignes autres que la vôtre sont des données de démonstration.
-          </p>
+    <AppShell title={l(D.nav.admin)} crumb={l(D.nav.administration)} wide>
+      <header className="pagehead">
+        <div className="pagehead__text">
+          <span className="pagehead__eyebrow">{l(D.admin.eyebrow)}</span>
+          <h1>{l(D.admin.title)}</h1>
+          <p>{l(D.admin.intro)}</p>
         </div>
-      </div>
+      </header>
 
       <div className="grid grid--4" style={{ marginBottom: 'var(--space-6)' }}>
         <div className="stat">
-          <span className="stat__label">Apprenants</span>
+          <span className="stat__label">{l(D.admin.learners)}</span>
           <span className="stat__value">{rows.length}</span>
-          <span className="stat__hint">sur une licence de 100 places</span>
+          <span className="stat__hint">{l(D.admin.learnersHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Progression moyenne</span>
+          <span className="stat__label">{l(D.admin.avgProgress)}</span>
           <span className="stat__value">{averageProgress}%</span>
           <ProgressBar value={averageProgress} thin />
         </div>
         <div className="stat">
-          <span className="stat__label">Comptes à surveiller</span>
+          <span className="stat__label">{l(D.admin.atRisk)}</span>
           <span className="stat__value" style={{ color: atRisk > 0 ? 'var(--warning)' : undefined }}>
             {atRisk}
           </span>
-          <span className="stat__hint">score de risque ≥ 25</span>
+          <span className="stat__hint">{l(D.admin.atRiskHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Événements critiques</span>
+          <span className="stat__label">{l(D.admin.criticalEvents)}</span>
           <span className="stat__value" style={{ color: summary.critical > 0 ? 'var(--danger)' : undefined }}>
             {summary.critical}
           </span>
-          <span className="stat__hint">sur votre session en cours</span>
+          <span className="stat__hint">{l(D.admin.criticalHint)}</span>
         </div>
       </div>
 
       <section className="card card--flush" style={{ marginBottom: 'var(--space-6)' }}>
         <div className="card__header">
           <IconUser size={17} />
-          <h3>Suivi des apprenants — Les volcans</h3>
+          <h3>{l(D.admin.tracking)}</h3>
         </div>
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Apprenant</th>
-                <th>Progression</th>
-                <th>Dernier quiz</th>
-                <th>Appareils</th>
-                <th>Risque</th>
+                <th>{l(D.admin.thLearner)}</th>
+                <th>{l(D.admin.thProgress)}</th>
+                <th>{l(D.admin.thLastQuiz)}</th>
+                <th>{l(D.admin.thDevices)}</th>
+                <th>{l(D.admin.thRisk)}</th>
               </tr>
             </thead>
             <tbody>
@@ -132,7 +127,11 @@ export function AdminPage() {
                 <tr key={row.email}>
                   <td>
                     <strong>{row.name}</strong>
-                    {row.isMe ? <span className="badge badge--accent" style={{ marginLeft: 8 }}>Vous</span> : null}
+                    {row.isMe ? (
+                      <span className="badge badge--accent" style={{ marginLeft: 8 }}>
+                        {l(D.admin.you)}
+                      </span>
+                    ) : null}
                     <div className="muted" style={{ fontSize: '0.76rem' }}>
                       {row.email}
                     </div>
@@ -151,14 +150,18 @@ export function AdminPage() {
                     {row.quiz > 0 ? (
                       <span className={row.quiz >= 70 ? 'badge badge--success' : 'badge badge--warning'}>{row.quiz}%</span>
                     ) : (
-                      <span className="muted">—</span>
+                      <span className="muted">{l(D.common.none)}</span>
                     )}
                   </td>
                   <td className="tabnum">{row.devices} / 3</td>
                   <td>
                     <span
                       className={
-                        row.risk >= 50 ? 'severity severity--critical' : row.risk >= 25 ? 'severity severity--warning' : 'severity severity--info'
+                        row.risk >= 50
+                          ? 'severity severity--critical'
+                          : row.risk >= 25
+                            ? 'severity severity--warning'
+                            : 'severity severity--info'
                       }
                     >
                       {row.risk >= 25 ? <IconAlert size={13} /> : <span className="dot" />}
@@ -175,13 +178,10 @@ export function AdminPage() {
       <section className="card" style={{ marginBottom: 'var(--space-6)' }}>
         <div className="row" style={{ marginBottom: 'var(--space-4)' }}>
           <IconFingerprint size={18} style={{ color: 'var(--accent)' }} />
-          <h3 style={{ fontSize: '0.95rem' }}>Vérificateur d’empreinte — identifier la source d’une fuite</h3>
+          <h3 style={{ fontSize: '0.95rem' }}>{l(D.admin.verifierTitle)}</h3>
         </div>
         <p className="secondary" style={{ fontSize: '0.87rem', marginBottom: 'var(--space-4)', maxWidth: '76ch' }}>
-          Collez ici un extrait de texte récupéré sur un support tiers (email, forum, document partagé). Si l’extrait
-          provient de la plateforme, l’empreinte invisible révèle l’apprenant, l’appareil et l’heure de consultation.
-          Les deux boutons ci-dessous injectent le même extrait de démonstration, avec puis sans filigrane, pour
-          comparer les verdicts.
+          {l(D.admin.verifierIntro)}
         </p>
 
         <div className="row" style={{ marginBottom: 'var(--space-4)', flexWrap: 'wrap' }}>
@@ -190,21 +190,21 @@ export function AdminPage() {
             className="btn btn--secondary"
             onClick={() => setSample(watermarkText(SAMPLE_TEXT, fingerprint, { everyWords: 24 }))}
           >
-            Insérer un extrait filigrané d’exemple
+            {l(D.admin.insertMarked)}
           </button>
           <button type="button" className="btn btn--ghost" onClick={() => setSample(SAMPLE_TEXT)}>
-            Insérer le même texte sans filigrane
+            {l(D.admin.insertClean)}
           </button>
           {sample ? (
             <button type="button" className="btn btn--ghost" onClick={() => setSample('')}>
-              Effacer
+              {l(D.admin.clear)}
             </button>
           ) : null}
         </div>
 
         <div className="field" style={{ marginBottom: 'var(--space-4)' }}>
           <label className="field__label" htmlFor="sample">
-            Extrait suspect
+            {l(D.admin.sampleLabel)}
           </label>
           <textarea
             id="sample"
@@ -212,7 +212,7 @@ export function AdminPage() {
             data-allow-select="true"
             value={sample}
             onChange={(event) => setSample(event.target.value)}
-            placeholder="Collez ici le texte à analyser…"
+            placeholder={l(D.admin.samplePlaceholder)}
           />
         </div>
 
@@ -222,37 +222,36 @@ export function AdminPage() {
               <span className="callout__icon">
                 <IconSearch size={18} />
               </span>
-              <div>
-                <div className="callout__title">Empreinte identifiée</div>
+              <div style={{ minWidth: 0 }}>
+                <div className="callout__title">{l(D.admin.found)}</div>
                 <div className="mono" style={{ marginTop: 4 }}>
                   {decoded.fingerprint}
                 </div>
                 {decoded.parsed ? (
                   <div className="keyvalues" style={{ marginTop: 'var(--space-3)', background: 'var(--bg-elevated)' }}>
                     <div className="keyvalues__row">
-                      <dt>Apprenant</dt>
+                      <dt>{l(D.admin.fpLearner)}</dt>
                       <dd className="mono">
                         {decoded.parsed.userRef}
                         {user && user.id.endsWith(decoded.parsed.userRef) ? ` — ${user.displayName} (${user.email})` : ''}
                       </dd>
                     </div>
                     <div className="keyvalues__row">
-                      <dt>Appareil</dt>
+                      <dt>{l(D.admin.fpDevice)}</dt>
                       <dd className="mono">{decoded.parsed.deviceRef}</dd>
                     </div>
                     <div className="keyvalues__row">
-                      <dt>Consulté vers</dt>
+                      <dt>{l(D.admin.fpReadAt)}</dt>
                       <dd>
                         {decoded.parsed.at
-                          ? decoded.parsed.at.toLocaleString('fr-FR', { dateStyle: 'full', timeStyle: 'short' })
-                          : 'inconnu'}
+                          ? formatDate(decoded.parsed.at, { dateStyle: 'full', timeStyle: 'short' })
+                          : l(D.common.none)}
                       </dd>
                     </div>
                   </div>
                 ) : null}
                 <div className="muted" style={{ fontSize: '0.78rem', marginTop: 6 }}>
-                  {decoded.hiddenChars} caractères invisibles détectés pour {decoded.visibleLength} caractères visibles.
-                  L’empreinte est répétée tous les 24 mots : un extrait de quelques lignes suffit à identifier la source.
+                  {l(D.admin.fpStats(decoded.hiddenChars, decoded.visibleLength))}
                 </div>
               </div>
             </div>
@@ -262,11 +261,8 @@ export function AdminPage() {
                 <IconSearch size={18} />
               </span>
               <div>
-                <div className="callout__title">Aucune empreinte détectée</div>
-                <span style={{ fontSize: '0.85rem' }}>
-                  Cet extrait ne provient pas de la plateforme, ou il a été retranscrit manuellement, normalisé, ou
-                  passé par un OCR — ce qui détruit les caractères de largeur nulle.
-                </span>
+                <div className="callout__title">{l(D.admin.notFound)}</div>
+                <span style={{ fontSize: '0.85rem' }}>{l(D.admin.notFoundText)}</span>
               </div>
             </div>
           )
@@ -276,28 +272,28 @@ export function AdminPage() {
       <section className="card card--flush">
         <div className="card__header">
           <IconShieldCheck size={17} />
-          <h3>Matrice de protection par plateforme</h3>
-          <span className="card__hint">Limites documentées honnêtement</span>
+          <h3>{l(D.admin.matrix)}</h3>
+          <span className="card__hint">{l(D.admin.matrixHint)}</span>
         </div>
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Mesure</th>
-                <th>Web (cette démo)</th>
-                <th>Desktop Electron</th>
-                <th>Mobile React Native</th>
+                <th>{l(D.admin.thMeasure)}</th>
+                <th>{l(D.admin.thWeb)}</th>
+                <th>{l(D.admin.thDesktop)}</th>
+                <th>{l(D.admin.thMobile)}</th>
               </tr>
             </thead>
             <tbody>
-              {PROTECTION_MATRIX.map((row) => (
+              {matrix.map((row) => (
                 <tr key={row.measure}>
                   <td>
                     <strong>{row.measure}</strong>
                   </td>
-                  <td>{row.web}</td>
-                  <td>{row.desktop}</td>
-                  <td>{row.mobile}</td>
+                  {row.values.map((value, index) => (
+                    <td key={index}>{value}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>

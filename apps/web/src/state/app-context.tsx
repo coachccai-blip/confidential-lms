@@ -22,10 +22,12 @@ import {
   type QuizAttempt,
   type SecurityEvent,
   type SecurityEventType,
+  type Locale,
   type SessionToken,
   type User,
 } from '@lms/core';
 import { EMPTY_STATE, STORAGE_KEY, clearState, loadState, saveState, type PersistedState, type ThemeName } from './storage';
+import { LOCALE_TAGS } from '@lms/core';
 
 /** Duree d'un jeton d'acces : 15 minutes (brief section 3). */
 const ACCESS_TOKEN_TTL_MS = 15 * 60 * 1000;
@@ -52,6 +54,7 @@ export interface AppContextValue {
   readonly user: User | null;
   readonly device: Device | null;
   readonly theme: ThemeName;
+  readonly locale: Locale;
   readonly toasts: readonly Toast[];
   /** Charge utile injectee dans le texte servi a cet apprenant. */
   readonly fingerprint: string;
@@ -60,6 +63,7 @@ export interface AppContextValue {
   readonly forgetDevice: (deviceId: string) => void;
   readonly revokeSession: (sessionId: string) => void;
   readonly setTheme: (theme: ThemeName) => void;
+  readonly setLocale: (locale: Locale) => void;
   readonly toggleTheme: () => void;
   readonly logEvent: (type: SecurityEventType, metadata?: Record<string, string | number | boolean>) => void;
   readonly markLessonViewed: (lessonId: string, ratio?: number) => void;
@@ -128,6 +132,10 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', state.theme);
   }, [state.theme]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('lang', LOCALE_TAGS[state.locale]);
+  }, [state.locale]);
 
   const dismissToast = useCallback((id: string) => {
     setToasts((current) => current.filter((toast) => toast.id !== id));
@@ -309,6 +317,10 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     setState((previous) => ({ ...previous, theme }));
   }, []);
 
+  const setLocale = useCallback((locale: Locale) => {
+    setState((previous) => ({ ...previous, locale }));
+  }, []);
+
   const toggleTheme = useCallback(() => {
     setState((previous) => ({ ...previous, theme: previous.theme === 'dark' ? 'light' : 'dark' }));
   }, []);
@@ -415,6 +427,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       user: state.currentSessionId ? state.user : null,
       device,
       theme: state.theme,
+      locale: state.locale,
       toasts,
       fingerprint,
       signIn,
@@ -422,6 +435,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       forgetDevice,
       revokeSession,
       setTheme,
+      setLocale,
       toggleTheme,
       logEvent,
       markLessonViewed,
@@ -441,6 +455,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       forgetDevice,
       revokeSession,
       setTheme,
+      setLocale,
       toggleTheme,
       logEvent,
       markLessonViewed,

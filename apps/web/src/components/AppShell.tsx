@@ -2,7 +2,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { computeCourseProgress } from '@lms/core';
 import { useApp } from '../state/app-context';
-import { volcansCourse } from '../content';
+import { allLessons, courses } from '../content';
+import { D, useI18n } from '../i18n';
 import {
   IconBook,
   IconGauge,
@@ -13,8 +14,9 @@ import {
   IconShieldCheck,
   IconSun,
   IconUser,
-  IconVolcano,
+  IconLayers,
 } from './Icons';
+import { LanguageSwitch } from './LanguageSwitch';
 import { ProgressBar } from './Progress';
 import { Toasts } from './Toasts';
 
@@ -28,6 +30,7 @@ export interface AppShellProps {
 
 export function AppShell({ title, crumb, actions, children, wide = false }: AppShellProps) {
   const { user, state, signOut, theme, toggleTheme } = useApp();
+  const { l } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -35,7 +38,17 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const progress = computeCourseProgress(volcansCourse, state.progress);
+  const lessons = allLessons();
+  const completed = lessons.filter((lesson) => state.progress[lesson.id]?.completed).length;
+  const percentage = lessons.length === 0 ? 0 : Math.round((completed / lessons.length) * 100);
+
+  // Le parcours mis en avant : le premier commencé mais non terminé.
+  const currentCourse =
+    courses.find((course) => {
+      const progress = computeCourseProgress(course, state.progress);
+      return progress.started && !progress.finished;
+    }) ?? courses[0];
+
   const initials = (user?.displayName ?? 'AP')
     .split(' ')
     .map((part) => part.charAt(0))
@@ -52,81 +65,78 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
       <aside className={menuOpen ? 'sidebar sidebar--open' : 'sidebar'}>
         <div className="brand">
           <span className="brand__mark">
-            <IconVolcano size={19} style={{ color: '#1a0d04' }} />
+            <IconLayers size={19} style={{ color: '#04121f' }} />
           </span>
           <span>
-            <span className="brand__name">Magmatica</span>
+            <span className="brand__name">{l(D.brand.name)}</span>
             <span className="brand__tag" style={{ display: 'block' }}>
-              Formation protégée
+              {l(D.brand.tagline)}
             </span>
           </span>
         </div>
 
-        <nav className="nav" aria-label="Navigation principale">
-          <span className="nav__label">Apprentissage</span>
+        <nav className="nav" aria-label={l(D.nav.learning)}>
+          <span className="nav__label">{l(D.nav.learning)}</span>
           <NavLink to="/app" end className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}>
-            <IconHome size={17} /> Tableau de bord
+            <IconHome size={17} /> {l(D.nav.dashboard)}
           </NavLink>
           <NavLink
-            to="/app/cours/volcans"
+            to="/app/catalogue"
             className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}
           >
-            <IconBook size={17} /> Mes formations
-            <span className="nav__badge">{progress.percentage}%</span>
+            <IconBook size={17} /> {l(D.nav.catalogue)}
+            <span className="nav__badge">{percentage}%</span>
           </NavLink>
 
-          <span className="nav__label">Compte</span>
+          <span className="nav__label">{l(D.nav.account)}</span>
           <NavLink to="/app/compte" className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}>
-            <IconUser size={17} /> Appareils &amp; sessions
+            <IconUser size={17} /> {l(D.nav.devices)}
           </NavLink>
           <NavLink
             to="/app/securite"
             className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}
           >
-            <IconShieldCheck size={17} /> Journal de sécurité
+            <IconShieldCheck size={17} /> {l(D.nav.security)}
             {criticalEvents > 0 ? <span className="nav__badge">{criticalEvents}</span> : null}
           </NavLink>
 
           {user?.role === 'admin' ? (
             <>
-              <span className="nav__label">Administration</span>
+              <span className="nav__label">{l(D.nav.administration)}</span>
               <NavLink to="/admin" className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}>
-                <IconGauge size={17} /> Pilotage &amp; traçabilité
+                <IconGauge size={17} /> {l(D.nav.admin)}
               </NavLink>
             </>
           ) : null}
+
           <div className="side-course">
-            <span className="side-course__label">Parcours en cours</span>
-            <span className="side-course__title">Les volcans — comprendre la Terre qui gronde</span>
-            <ProgressBar value={progress.percentage} thin />
-            <span className="muted" style={{ fontSize: '0.72rem' }}>
-              {progress.completed} / {progress.total} étapes · {progress.percentage} %
+            <span className="side-course__label">{l(D.nav.inProgress)}</span>
+            <span className="side-course__title">{currentCourse ? l(currentCourse.title) : ''}</span>
+            <ProgressBar value={percentage} thin />
+            <span style={{ fontSize: '0.72rem', color: 'var(--on-deep-muted)' }}>
+              {l(D.nav.stepsDone(completed, lessons.length, percentage))}
             </span>
           </div>
         </nav>
 
         <div className="sidebar__footer">
-          <div className="shield-bar" style={{ justifyContent: 'center' }}>
-            <span className="shield-bar__pill">
-              <IconShieldCheck size={12} /> Protections actives
-            </span>
-          </div>
+          <LanguageSwitch deep />
           <NavLink to="/app/compte" className="user-chip">
             <span className="avatar">{initials}</span>
             <span className="user-chip__meta">
-              <span className="user-chip__name">{user?.displayName ?? 'Apprenant'}</span>
+              <span className="user-chip__name">{user?.displayName ?? '—'}</span>
               <span className="user-chip__mail">{user?.email ?? ''}</span>
             </span>
           </NavLink>
-          <button type="button" className="btn btn--ghost btn--block" onClick={signOut}>
-            <IconLogout size={16} /> Se déconnecter
+          <button type="button" className="btn btn--ghost btn--block" onClick={signOut} style={{ color: 'var(--on-deep-secondary)' }}>
+            <IconLogout size={16} /> {l(D.nav.signOut)}
           </button>
         </div>
       </aside>
 
       <div className="main">
         <header className="topbar">
-          <button type="button" className="menu-button" onClick={() => setMenuOpen((open) => !open)} aria-label="Ouvrir le menu">
+          <button type="button" className="menu-button" onClick={() => setMenuOpen((open) => !open)} aria-label={l(D.common.openMenu)}>
             <IconMenu size={18} />
           </button>
           {crumb ? (
@@ -140,12 +150,13 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
           <span className="topbar__title">{title}</span>
           <div className="topbar__actions">
             {actions}
+            <LanguageSwitch />
             <button
               type="button"
               className="icon-btn"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
-              title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+              aria-label={theme === 'dark' ? l(D.common.lightMode) : l(D.common.darkMode)}
+              title={theme === 'dark' ? l(D.common.lightMode) : l(D.common.darkMode)}
             >
               {theme === 'dark' ? <IconSun size={17} /> : <IconMoon size={17} />}
             </button>

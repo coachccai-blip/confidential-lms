@@ -1,10 +1,11 @@
+import type { LocalizedText } from './locale';
 import type { Course, Lesson, LessonProgress } from './types';
 
 export type ProgressMap = Readonly<Record<string, LessonProgress>>;
 
 export interface ModuleProgress {
   readonly moduleId: string;
-  readonly title: string;
+  readonly title: LocalizedText;
   readonly total: number;
   readonly completed: number;
   readonly percentage: number;

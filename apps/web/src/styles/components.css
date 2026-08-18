@@ -26,9 +26,9 @@
 
 .btn--primary {
   background: var(--accent-gradient);
-  color: #180d05;
+  color: #04121f;
   font-weight: 620;
-  box-shadow: 0 8px 22px -14px var(--ember-3);
+  box-shadow: 0 10px 24px -14px var(--ocean-3);
 }
 
 .btn--primary:hover:not(:disabled) {

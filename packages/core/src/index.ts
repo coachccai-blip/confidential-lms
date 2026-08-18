@@ -1,3 +1,4 @@
+export * from './locale';
 export * from './types';
 export * from './quiz';
 export * from './progress';

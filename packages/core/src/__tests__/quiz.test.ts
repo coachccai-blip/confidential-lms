@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { attemptsLeft, bestScore, canAttempt, gradeQuiz, isQuizPassed, shuffleWithSeed } from '../quiz';
+import { sameInAllLocales as L } from '../locale';
 import type { Quiz, QuizAttempt } from '../types';
 
 const quiz: Quiz = {
   id: 'qz_test',
-  title: 'Quiz de test',
-  description: '',
+  title: L('Quiz de test'),
+  description: L(''),
   passingScore: 70,
   maxAttempts: 3,
   partialCredit: false,
@@ -13,37 +14,37 @@ const quiz: Quiz = {
     {
       id: 'q1',
       kind: 'single',
-      prompt: 'Quel gaz domine les emissions volcaniques ?',
+      prompt: L('Quel auxiliaire accompagne « aller » au passe compose ?'),
       points: 1,
-      explanation: 'La vapeur d eau represente plus de 80 % des gaz emis.',
+      explanation: L('Les verbes de mouvement comme « aller » se conjuguent avec etre.'),
       answers: [
-        { id: 'q1a', text: "Vapeur d'eau", correct: true },
-        { id: 'q1b', text: 'Dioxyde de soufre', correct: false },
-        { id: 'q1c', text: 'Methane', correct: false },
+        { id: 'q1a', text: L('etre'), correct: true },
+        { id: 'q1b', text: L('avoir'), correct: false },
+        { id: 'q1c', text: L('faire'), correct: false },
       ],
     },
     {
       id: 'q2',
       kind: 'multiple',
-      prompt: 'Quels contextes engendrent du volcanisme ?',
+      prompt: L('Quels temps appartiennent au mode indicatif ?'),
       points: 2,
-      explanation: 'Dorsales, subduction et points chauds.',
+      explanation: L('Present, imparfait et futur simple sont des temps de l indicatif.'),
       answers: [
-        { id: 'q2a', text: 'Dorsale oceanique', correct: true },
-        { id: 'q2b', text: 'Zone de subduction', correct: true },
-        { id: 'q2c', text: 'Faille transformante pure', correct: false },
-        { id: 'q2d', text: 'Point chaud', correct: true },
+        { id: 'q2a', text: L('Present'), correct: true },
+        { id: 'q2b', text: L('Imparfait'), correct: true },
+        { id: 'q2c', text: L('Subjonctif present'), correct: false },
+        { id: 'q2d', text: L('Futur simple'), correct: true },
       ],
     },
     {
       id: 'q3',
       kind: 'boolean',
-      prompt: 'Une nuee ardente peut depasser 100 km/h.',
+      prompt: L('Le participe passe employe avec etre s accorde avec le sujet.'),
       points: 1,
-      explanation: 'Les ecoulements pyroclastiques atteignent 100 a 700 km/h.',
+      explanation: L('Avec l auxiliaire etre, l accord se fait en genre et en nombre avec le sujet.'),
       answers: [
-        { id: 'q3v', text: 'Vrai', correct: true },
-        { id: 'q3f', text: 'Faux', correct: false },
+        { id: 'q3v', text: L('Vrai'), correct: true },
+        { id: 'q3f', text: L('Faux'), correct: false },
       ],
     },
   ],
@@ -98,7 +99,8 @@ describe('correction de quiz', () => {
   it('expose la correction et les bonnes reponses pour chaque question', () => {
     const result = gradeQuiz(quiz, {});
     for (const question of result.questions) {
-      expect(question.explanation.length).toBeGreaterThan(0);
+      expect(question.explanation.fr.length).toBeGreaterThan(0);
+      expect(question.explanation.en.length).toBeGreaterThan(0);
       expect(question.correctAnswerIds.length).toBeGreaterThan(0);
     }
   });

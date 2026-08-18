@@ -1,4 +1,4 @@
-import type { Device, LessonProgress, QuizAttempt, SecurityEvent, SessionToken, User } from '@lms/core';
+import { DEFAULT_LOCALE, type Device, type LessonProgress, type Locale, type QuizAttempt, type SecurityEvent, type SessionToken, type User } from '@lms/core';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -13,6 +13,7 @@ export interface PersistedState {
   readonly attempts: readonly QuizAttempt[];
   readonly events: readonly SecurityEvent[];
   readonly theme: ThemeName;
+  readonly locale: Locale;
 }
 
 export const STORAGE_KEY = 'magmatica.state.v1';
@@ -29,6 +30,7 @@ export const EMPTY_STATE: PersistedState = {
   attempts: [],
   events: [],
   theme: 'dark',
+  locale: DEFAULT_LOCALE,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

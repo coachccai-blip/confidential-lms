@@ -1,15 +1,16 @@
+import type { LocalizedText } from './locale';
 import type { Question, Quiz, QuizAttempt } from './types';
 
 export interface GradedQuestion {
   readonly questionId: string;
-  readonly prompt: string;
+  readonly prompt: LocalizedText;
   readonly kind: Question['kind'];
   readonly selected: readonly string[];
   readonly correctAnswerIds: readonly string[];
   readonly correct: boolean;
   readonly earned: number;
   readonly possible: number;
-  readonly explanation: string;
+  readonly explanation: LocalizedText;
   readonly answered: boolean;
 }
 

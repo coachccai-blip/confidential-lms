@@ -1,0 +1,358 @@
+/* ---------------- Mots difficiles et fenêtre de définition ---------------- */
+
+/* Terme cliquable dans le corps d'une leçon. */
+.gloss {
+  display: inline;
+  padding: 0 1px;
+  color: var(--accent);
+  font-weight: 560;
+  border-bottom: 1px dashed var(--accent-border);
+  cursor: help;
+  transition: background var(--speed) var(--ease), border-color var(--speed) var(--ease);
+  border-radius: 3px;
+}
+
+.gloss:hover,
+.gloss:focus-visible {
+  background: var(--accent-soft);
+  border-bottom-color: var(--accent);
+}
+
+.gloss::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: 4px;
+  opacity: 0.7;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: rgba(3, 10, 20, 0.62);
+  backdrop-filter: blur(6px);
+  animation: modal-fade 140ms var(--ease);
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: min(80vh, 720px);
+  overflow-y: auto;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+  animation: modal-rise 200ms var(--ease);
+}
+
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal__head {
+  position: relative;
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  background:
+    radial-gradient(420px 200px at 88% -60%, rgba(56, 189, 248, 0.3), transparent 70%),
+    linear-gradient(135deg, var(--deep-2), var(--deep));
+  color: var(--on-deep-secondary);
+}
+
+.modal__eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 620;
+  color: var(--ocean-1);
+}
+
+.modal__term {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.modal__term h2 {
+  color: var(--on-deep);
+  font-size: 1.5rem;
+}
+
+.modal__ipa {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--on-deep-muted);
+}
+
+.modal__pos {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--on-deep-secondary);
+}
+
+.modal__close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--on-deep-secondary);
+  background: rgba(148, 197, 245, 0.12);
+  border: 1px solid var(--deep-border);
+  transition: background var(--speed) var(--ease);
+}
+
+.modal__close:hover {
+  background: rgba(148, 197, 245, 0.24);
+  color: var(--on-deep);
+}
+
+.modal__body {
+  padding: var(--space-2) 0 var(--space-2);
+}
+
+/* Une définition par langue, empilées : l'apprenant compare d'un coup d'œil. */
+.definition {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.definition:last-child {
+  border-bottom: none;
+}
+
+.definition__lang {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding-top: 4px;
+}
+
+.definition--active .definition__lang {
+  color: var(--accent);
+}
+
+.definition--active {
+  background: var(--accent-soft);
+}
+
+.definition p {
+  color: var(--text-secondary);
+}
+
+.definition--active p {
+  color: var(--text);
+}
+
+.modal__example {
+  margin: 0 var(--space-6) var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--panel-2);
+}
+
+.modal__example q {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--text);
+  font-style: italic;
+}
+
+.modal__example span {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+}
+
+/* ---------------- Sélecteur de langue ---------------- */
+
+.lang-switch {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  gap: 1px;
+}
+
+.lang-switch__btn {
+  padding: 4px 11px;
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 620;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
+}
+
+.lang-switch__btn:hover {
+  color: var(--text);
+}
+
+.lang-switch__btn--active {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+
+.lang-switch--deep {
+  border-color: var(--deep-border);
+  background: rgba(148, 197, 245, 0.1);
+}
+
+.lang-switch--deep .lang-switch__btn {
+  color: var(--on-deep-muted);
+}
+
+.lang-switch--deep .lang-switch__btn:hover {
+  color: var(--on-deep);
+}
+
+.lang-switch--deep .lang-switch__btn--active {
+  background: var(--ocean-1);
+  color: #04121f;
+}
+
+/* ---------------- Blocs propres aux cours de langue ---------------- */
+
+.examples {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.examples__title {
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  font-weight: 620;
+}
+
+.examples__item {
+  display: grid;
+  gap: 3px;
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.examples__item:last-child {
+  border-bottom: none;
+}
+
+.examples__fr {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.examples__fr::before {
+  content: '›';
+  color: var(--accent);
+  margin-right: var(--space-2);
+  font-weight: 700;
+}
+
+.examples__item--incorrect .examples__fr {
+  color: var(--danger);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.examples__item--incorrect .examples__fr::before {
+  content: '✗';
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.examples__gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  padding-left: 18px;
+}
+
+.conj {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.conj__title {
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  font-weight: 620;
+}
+
+.conj table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.conj th {
+  text-align: left;
+  padding: var(--space-2) var(--space-5);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  font-weight: 620;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.conj td {
+  padding: 7px var(--space-5);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.conj tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.conj__pronoun {
+  color: var(--text-muted);
+  white-space: nowrap;
+  width: 1%;
+}
+
+.conj__note {
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--panel-2);
+}

@@ -1,8 +1,10 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppProvider, useApp } from './state/app-context';
+import { GlossaryProvider } from './components/GlossaryProvider';
 import { ScrollToTop } from './components/ScrollToTop';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { CataloguePage } from './pages/CataloguePage';
 import { CoursePage } from './pages/CoursePage';
 import { LessonPage } from './pages/LessonPage';
 import { QuizPage } from './pages/QuizPage';
@@ -27,6 +29,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <DashboardPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/app/catalogue"
+        element={
+          <RequireAuth>
+            <CataloguePage />
           </RequireAuth>
         }
       />
@@ -88,7 +98,9 @@ export function App() {
     <AppProvider>
       <HashRouter>
         <ScrollToTop />
-        <AppRoutes />
+        <GlossaryProvider>
+          <AppRoutes />
+        </GlossaryProvider>
       </HashRouter>
     </AppProvider>
   );

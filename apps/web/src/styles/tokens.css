@@ -1,10 +1,18 @@
 /* ------------------------------------------------------------------
-   Design tokens — palette sombre par defaut, palette claire au choix.
-   Inspiration : interfaces Linear / Notion, accent « magma ».
+   Design tokens — thème « bleu océan ».
+
+   Trois familles de surfaces :
+   - `bg` / `panel`   : la surface courante, claire ou sombre selon le thème ;
+   - `deep`           : le bleu profond, IDENTIQUE dans les deux thèmes, qui
+                        porte les titres en blanc (barre latérale, en-têtes
+                        de page, bandeau de connexion) ;
+   - `accent`         : l'azur de surface, réservé aux actions et aux repères.
    ------------------------------------------------------------------ */
 
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Pile système enrichie des faces CJK : aucun appel réseau externe. */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue',
+    'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   --radius-xs: 6px;
@@ -28,90 +36,103 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --speed: 180ms;
 
-  --ember-1: #ffb020;
-  --ember-2: #ff7a2f;
-  --ember-3: #e2453b;
-  --accent-gradient: linear-gradient(135deg, var(--ember-1), var(--ember-3));
+  /* Bleus de référence de la marque */
+  --ocean-1: #67e8f9; /* écume */
+  --ocean-2: #38bdf8; /* azur */
+  --ocean-3: #2563eb; /* large */
+  --ocean-4: #0b1f3a; /* profondeur */
+  --ocean-5: #061323; /* abysse */
+  --accent-gradient: linear-gradient(135deg, var(--ocean-1), var(--ocean-3));
 
-  --sidebar-w: 268px;
+  /* Surface profonde, commune aux deux thèmes : titres blancs garantis. */
+  --deep: #071527;
+  --deep-2: #0c2140;
+  --deep-border: rgba(148, 197, 245, 0.16);
+  --on-deep: #ffffff;
+  --on-deep-secondary: #c2d6ee;
+  --on-deep-muted: #8ba4c2;
+
+  --sidebar-w: 272px;
   --content-max: 760px;
 }
 
-/* Theme sombre (defaut) */
+/* ---------------- Thème sombre (défaut) ---------------- */
 :root,
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --bg: #08090b;
-  --bg-elevated: #0d0f12;
-  --panel: #111317;
-  --panel-2: #15181d;
-  --panel-hover: #1a1e24;
-  --border: #21252c;
-  --border-strong: #2c323b;
+  --bg: #050a12;
+  --bg-elevated: #0a111d;
+  --panel: #0e1726;
+  --panel-2: #121d30;
+  --panel-hover: #18253b;
+  --border: #1d2b40;
+  --border-strong: #2a3c56;
 
-  --text: #edeff3;
-  --text-secondary: #b3b9c4;
-  --text-muted: #7c838f;
-  --text-inverse: #0a0b0d;
+  --text: #f1f6fb;
+  --text-secondary: #aabbcf;
+  --text-muted: #74869e;
+  --text-inverse: #05101d;
 
-  --accent: #ff8a3d;
-  --accent-hover: #ff9d5c;
-  --accent-soft: rgba(255, 138, 61, 0.14);
-  --accent-border: rgba(255, 138, 61, 0.32);
+  --accent: #4cc4f5;
+  --accent-hover: #6fd2f8;
+  --accent-soft: rgba(76, 196, 245, 0.14);
+  --accent-border: rgba(76, 196, 245, 0.34);
+  --accent-on: #04121f;
 
-  --success: #3ecf8e;
-  --success-soft: rgba(62, 207, 142, 0.13);
-  --warning: #f5b544;
-  --warning-soft: rgba(245, 181, 68, 0.13);
-  --danger: #f2635a;
-  --danger-soft: rgba(242, 99, 90, 0.13);
-  --info: #5aa9f8;
-  --info-soft: rgba(90, 169, 248, 0.13);
+  --success: #2dd4a7;
+  --success-soft: rgba(45, 212, 167, 0.13);
+  --warning: #f2b544;
+  --warning-soft: rgba(242, 181, 68, 0.13);
+  --danger: #f4685f;
+  --danger-soft: rgba(244, 104, 95, 0.13);
+  --info: #6aa8f7;
+  --info-soft: rgba(106, 168, 247, 0.13);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.8);
-  --shadow-lg: 0 24px 64px -24px rgba(0, 0, 0, 0.9);
+  --shadow-sm: 0 1px 2px rgba(2, 8, 18, 0.6);
+  --shadow-md: 0 10px 28px -14px rgba(2, 8, 18, 0.9);
+  --shadow-lg: 0 28px 70px -28px rgba(2, 8, 18, 0.95);
 
-  --watermark-color: rgba(255, 255, 255, 0.085);
-  --grid-line: rgba(255, 255, 255, 0.028);
+  --watermark-color: rgba(210, 232, 250, 0.085);
+  --grid-line: rgba(140, 190, 240, 0.05);
 }
 
-/* Theme clair */
+/* ---------------- Thème clair ---------------- */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --bg: #f7f8fa;
+  --bg: #f1f6fb;
   --bg-elevated: #ffffff;
   --panel: #ffffff;
-  --panel-2: #f4f5f8;
-  --panel-hover: #eef0f4;
-  --border: #e4e7ec;
-  --border-strong: #d3d8e0;
+  --panel-2: #f2f7fc;
+  --panel-hover: #e8f1f9;
+  --border: #dce7f2;
+  --border-strong: #c4d5e6;
 
-  --text: #10131a;
-  --text-secondary: #4a515e;
-  --text-muted: #79808d;
+  --text: #0a1725;
+  --text-secondary: #405670;
+  --text-muted: #69809a;
   --text-inverse: #ffffff;
 
-  --accent: #d9541e;
-  --accent-hover: #c04716;
-  --accent-soft: rgba(217, 84, 30, 0.09);
-  --accent-border: rgba(217, 84, 30, 0.26);
+  --accent: #0a69b4;
+  --accent-hover: #085795;
+  --accent-soft: rgba(10, 105, 180, 0.09);
+  --accent-border: rgba(10, 105, 180, 0.26);
+  --accent-on: #ffffff;
 
-  --success: #17845a;
-  --success-soft: rgba(23, 132, 90, 0.1);
-  --warning: #a86a10;
-  --warning-soft: rgba(168, 106, 16, 0.1);
-  --danger: #c0392f;
-  --danger-soft: rgba(192, 57, 47, 0.09);
-  --info: #1c6fc4;
-  --info-soft: rgba(28, 111, 196, 0.09);
+  --success: #0f8a6a;
+  --success-soft: rgba(15, 138, 106, 0.1);
+  --warning: #a06a0d;
+  --warning-soft: rgba(160, 106, 13, 0.1);
+  --danger: #c33b31;
+  --danger-soft: rgba(195, 59, 49, 0.09);
+  --info: #1668c4;
+  --info-soft: rgba(22, 104, 196, 0.09);
 
-  --shadow-sm: 0 1px 2px rgba(16, 19, 26, 0.06);
-  --shadow-md: 0 10px 30px -18px rgba(16, 19, 26, 0.35);
-  --shadow-lg: 0 30px 70px -32px rgba(16, 19, 26, 0.35);
+  --shadow-sm: 0 1px 2px rgba(10, 23, 37, 0.06);
+  --shadow-md: 0 12px 30px -18px rgba(10, 23, 37, 0.35);
+  --shadow-lg: 0 30px 70px -32px rgba(10, 23, 37, 0.35);
 
-  --watermark-color: rgba(16, 19, 26, 0.115);
-  --grid-line: rgba(16, 19, 26, 0.03);
+  --watermark-color: rgba(10, 23, 37, 0.12);
+  --grid-line: rgba(10, 23, 37, 0.035);
 }

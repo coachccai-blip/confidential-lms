@@ -1,47 +1,28 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useApp } from '../state/app-context';
+import { D, useI18n } from '../i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 import {
   IconEyeOff,
   IconFingerprint,
+  IconLayers,
   IconLock,
-  IconShieldCheck,
-  IconSun,
   IconMoon,
-  IconVolcano,
+  IconSun,
 } from '../components/Icons';
 import { Toasts } from '../components/Toasts';
 
-const FEATURES = [
-  {
-    icon: IconFingerprint,
-    title: 'Filigrane nominatif',
-    text: 'Chaque écran affiche votre email et votre téléphone ; chaque texte porte une empreinte invisible qui identifie la source d’une fuite.',
-  },
-  {
-    icon: IconLock,
-    title: 'Copie, impression et export bloqués',
-    text: 'Sélection, clic droit, copier-coller, Ctrl+P et sauvegarde de page sont neutralisés sur les écrans de contenu.',
-  },
-  {
-    icon: IconEyeOff,
-    title: 'Masquage automatique',
-    text: 'Le contenu disparaît dès que la fenêtre perd le focus ou passe en arrière-plan.',
-  },
-  {
-    icon: IconShieldCheck,
-    title: 'Session unique, 3 appareils maximum',
-    text: 'Une nouvelle connexion révoque les précédentes. Chaque événement est horodaté dans votre journal de sécurité.',
-  },
-] as const;
+const FEATURE_ICONS = [IconFingerprint, IconEyeOff, IconLayers, IconLock] as const;
 
 export function LoginPage() {
   const { user, signIn, theme, toggleTheme, pushToast } = useApp();
+  const { l } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState('marie.dubois@exemple.fr');
   const [phone, setPhone] = useState('+33 6 12 34 56 78');
   const [name, setName] = useState('Marie Dubois');
-  const [password, setPassword] = useState('demo-magmatica');
+  const [password, setPassword] = useState('demo-lumiere');
   const [error, setError] = useState<string | null>(null);
 
   if (user) return <Navigate to="/app" replace />;
@@ -51,15 +32,15 @@ export function LoginPage() {
     setError(null);
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Adresse email invalide.');
+      setError(l(D.login.errorEmail));
       return;
     }
     if (phone.replace(/\D/g, '').length < 8) {
-      setError('Numéro de téléphone invalide — il sert au filigrane de traçabilité.');
+      setError(l(D.login.errorPhone));
       return;
     }
     if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      setError(l(D.login.errorPassword));
       return;
     }
 
@@ -68,7 +49,7 @@ export function LoginPage() {
       setError(outcome.message);
       return;
     }
-    pushToast({ tone: 'success', title: 'Connexion établie', text: 'Protections de contenu activées sur cet appareil.' });
+    pushToast({ tone: 'success', title: l(D.toast.signedInTitle), text: l(D.toast.signedInText) });
     navigate('/app');
   }
 
@@ -77,60 +58,62 @@ export function LoginPage() {
       <section className="auth__aside">
         <div className="brand">
           <span className="brand__mark">
-            <IconVolcano size={19} style={{ color: '#1a0d04' }} />
+            <IconLayers size={19} style={{ color: '#04121f' }} />
           </span>
           <span>
-            <span className="brand__name">Magmatica</span>
+            <span className="brand__name">{l(D.brand.name)}</span>
             <span className="brand__tag" style={{ display: 'block' }}>
-              Formation protégée
+              {l(D.brand.tagline)}
             </span>
           </span>
         </div>
 
         <div className="auth__pitch">
-          <h1>Vos formations, protégées et traçables.</h1>
-          <p>
-            Plateforme de diffusion de contenus pédagogiques à forte valeur commerciale. Chaque leçon est marquée au nom
-            de l’apprenant qui la consulte, et chaque tentative de copie est enregistrée.
-          </p>
+          <h1>{l(D.login.headline)}</h1>
+          <p>{l(D.login.intro)}</p>
 
           <div className="auth__features">
-            {FEATURES.map((feature) => (
-              <div className="auth__feature" key={feature.title}>
-                <feature.icon size={17} />
-                <span>
-                  <strong style={{ color: 'var(--text)' }}>{feature.title}.</strong> {feature.text}
-                </span>
-              </div>
-            ))}
+            {D.login.features.map((feature, index) => {
+              const Icon = FEATURE_ICONS[index] ?? IconLock;
+              return (
+                <div className="auth__feature" key={index}>
+                  <Icon size={17} />
+                  <span>
+                    <strong>{l(feature.title)}.</strong> {l(feature.text)}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        <p className="muted" style={{ fontSize: '0.78rem', position: 'relative', maxWidth: '52ch' }}>
-          Démonstration web publique. Les protections système les plus fortes — blocage réel des captures d’écran —
-          nécessitent les applications Electron et mobile décrites dans le README du projet.
+        <p style={{ fontSize: '0.78rem', position: 'relative', maxWidth: '52ch', color: 'var(--on-deep-muted)' }}>
+          {l(D.login.disclaimer)}
         </p>
       </section>
 
       <section className="auth__panel">
         <form className="auth__form" onSubmit={onSubmit}>
           <div className="row row--between">
-            <h2>Connexion apprenant</h2>
-            <button type="button" className="icon-btn" onClick={toggleTheme} aria-label="Changer de thème">
-              {theme === 'dark' ? <IconSun size={17} /> : <IconMoon size={17} />}
-            </button>
+            <h2>{l(D.login.title)}</h2>
+            <div className="row" style={{ gap: 'var(--space-2)' }}>
+              <LanguageSwitch />
+              <button type="button" className="icon-btn" onClick={toggleTheme} aria-label={l(D.common.darkMode)}>
+                {theme === 'dark' ? <IconSun size={17} /> : <IconMoon size={17} />}
+              </button>
+            </div>
           </div>
 
           <div className="field">
             <label className="field__label" htmlFor="name">
-              Nom complet
+              {l(D.login.name)}
             </label>
             <input id="name" className="input" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
           </div>
 
           <div className="field">
             <label className="field__label" htmlFor="email">
-              Adresse email
+              {l(D.login.email)}
             </label>
             <input
               id="email"
@@ -141,12 +124,12 @@ export function LoginPage() {
               autoComplete="email"
               required
             />
-            <span className="field__hint">Affichée dans le filigrane de chaque écran de contenu.</span>
+            <span className="field__hint">{l(D.login.emailHint)}</span>
           </div>
 
           <div className="field">
             <label className="field__label" htmlFor="phone">
-              Téléphone
+              {l(D.login.phone)}
             </label>
             <input
               id="phone"
@@ -156,12 +139,12 @@ export function LoginPage() {
               autoComplete="tel"
               required
             />
-            <span className="field__hint">Second marqueur de traçabilité, exigé par la politique de diffusion.</span>
+            <span className="field__hint">{l(D.login.phoneHint)}</span>
           </div>
 
           <div className="field">
             <label className="field__label" htmlFor="password">
-              Mot de passe
+              {l(D.login.password)}
             </label>
             <input
               id="password"
@@ -184,17 +167,12 @@ export function LoginPage() {
           ) : null}
 
           <button type="submit" className="btn btn--primary btn--lg btn--block">
-            Accéder à mes formations
+            {l(D.login.submit)}
           </button>
 
           <div className="auth__demo">
-            <strong style={{ color: 'var(--text-secondary)' }}>Mode démonstration</strong>
-            <span>
-              Aucun serveur n’est interrogé : l’authentification, les sessions et la progression sont simulées localement
-              pour rendre les mécanismes de protection observables. Utilisez une adresse commençant par
-              <span className="mono"> admin@ </span>
-              pour ouvrir l’espace d’administration.
-            </span>
+            <strong style={{ color: 'var(--text-secondary)' }}>{l(D.login.demoTitle)}</strong>
+            <span>{l(D.login.demoText)}</span>
           </div>
         </form>
       </section>

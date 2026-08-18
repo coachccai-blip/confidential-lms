@@ -156,19 +156,19 @@
 .option--selected .option__box {
   border-color: var(--accent);
   background: var(--accent);
-  color: #180d05;
+  color: var(--accent-on);
 }
 
 .option--correct .option__box {
   border-color: var(--success);
   background: var(--success);
-  color: #04150d;
+  color: #04150f;
 }
 
 .option--incorrect .option__box {
   border-color: var(--danger);
   background: var(--danger);
-  color: #1b0605;
+  color: #1d0605;
 }
 
 .option--missed .option__box {

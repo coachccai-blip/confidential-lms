@@ -6,6 +6,7 @@ import {
   lessonNeighbours,
   resolveResumeLesson,
 } from '../progress';
+import { sameInAllLocales as L } from '../locale';
 import type { Course, LessonProgress } from '../types';
 
 const lesson = (id: string, moduleId: string, durationMin = 10) =>
@@ -13,8 +14,8 @@ const lesson = (id: string, moduleId: string, durationMin = 10) =>
     id,
     moduleId,
     kind: 'text' as const,
-    title: `Lecon ${id}`,
-    summary: '',
+    title: L(`Lecon ${id}`),
+    summary: L(''),
     durationMin,
     blocks: [],
   });
@@ -22,10 +23,11 @@ const lesson = (id: string, moduleId: string, durationMin = 10) =>
 const course: Course = {
   id: 'crs_1',
   slug: 'test',
-  title: 'Cours de test',
-  subtitle: '',
-  description: '',
-  level: 'debutant',
+  category: 'grammaire',
+  title: L('Cours de test'),
+  subtitle: L(''),
+  description: L(''),
+  level: 'B1',
   status: 'published',
   accentFrom: '#000',
   accentTo: '#fff',
@@ -34,15 +36,15 @@ const course: Course = {
     {
       id: 'mod_1',
       courseId: 'crs_1',
-      title: 'Module 1',
-      summary: '',
+      title: L('Module 1'),
+      summary: L(''),
       lessons: [lesson('l1', 'mod_1'), lesson('l2', 'mod_1', 15)],
     },
     {
       id: 'mod_2',
       courseId: 'crs_1',
-      title: 'Module 2',
-      summary: '',
+      title: L('Module 2'),
+      summary: L(''),
       lessons: [lesson('l3', 'mod_2', 20), lesson('l4', 'mod_2', 5)],
     },
   ],

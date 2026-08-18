@@ -1,160 +1,130 @@
 import { Link } from 'react-router-dom';
-import { bestScore, computeCourseProgress, estimatedRemainingMinutes, isQuizPassed } from '@lms/core';
+import { computeCourseProgress, isQuizPassed } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar, ProgressRing } from '../components/Progress';
-import { courses, volcansCourse } from '../content';
-import { formatDuration } from '../lib/format';
+import { Figure, allLessons, courses, quizzes } from '../content';
 import { useApp } from '../state/app-context';
-import { IconAward, IconBook, IconClock, IconPlay, IconShieldCheck, IconSparkle } from '../components/Icons';
-
-const TOTAL_MINUTES = volcansCourse.modules.flatMap((m) => m.lessons).reduce((sum, l) => sum + l.durationMin, 0);
+import { D, formatDuration, useI18n } from '../i18n';
+import { IconBook, IconChevronRight, IconPlay, IconShieldCheck, IconSparkle } from '../components/Icons';
+import { CourseCatalogue } from '../components/CourseCatalogue';
 
 export function DashboardPage() {
   const { user, state } = useApp();
-  const progress = computeCourseProgress(volcansCourse, state.progress);
-  const remaining = estimatedRemainingMinutes(volcansCourse, state.progress);
-  const quizzesPassed = ['qz_volc_1', 'qz_volc_2', 'qz_volc_3', 'qz_volc_final'].filter((id) =>
-    isQuizPassed(id, state.attempts),
-  ).length;
-  const finalScore = bestScore('qz_volc_final', state.attempts);
+  const { l, locale } = useI18n();
+
+  const lessons = allLessons();
+  const completed = lessons.filter((lesson) => state.progress[lesson.id]?.completed).length;
+  const percentage = lessons.length === 0 ? 0 : Math.round((completed / lessons.length) * 100);
+  const remaining = lessons
+    .filter((lesson) => !state.progress[lesson.id]?.completed)
+    .reduce((sum, lesson) => sum + lesson.durationMin, 0);
+  const quizIds = Object.keys(quizzes);
+  const quizzesPassed = quizIds.filter((id) => isQuizPassed(id, state.attempts)).length;
+
+  // Le parcours à reprendre : le premier commencé mais non terminé, sinon le premier du catalogue.
+  const started = courses.filter((course) => computeCourseProgress(course, state.progress).started);
+  const current =
+    started.find((course) => !computeCourseProgress(course, state.progress).finished) ?? started[0] ?? courses[0];
+  const currentProgress = current ? computeCourseProgress(current, state.progress) : null;
+  const resumeLesson = currentProgress?.resumeLesson ?? null;
+  const resumeHref =
+    current && resumeLesson
+      ? resumeLesson.kind === 'quiz'
+        ? `/app/cours/${current.slug}/quiz/${resumeLesson.quizId}`
+        : `/app/cours/${current.slug}/lecon/${resumeLesson.id}`
+      : '/app/catalogue';
+
   const firstName = (user?.displayName ?? '').split(' ')[0] ?? '';
 
   return (
-    <AppShell title="Tableau de bord" wide>
-      <div className="page__header">
-        <div>
-          <h1>Bonjour {firstName}</h1>
-          <p>
-            {progress.started
-              ? 'Reprenez votre parcours là où vous vous êtes arrêté. Votre progression est enregistrée à chaque leçon terminée.'
-              : 'Votre parcours certifiant vous attend. Comptez environ ' + formatDuration(TOTAL_MINUTES) + ' au total.'}
-          </p>
+    <AppShell title={l(D.nav.dashboard)} wide>
+      <header className="pagehead">
+        <div className="pagehead__text">
+          <span className="pagehead__eyebrow">{l(D.dashboard.eyebrow)}</span>
+          <h1>{l(D.dashboard.greeting(firstName))}</h1>
+          <p>{percentage > 0 ? l(D.dashboard.introStarted) : l(D.dashboard.introNew)}</p>
         </div>
-      </div>
+        <div className="pagehead__aside">
+          <ProgressRing value={percentage} size={104} />
+        </div>
+      </header>
 
       <div className="grid grid--4" style={{ marginBottom: 'var(--space-8)' }}>
         <div className="stat">
-          <span className="stat__label">Progression</span>
-          <span className="stat__value">{progress.percentage}%</span>
-          <ProgressBar value={progress.percentage} thin />
+          <span className="stat__label">{l(D.dashboard.statProgress)}</span>
+          <span className="stat__value">{percentage}%</span>
+          <ProgressBar value={percentage} thin />
         </div>
         <div className="stat">
-          <span className="stat__label">Étapes terminées</span>
+          <span className="stat__label">{l(D.dashboard.statSteps)}</span>
           <span className="stat__value">
-            {progress.completed}
+            {completed}
             <span className="muted" style={{ fontSize: '1rem', fontWeight: 500 }}>
               {' '}
-              / {progress.total}
+              / {lessons.length}
             </span>
           </span>
-          <span className="stat__hint">sur 4 modules</span>
+          <span className="stat__hint">{l(D.dashboard.statStepsHint(courses.length))}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Quiz réussis</span>
+          <span className="stat__label">{l(D.dashboard.statQuizzes)}</span>
           <span className="stat__value">
             {quizzesPassed}
             <span className="muted" style={{ fontSize: '1rem', fontWeight: 500 }}>
               {' '}
-              / 4
+              / {quizIds.length}
             </span>
           </span>
-          <span className="stat__hint">{finalScore !== null ? `Examen final : ${finalScore} %` : 'Examen final non passé'}</span>
+          <span className="stat__hint">{l(D.dashboard.statQuizzesHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Temps restant estimé</span>
-          <span className="stat__value">{formatDuration(remaining)}</span>
-          <span className="stat__hint">{remaining} minutes de contenu</span>
+          <span className="stat__label">{l(D.dashboard.statTime)}</span>
+          <span className="stat__value">{formatDuration(remaining, locale)}</span>
+          <span className="stat__hint">{l(D.dashboard.statTimeHint(remaining))}</span>
         </div>
       </div>
 
-      <section className="card" style={{ marginBottom: 'var(--space-8)', padding: 0, overflow: 'hidden' }}>
-        <div style={{ display: 'flex', gap: 'var(--space-8)', padding: 'var(--space-8)', flexWrap: 'wrap', alignItems: 'center' }}>
-          <ProgressRing value={progress.percentage} size={116} />
-          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <span className="badge badge--accent">
-              <IconSparkle size={12} /> Parcours en cours
-            </span>
-            <h2 style={{ margin: 'var(--space-3) 0 var(--space-2)' }}>{volcansCourse.title}</h2>
-            <p className="secondary" style={{ maxWidth: '58ch' }}>
-              {progress.resumeLesson
-                ? `Prochaine étape : ${progress.resumeLesson.title}`
-                : 'Parcours terminé — félicitations.'}
-            </p>
-            <div className="row" style={{ marginTop: 'var(--space-5)', flexWrap: 'wrap' }}>
-              {progress.resumeLesson ? (
-                <Link
-                  className="btn btn--primary"
-                  to={
-                    progress.resumeLesson.kind === 'quiz'
-                      ? `/app/cours/volcans/quiz/${progress.resumeLesson.quizId}`
-                      : `/app/cours/volcans/lecon/${progress.resumeLesson.id}`
-                  }
-                >
-                  <IconPlay size={15} /> {progress.started ? 'Reprendre' : 'Commencer le parcours'}
+      {current && currentProgress ? (
+        <section className="card" style={{ marginBottom: 'var(--space-8)', padding: 0, overflow: 'hidden' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-8)', padding: 'var(--space-8)', flexWrap: 'wrap', alignItems: 'center' }}>
+            <ProgressRing value={currentProgress.percentage} size={112} />
+            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+              <span className="badge badge--accent">
+                <IconSparkle size={12} /> {l(D.categories[current.category])}
+              </span>
+              <h2 style={{ margin: 'var(--space-3) 0 var(--space-2)' }}>{l(current.title)}</h2>
+              <p className="secondary" style={{ maxWidth: '58ch' }}>
+                {resumeLesson ? l(D.dashboard.nextStep(l(resumeLesson.title))) : l(D.dashboard.allDone)}
+              </p>
+              <div className="row" style={{ marginTop: 'var(--space-5)', flexWrap: 'wrap' }}>
+                <Link className="btn btn--primary" to={resumeHref}>
+                  <IconPlay size={15} /> {currentProgress.started ? l(D.dashboard.resume) : l(D.dashboard.start)}
                 </Link>
-              ) : null}
-              <Link className="btn btn--secondary" to="/app/cours/volcans">
-                <IconBook size={15} /> Voir le sommaire
-              </Link>
+                <Link className="btn btn--secondary" to={`/app/cours/${current.slug}`}>
+                  <IconBook size={15} /> {l(D.dashboard.syllabus)}
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="shield-bar" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderBottom: 'none' }}>
-          <IconShieldCheck size={14} />
-          Contenu filigrané au nom de {user?.email} · copie, impression et export désactivés · chaque accès est journalisé.
-        </div>
-      </section>
+          <div className="shield-bar" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderBottom: 'none' }}>
+            <IconShieldCheck size={14} />
+            {l(D.dashboard.protectedNotice(user?.email ?? ''))}
+          </div>
+        </section>
+      ) : null}
 
-      <h2 style={{ marginBottom: 'var(--space-4)' }}>Catalogue</h2>
-      <div className="grid grid--3">
-        {courses.map((course) => {
-          const isPublished = course.status === 'published';
-          const courseProgress = isPublished ? computeCourseProgress(course, state.progress) : null;
-          const inner = (
-            <>
-              <div
-                className="course-card__cover"
-                style={{ background: `linear-gradient(135deg, ${course.accentFrom}, ${course.accentTo})`, opacity: isPublished ? 1 : 0.4 }}
-              />
-              <div className="course-card__body">
-                <div className="wrap">
-                  {course.tags.map((tag) => (
-                    <span className="badge" key={tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <span className="course-card__title">{course.title}</span>
-                <span className="course-card__desc">{course.description}</span>
-                {courseProgress ? <ProgressBar value={courseProgress.percentage} thin /> : null}
-                <div className="course-card__foot">
-                  <span className="row" style={{ gap: 6 }}>
-                    <IconClock size={13} />
-                    {isPublished ? formatDuration(TOTAL_MINUTES) : 'Bientôt'}
-                  </span>
-                  {isPublished ? (
-                    <span className="badge badge--success">
-                      <IconAward size={12} /> Certifiant
-                    </span>
-                  ) : (
-                    <span className="badge">En préparation</span>
-                  )}
-                </div>
-              </div>
-            </>
-          );
+      <figure className="figure" style={{ marginBottom: 'var(--space-8)' }}>
+        <Figure figureId="cecrl-echelle" locale={locale} />
+      </figure>
 
-          return isPublished ? (
-            <Link className="course-card" to={`/app/cours/${course.slug}`} key={course.id}>
-              {inner}
-            </Link>
-          ) : (
-            <div className="course-card" key={course.id} style={{ cursor: 'not-allowed' }}>
-              {inner}
-            </div>
-          );
-        })}
+      <div className="row row--between" style={{ marginBottom: 'var(--space-5)', flexWrap: 'wrap' }}>
+        <h2>{l(D.dashboard.catalogue)}</h2>
+        <Link className="btn btn--secondary" to="/app/catalogue">
+          {l(D.nav.catalogue)} <IconChevronRight size={15} />
+        </Link>
       </div>
+      <CourseCatalogue />
+
     </AppShell>
   );
 }

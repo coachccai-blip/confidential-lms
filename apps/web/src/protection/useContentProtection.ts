@@ -3,9 +3,25 @@ import type { SecurityEventType } from '@lms/core';
 
 export type ShieldReason = 'blur' | 'hidden' | 'print' | null;
 
+export interface ProtectionMessage {
+  readonly title: string;
+  readonly text: string;
+}
+
+/** Libellés fournis par l'appelant : la couche protection reste sans langue. */
+export interface ProtectionMessages {
+  readonly clipboardNotice: string;
+  readonly copy: ProtectionMessage;
+  readonly save: ProtectionMessage;
+  readonly print: ProtectionMessage;
+  readonly screenshot: ProtectionMessage;
+  readonly devtools: ProtectionMessage;
+}
+
 export interface ProtectionOptions {
   readonly enabled: boolean;
   readonly fingerprint: string;
+  readonly messages: ProtectionMessages;
   readonly onEvent: (type: SecurityEventType, metadata?: Record<string, string | number | boolean>) => void;
   readonly onNotice: (notice: { readonly tone: 'warning' | 'danger' | 'info'; readonly title: string; readonly text: string }) => void;
 }
@@ -25,7 +41,7 @@ const DEVTOOLS_DELTA_PX = 170;
  * (`setContentProtection`) ou Android (`FLAG_SECURE`).
  */
 export function useContentProtection(options: ProtectionOptions): { readonly shieldReason: ShieldReason } {
-  const { enabled, fingerprint, onEvent, onNotice } = options;
+  const { enabled, fingerprint, messages, onEvent, onNotice } = options;
   const [shieldReason, setShieldReason] = useState<ShieldReason>(null);
   const blurTimer = useRef<number | null>(null);
   const devtoolsFlagged = useRef(false);
@@ -45,7 +61,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       onNotice(payload);
     }
 
-    const notice = `Contenu protégé — Magmatica. Reproduction et diffusion interdites.\nEmpreinte de traçabilité : ${fingerprint}`;
+    const notice = `${messages.clipboardNotice}\n${fingerprint}`;
 
     function onContextMenu(event: MouseEvent) {
       event.preventDefault();
@@ -57,11 +73,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       // Le presse-papiers recoit l'avertissement filigrane, pas le contenu.
       event.clipboardData?.setData('text/plain', notice);
       onEvent('copy-blocked');
-      notify({
-        tone: 'warning',
-        title: 'Copie bloquée',
-        text: 'Le contenu est protégé. Votre empreinte a été enregistrée dans le journal de sécurité.',
-      });
+      notify({ tone: 'warning', ...messages.copy });
     }
 
     function onCut(event: ClipboardEvent) {
@@ -84,11 +96,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
     function onBeforePrint() {
       setShieldReason('print');
       onEvent('print-blocked');
-      notify({
-        tone: 'danger',
-        title: 'Impression désactivée',
-        text: 'Le contenu de formation ne peut pas être imprimé ni exporté en PDF.',
-      });
+      notify({ tone: 'danger', ...messages.print });
       window.setTimeout(() => setShieldReason((current) => (current === 'print' ? null : current)), 2500);
     }
 
@@ -101,11 +109,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
         if (target?.closest('input, textarea')) return;
         event.preventDefault();
         onEvent('copy-blocked', { raccourci: `${event.ctrlKey ? 'Ctrl' : 'Cmd'}+${key.toUpperCase()}` });
-        notify({
-          tone: 'warning',
-          title: 'Copie bloquée',
-          text: 'Le contenu est protégé. Votre empreinte a été enregistrée dans le journal de sécurité.',
-        });
+        notify({ tone: 'warning', ...messages.copy });
       }
 
       if (meta && key === 'p') {
@@ -116,11 +120,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       if (meta && ['s', 'u'].includes(key)) {
         event.preventDefault();
         onEvent('save-blocked', { raccourci: key.toUpperCase() });
-        notify({
-          tone: 'warning',
-          title: 'Sauvegarde bloquée',
-          text: 'L’enregistrement de la page et l’affichage du code source sont désactivés.',
-        });
+        notify({ tone: 'warning', ...messages.save });
       }
 
       if (key === 'f12' || (meta && event.shiftKey && ['i', 'j', 'c'].includes(key))) {
@@ -130,11 +130,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
 
       if (key === 'printscreen') {
         onEvent('screenshot-shortcut');
-        notify({
-          tone: 'danger',
-          title: 'Capture d’écran détectée',
-          text: 'Le navigateur ne peut pas bloquer la capture. Le contenu affiché porte votre filigrane nominatif.',
-        });
+        notify({ tone: 'danger', ...messages.screenshot });
         // Tentative best-effort de neutralisation du presse-papiers.
         void navigator.clipboard?.writeText(notice).catch(() => undefined);
       }
@@ -169,11 +165,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       if (suspicious && !devtoolsFlagged.current) {
         devtoolsFlagged.current = true;
         onEvent('devtools-suspected', { ecartX: widthGap, ecartY: heightGap });
-        notify({
-          tone: 'danger',
-          title: 'Outils de développement suspectés',
-          text: 'Cet événement est horodaté dans le journal de sécurité de votre compte.',
-        });
+        notify({ tone: 'danger', ...messages.devtools });
       }
       if (!suspicious) devtoolsFlagged.current = false;
     }
@@ -211,7 +203,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       window.removeEventListener('focus', onFocus);
       window.removeEventListener('resize', onResize);
     };
-  }, [enabled, fingerprint, onEvent, onNotice]);
+  }, [enabled, fingerprint, messages, onEvent, onNotice]);
 
   return { shieldReason };
 }

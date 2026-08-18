@@ -1,11 +1,14 @@
 import { Fragment, type ReactNode } from 'react';
-import type { LessonBlock, Locale, LocalizedText } from '@lms/core';
+import { personalise, pickVariant, type LessonBlock, type Locale, type LocalizedText } from '@lms/core';
 import { Figure } from '../content';
 import { getGlossaryEntry } from '../content';
 import { ProtectedText } from '../protection';
-import { useI18n } from '../i18n';
+import { D, useI18n } from '../i18n';
+import { useApp } from '../state/app-context';
+import { InteractiveBlock } from './Interactive';
+import { Reveal } from './Reveal';
 import { useGlossary } from './GlossaryProvider';
-import { IconAlert, IconCheck, IconInfo, IconShield } from './Icons';
+import { IconAlert, IconCheck, IconInfo, IconShield, IconSparkle } from './Icons';
 
 export function slugify(text: string): string {
   return text
@@ -26,7 +29,10 @@ const INLINE = /(\[\[[^\]]+\]\]|\*\*[^*]+\*\*)/g;
 
 function RichText({ text, fingerprint }: { readonly text: string; readonly fingerprint: string }): ReactNode {
   const { open } = useGlossary();
-  const parts = text.split(INLINE).filter((part) => part.length > 0);
+  const { user } = useApp();
+  // Le jeton `{prenom}` est resolu ici, apres traduction : chaque langue
+  // place le prenom ou sa syntaxe l'exige.
+  const parts = personalise(text, user?.firstName).split(INLINE).filter((part) => part.length > 0);
 
   return (
     <>
@@ -65,13 +71,22 @@ interface BlockProps {
   readonly fingerprint: string;
   readonly locale: Locale;
   readonly l: (text: LocalizedText) => string;
+  /** Prénom de l'apprenant, injecté partout où le jeton apparaît. */
+  readonly firstName: string | undefined;
 }
 
-function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
+function BlockRenderer({ block, fingerprint, locale, l, firstName }: BlockProps) {
+  /** Raccourci : traduire puis résoudre le jeton `{prenom}`. */
+  const p = (text: LocalizedText) => personalise(l(text), firstName);
   switch (block.type) {
     case 'heading':
       return (
         <h2 id={slugify(l(block.text))}>
+          {block.emoji ? (
+            <span className="block__emoji" aria-hidden="true">
+              {block.emoji}
+            </span>
+          ) : null}
           <RichText text={l(block.text)} fingerprint={fingerprint} />
         </h2>
       );
@@ -79,6 +94,11 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
     case 'paragraph':
       return (
         <p>
+          {block.emoji ? (
+            <span className="block__emoji" aria-hidden="true">
+              {block.emoji}
+            </span>
+          ) : null}
           <RichText text={l(block.text)} fingerprint={fingerprint} />
         </p>
       );
@@ -103,7 +123,7 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
       return (
         <aside className={`callout callout--${block.tone}`}>
           <span className="callout__icon">
-            <Icon size={18} />
+            {block.emoji ? <span aria-hidden="true">{block.emoji}</span> : <Icon size={18} />}
           </span>
           <div>
             <div className="callout__title">
@@ -130,6 +150,16 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
     case 'table':
       return (
         <div className="table-wrap">
+          {block.caption ? (
+            <div className="table__caption">
+              {block.emoji ? (
+                <span className="block__emoji" aria-hidden="true">
+                  {block.emoji}
+                </span>
+              ) : null}
+              {l(block.caption)}
+            </div>
+          ) : null}
           <table className="table">
             {block.caption ? <caption className="sr-only">{l(block.caption)}</caption> : null}
             <thead>
@@ -175,7 +205,14 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
     case 'keyvalues':
       return (
         <div className="keyvalues">
-          <div className="keyvalues__title">{l(block.title)}</div>
+          <div className="keyvalues__title">
+            {block.emoji ? (
+              <span className="block__emoji" aria-hidden="true">
+                {block.emoji}
+              </span>
+            ) : null}
+            {l(block.title)}
+          </div>
           <dl>
             {block.entries.map((entry, index) => (
               <div className="keyvalues__row" key={index}>
@@ -194,11 +231,18 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
     case 'examples':
       return (
         <div className="examples">
-          <div className="examples__title">{l(block.title)}</div>
+          <div className="examples__title">
+            {block.emoji ? (
+              <span className="block__emoji" aria-hidden="true">
+                {block.emoji}
+              </span>
+            ) : null}
+            {l(block.title)}
+          </div>
           {block.items.map((item, index) => (
             <div className={item.incorrect ? 'examples__item examples__item--incorrect' : 'examples__item'} key={index}>
               <span className="examples__fr">
-                <ProtectedText fingerprint={fingerprint}>{item.fr}</ProtectedText>
+                <ProtectedText fingerprint={fingerprint}>{personalise(item.fr, firstName)}</ProtectedText>
               </span>
               <span className="examples__gloss">
                 <RichText text={l(item.gloss)} fingerprint={fingerprint} />
@@ -211,7 +255,14 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
     case 'conjugation':
       return (
         <div className="conj">
-          <div className="conj__title">{l(block.title)}</div>
+          <div className="conj__title">
+            {block.emoji ? (
+              <span className="block__emoji" aria-hidden="true">
+                {block.emoji}
+              </span>
+            ) : null}
+            {l(block.title)}
+          </div>
           <div className="table-wrap">
             <table>
               <thead>
@@ -242,23 +293,79 @@ function BlockRenderer({ block, fingerprint, locale, l }: BlockProps) {
         </div>
       );
 
+    case 'interactive':
+      return (
+        <InteractiveBlock
+          title={p(block.title)}
+          hint={p(block.hint)}
+          emoji={block.emoji}
+          widget={block.widget}
+          firstName={firstName}
+        />
+      );
+
     default:
       return null;
   }
 }
 
+/** Phrase d'accompagnement nominative, inseree dans le fil de la lecon. */
+function CoachLine({
+  text,
+  fingerprint,
+  tone = 'open',
+}: {
+  readonly text: LocalizedText;
+  readonly fingerprint: string;
+  readonly tone?: 'open' | 'mid';
+}) {
+  const { l } = useI18n();
+  return (
+    <p className={`coach coach--${tone}`}>
+      <IconSparkle size={15} className="coach__icon" />
+      <span>
+        <RichText text={l(text)} fingerprint={fingerprint} />
+      </span>
+    </p>
+  );
+}
+
 export function LessonBlocks({
   blocks,
   fingerprint,
+  lessonId,
 }: {
   readonly blocks: readonly LessonBlock[];
   readonly fingerprint: string;
+  /** Sert de graine : une lecon garde toujours la meme phrase d'accueil. */
+  readonly lessonId?: string;
 }) {
   const { l, locale } = useI18n();
+  const { user } = useApp();
+
+  const seed = lessonId ?? '';
+  const greeting = seed ? pickVariant(D.coach.greetings, seed) : null;
+  const midway = seed ? pickVariant(D.coach.midway, `${seed}#mid`) : null;
+  // L'encouragement tombe apres environ 60 % des blocs, jamais sur les deux
+  // derniers : il doit relancer la lecture, pas la conclure.
+  const midIndex = blocks.length >= 5 ? Math.min(Math.round(blocks.length * 0.6), blocks.length - 2) : -1;
+
   return (
     <div className="prose">
+      {greeting ? <CoachLine text={greeting} fingerprint={fingerprint} /> : null}
       {blocks.map((block, index) => (
-        <BlockRenderer block={block} fingerprint={fingerprint} locale={locale} l={l} key={index} />
+        <Fragment key={index}>
+          <Reveal index={index}>
+            <BlockRenderer
+              block={block}
+              fingerprint={fingerprint}
+              locale={locale}
+              l={l}
+              firstName={user?.firstName}
+            />
+          </Reveal>
+          {midway && index === midIndex ? <CoachLine text={midway} fingerprint={fingerprint} tone="mid" /> : null}
+        </Fragment>
       ))}
     </div>
   );

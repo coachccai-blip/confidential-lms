@@ -51,6 +51,7 @@ export const c2InstitutionsCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Qui fait quoi', 'Who does what', '各机构的职权'),
               headers: [t('Institution', 'Institution', '机构'), t('Rôle', 'Role', '职权'), t('Désignation', 'How it is chosen', '产生方式')],
               rows: [
@@ -63,6 +64,7 @@ export const c2InstitutionsCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🪤',
               title: t('Le lexique que la presse ne définit jamais', 'The vocabulary the press never defines', '媒体从不解释的词汇'),
               entries: [
                 { label: t('Le 49.3', 'Article 49.3', '第 49.3 条'), value: t('L’article de la Constitution qui permet d’adopter un texte sans vote, sauf si une motion de censure est votée. Devenu un mot du langage courant.', 'The constitutional article allowing a text to pass without a vote, unless a motion of no confidence succeeds. It has become an everyday word.', '宪法条款，允许法案不经表决即获通过，除非不信任案获得通过。已成为日常用语。') },
@@ -75,6 +77,7 @@ export const c2InstitutionsCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('Les surnoms de la vie politique', 'Nicknames in political life', '政坛的代称'),
               text: t(
                 'La presse désigne les institutions par leur adresse : **l’Élysée** (le président), **Matignon** (le Premier ministre), **Bercy** (l’Économie et les Finances), **le Quai d’Orsay** (les Affaires étrangères), **la place Beauvau** (l’Intérieur). « Matignon a tranché » signifie « le Premier ministre a décidé ».',
@@ -106,6 +109,7 @@ export const c2InstitutionsCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Allusions historiques fréquentes', 'Frequent historical allusions', '常见历史典故'),
               headers: [t('Référence', 'Reference', '典故'), t('Fait', 'Fact', '所指'), t('Ce qu’elle signale', 'What it signals', '暗示的含义')],
               rows: [
@@ -117,7 +121,58 @@ export const c2InstitutionsCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🏛️',
+              title: t('La frise des allusions', 'The timeline of allusions', '典故时间轴'),
+              hint: t(
+                'Chaque date porte un sens figuré que la presse mobilise sans jamais l’expliquer.',
+                'Each date carries a figurative meaning the press uses without ever explaining it.',
+                '每个日期都带有一层引申义，媒体使用时从不加以解释。',
+              ),
+              widget: {
+                kind: 'timeline',
+                points: [
+                  {
+                    id: '1789',
+                    label: t('1789', '1789', '1789'),
+                    headline: t('La nuit du 4 août', 'The night of 4 August', '八月 4 日之夜'),
+                    example: 'une nuit du 4 août fiscale',
+                    gloss: t('Abolition des privilèges. Employé pour un renoncement soudain et volontaire à des avantages acquis.', 'Abolition of privileges. Used for a sudden, voluntary surrender of acquired advantages.', '废除特权。用于指突然而自愿地放弃既得利益。'),
+                  },
+                  {
+                    id: '1871',
+                    label: t('1871', '1871', '1871'),
+                    headline: t('La Commune', 'The Commune', '巴黎公社'),
+                    example: 'un air de Commune',
+                    gloss: t('Insurrection parisienne écrasée. Renvoie à une révolte urbaine réprimée, et à une mémoire encore disputée.', 'A crushed Paris insurrection. Points to a repressed urban revolt, and to a still-contested memory.', '被镇压的巴黎起义。指被压制的城市反抗，以及至今仍有争议的记忆。'),
+                  },
+                  {
+                    id: '1894',
+                    label: t('1894', '1894', '1894'),
+                    headline: t('L’affaire Dreyfus', 'The Dreyfus affair', '德雷福斯事件'),
+                    example: 'une nouvelle affaire Dreyfus',
+                    gloss: t('Erreur judiciaire révisée en 1906. Signale un pays coupé en deux camps irréconciliables autour d’une question de principe.', 'A miscarriage of justice overturned in 1906. Signals a country split into two irreconcilable camps over a matter of principle.', '1906 年平反的冤案。标示国家因原则问题分裂为两个不可调和的阵营。'),
+                  },
+                  {
+                    id: '1940',
+                    label: t('1940', '1940', '1940'),
+                    headline: t('L’appel du 18 Juin', 'The appeal of 18 June', '六月 18 日号召'),
+                    example: 'lancer son appel du 18 Juin',
+                    gloss: t('Discours de De Gaulle depuis Londres. Désigne une résistance minoritaire contre ce que tout le monde tient pour acquis.', 'De Gaulle’s speech from London. Denotes a minority resistance against what everyone takes for granted.', '戴高乐在伦敦的讲话。指少数派对众人视为定局之事的抵抗。'),
+                  },
+                  {
+                    id: '1968',
+                    label: t('1968', '1968', '1968'),
+                    headline: t('Mai 68', 'May 68', '1968 年五月'),
+                    example: 'un petit Mai 68',
+                    gloss: t('Grèves et contestation étudiante. Évoque une révolte générationnelle et un basculement des mœurs.', 'Strikes and student protest. Evokes a generational revolt and a shift in social mores.', '罢工与学生运动。让人联想到代际反叛与风俗的转变。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'keyvalues',
+              emoji: '📖',
               title: t('Expressions issues de la littérature', 'Expressions from literature', '出自文学的表达'),
               entries: [
                 { label: t('Un tartuffe', 'A tartuffe', 'Tartuffe 式人物'), value: t('Un hypocrite qui se pare de vertu, d’après la pièce de Molière (1664).', 'A hypocrite cloaked in virtue, from Molière’s play (1664).', '披着德行外衣的伪君子，出自莫里哀 1664 年的戏剧。') },
@@ -130,6 +185,7 @@ export const c2InstitutionsCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Comment combler ce socle', 'How to build this foundation', '如何补上这块基础'),
               text: t(
                 'Lisez la presse avec un carnet : chaque fois qu’un nom propre vous arrête, notez-le et cherchez-le le soir même. Une trentaine de références couvre l’essentiel du discours public français. C’est un travail de quelques semaines, pas d’années.',
@@ -161,6 +217,7 @@ export const c2InstitutionsCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Quatre aires, quelques marqueurs', 'Four areas, a few markers', '四个地区，若干标志'),
               headers: [t('Aire', 'Area', '地区'), t('Marqueurs lexicaux', 'Lexical markers', '词汇标志'), t('Trait notable', 'Notable feature', '显著特点')],
               rows: [
@@ -173,6 +230,7 @@ export const c2InstitutionsCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Variante n’est pas faute', 'A variant is not a mistake', '变体不等于错误'),
               text: t(
                 '« Septante » n’est pas une déformation de « soixante-dix » : c’est la forme héritée du latin, restée en Belgique et en Suisse là où la France a adopté la numération vicésimale. Le jugement « c’est du mauvais français » repose sur une confusion entre norme dominante et correction linguistique.',
@@ -182,6 +240,7 @@ export const c2InstitutionsCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Reconnaître l’origine d’un texte', 'Recognising where a text comes from', '辨认文本的来源'),
               items: [
                 { fr: '« Il a magasiné toute la fin de semaine. »', gloss: t('Québec : « magasiner » et « fin de semaine » sont les marqueurs les plus sûrs.', 'Quebec: “magasiner” and “fin de semaine” are the surest markers.', '魁北克：“magasiner” 与 “fin de semaine” 是最可靠的标志。') },

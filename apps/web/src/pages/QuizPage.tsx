@@ -1,10 +1,20 @@
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { attemptsLeft, createId, gradeQuiz, type QuizAttempt, type QuizResult } from '@lms/core';
+import {
+  DEFAULT_FIRST_NAME,
+  attemptsLeft,
+  createId,
+  gradeQuiz,
+  personalise,
+  pickVariant,
+  type LocalizedText,
+  type QuizAttempt,
+  type QuizResult,
+} from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar } from '../components/Progress';
 import { getCourseBySlug, getQuiz } from '../content';
-import { Shield, Watermark, useProtectedScreen } from '../protection';
+import { Shield, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import {
@@ -23,6 +33,13 @@ export function QuizPage() {
   const { slug, quizId } = useParams();
   const { user, state, pushToast, recordAttempt, completeLesson } = useApp();
   const { l, formatNumber, formatDate } = useI18n();
+  const firstName = user?.firstName?.trim() || DEFAULT_FIRST_NAME;
+  /** Resout `{prenom}` dans les trois langues avant affichage. */
+  const personaliseText = (text: LocalizedText): LocalizedText => ({
+    fr: personalise(text.fr, firstName),
+    en: personalise(text.en, firstName),
+    zh: personalise(text.zh, firstName),
+  });
   const KIND_LABEL = {
     single: l(D.quiz.kindSingle),
     multiple: l(D.quiz.kindMultiple),
@@ -108,7 +125,6 @@ export function QuizPage() {
       }
     >
       <Shield reason={shieldReason} />
-      {user ? <Watermark email={user.email} phone={user.phone} fixed repeat={18} /> : null}
 
       <div className="quiz protected">
         <header className="pagehead pagehead--reader">
@@ -130,6 +146,11 @@ export function QuizPage() {
               </span>
               <span className="badge">{quiz.partialCredit ? l(D.quiz.partialOn) : l(D.quiz.partialOff)}</span>
             </div>
+            {!result ? (
+              <p className="quiz__coach">
+                {l(personaliseText(pickVariant(D.coach.quizIntro, quiz.id) ?? D.coach.quizIntro[0]))}
+              </p>
+            ) : null}
           </div>
         </header>
 
@@ -148,6 +169,13 @@ export function QuizPage() {
             </span>
             <div className="result__score">{result.percentage}%</div>
             <p className="result__label">
+              {l(
+                result.passed
+                  ? D.coach.quizPassed(firstName, result.percentage)
+                  : D.coach.quizFailed(firstName, result.percentage),
+              )}
+            </p>
+            <p className="result__label result__label--sub">
               {result.passed
                 ? l(D.quiz.passedText(result.correctCount, result.total))
                 : l(D.quiz.failedText(quiz.passingScore))}

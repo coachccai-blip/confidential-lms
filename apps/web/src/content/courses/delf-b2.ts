@@ -47,6 +47,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'table',
+              emoji: '🧭',
               caption: t('Deux plans, deux usages', 'Two plans, two uses', '两种提纲，两种用途'),
               headers: [t('Plan', 'Plan', '提纲'), t('Structure', 'Structure', '结构'), t('Quand l’employer', 'When to use it', '适用情形')],
               rows: [
@@ -54,7 +55,7 @@ export const delfB2Course: Course = {
                 [t('Thématique', 'Thematic', '主题式'), t('Aspect 1 → aspect 2 → aspect 3', 'Aspect 1 → aspect 2 → aspect 3', '方面 1 → 方面 2 → 方面 3'), t('Sujet ouvert : « Quels sont les effets de… ? »', 'Open topic: “What are the effects of…?”', '开放式题目：“……有哪些影响？”')],
               ],
             },
-            { type: 'heading', text: t('L’architecture attendue', 'The expected architecture', '期待的文章结构') },
+            { type: 'heading', emoji: '🔹', text: t('L’architecture attendue', 'The expected architecture', '期待的文章结构') },
             {
               type: 'list',
               ordered: true,
@@ -77,8 +78,48 @@ export const delfB2Course: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🧩',
+              title: t('Le paragraphe argumenté, démonté', 'The argued paragraph, taken apart', '论证段落拆解'),
+              hint: t(
+                'Cliquez chaque segment : c’est cet ordre que le barème récompense.',
+                'Click each segment: this is the order the mark scheme rewards.',
+                '点击每个片段：正是这一顺序为评分标准所肯定。',
+              ),
+              widget: {
+                kind: 'sentence',
+                segments: [
+                  {
+                    text: 'Le télétravail améliore l’équilibre de vie',
+                    role: t('1. L’affirmation', '1. The claim', '1. 论点'),
+                    detail: t('Une seule idée par paragraphe, énoncée d’emblée. Un correcteur doit pouvoir la souligner en une phrase.', 'One idea per paragraph, stated at once. A marker should be able to underline it in a single sentence.', '每段只讲一个观点，开门见山。阅卷人应能用一句话把它划出来。'),
+                  },
+                  { text: ',' },
+                  {
+                    text: 'car il supprime des trajets quotidiens',
+                    role: t('2. La justification', '2. The justification', '2. 论据'),
+                    detail: t('Le lien logique explicite. « Car », « en effet », « dans la mesure où » : sans connecteur, le correcteur doit deviner.', 'The explicit logical link. “Car”, “en effet”, “dans la mesure où”: without a connector, the marker has to guess.', '明确的逻辑连接。“Car”“en effet”“dans la mesure où”：没有连接词，阅卷人只能靠猜。'),
+                  },
+                  { text: '.' },
+                  {
+                    text: 'Une enquête de 2023 chiffre ce gain à quarante minutes par jour',
+                    role: t('3. L’exemple', '3. The example', '3. 例证'),
+                    detail: t('Précis, daté, vérifiable. Un exemple vague coûte plus qu’il ne rapporte : il signale qu’on n’a rien à citer.', 'Precise, dated, checkable. A vague example costs more than it earns: it signals you have nothing to cite.', '具体、有时间、可核实。含糊的例子得不偿失：它表明你无据可引。'),
+                  },
+                  { text: '.' },
+                  {
+                    text: 'Ce bénéfice reste cependant inégalement réparti',
+                    role: t('4. La nuance', '4. The qualification', '4. 分寸'),
+                    detail: t('Le geste B2 par excellence. Il montre qu’on a vu la limite de son propre argument avant que le lecteur ne la soulève.', 'The quintessential B2 move. It shows you saw the limit of your own argument before the reader raised it.', 'B2 最典型的动作。它表明你在读者提出之前就看到了自身论点的局限。'),
+                  },
+                  { text: '.' },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Le mouvement qui fait la différence', 'The move that makes the difference', '决定成败的一步'),
               text: t(
                 'La [[concession|concession]] est la marque du B2. « Certes, le télétravail réduit les trajets ; il fragilise cependant le lien collectif. » Une copie qui ne concède jamais rien est perçue comme un exercice de niveau B1, quelle que soit la richesse du vocabulaire.',
@@ -88,6 +129,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Banque d’articulateurs B2', 'B2 connector bank', 'B2 连接词库'),
               items: [
                 { fr: 'Il convient de rappeler que… / Force est de constater que…', gloss: t('Ouvertures de paragraphe en registre [[soutenu|soutenu]].', 'Paragraph openers in a [[soutenu|formal]] register.', '[[soutenu|正式]]语体的段落开头。') },
@@ -120,6 +162,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Les cinq mouvements obligatoires', 'The five compulsory moves', '五个必备环节'),
               entries: [
                 { label: t('1. En-tête', '1. Heading', '1. 抬头'), value: t('Expéditeur, destinataire, lieu et date, objet. Quatre lignes, jamais oubliées.', 'Sender, addressee, place and date, subject. Four lines, never forgotten.', '寄件人、收件人、地点与日期、事由。四行，缺一不可。') },
@@ -131,6 +174,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Le ton juste : ferme sans être agressif', 'The right tone: firm without aggression', '恰当的语气：坚定而不失礼'),
               items: [
                 { fr: 'Je me permets de vous faire part de mon mécontentement concernant…', gloss: t('Ferme et parfaitement poli.', 'Firm and perfectly polite.', '既坚定又完全得体。') },
@@ -142,6 +186,7 @@ export const delfB2Course: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🎚️',
               title: t('Le registre, critère noté', 'Register, a marked criterion', '语体：明确的评分项'),
               text: t(
                 'Le [[registre|registre de langue]] figure explicitement dans la grille. Bannissez les contractions de l’oral (« y a », « faut »), les abréviations et le tutoiement. Utilisez la [[nominalisation|nominalisation]] et la [[voix-passive|voix passive]] : « l’annulation de ma réservation n’a pas été confirmée ».',
@@ -181,6 +226,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Quatre indices qui trahissent l’opinion', 'Four clues that give away the opinion', '暴露作者立场的四个线索'),
               entries: [
                 { label: t('Le lexique évaluatif', 'Evaluative vocabulary', '评价性词汇'), value: t('« une mesure prétendue efficace » : la [[connotation|connotation]] fait tout le travail.', '“une mesure prétendue efficace”: the [[connotation|connotation]] does all the work.', '“une mesure prétendue efficace”：全靠[[connotation|感情色彩]]传达态度。') },
@@ -191,6 +237,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Décoder une phrase', 'Decoding a sentence', '解读句子'),
               items: [
                 { fr: 'Les autorités se sont enfin décidées à agir.', gloss: t('« Enfin » = reproche implicite sur la lenteur.', '“Enfin” = an implicit reproach about the delay.', '“Enfin”暗含对拖延的责备。') },
@@ -201,6 +248,7 @@ export const delfB2Course: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '❓',
               title: t('La question type', 'The typical question', '典型题型'),
               text: t(
                 '« L’auteur est-il favorable à cette mesure ? Justifiez par deux éléments du texte. » Une réponse complète cite deux indices de nature différente — par exemple un mot connoté et une tournure au conditionnel — et non deux fois le même procédé.',
@@ -241,6 +289,7 @@ export const delfB2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Répondre à une objection sans perdre pied', 'Answering an objection without losing your footing', '面对质疑而不失方寸'),
               items: [
                 { fr: 'Si je vous comprends bien, vous suggérez que… C’est un point important, mais…', gloss: t('Reformuler avant de répondre : gagne du temps et montre l’écoute.', 'Restate before answering: buys time and shows you are listening.', '先复述再回答：既争取时间又体现倾听。') },
@@ -252,6 +301,7 @@ export const delfB2Course: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🎓',
               title: t('Ce que le jury note vraiment', 'What the panel actually marks', '考官真正评什么'),
               text: t(
                 'La grille distingue quatre critères : capacité à argumenter, aisance dans l’interaction, étendue du lexique et correction grammaticale. Les deux premiers pèsent plus que les deux derniers. Un candidat fluide qui fait quelques fautes obtient une meilleure note qu’un candidat irréprochable mais hésitant.',

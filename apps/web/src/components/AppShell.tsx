@@ -16,6 +16,7 @@ import {
   IconUser,
   IconLayers,
 } from './Icons';
+import { GamificationWatcher, LevelChip } from './Gamification';
 import { LanguageSwitch } from './LanguageSwitch';
 import { ProgressBar } from './Progress';
 import { Toasts } from './Toasts';
@@ -112,6 +113,8 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
             </>
           ) : null}
 
+          <LevelChip />
+
           <div className="side-course">
             <span className="side-course__label">{l(D.nav.inProgress)}</span>
             <span className="side-course__title">{currentCourse ? l(currentCourse.title) : ''}</span>
@@ -175,6 +178,7 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
         <main className={wide ? 'page' : 'page page--narrow'}>{children}</main>
       </div>
 
+      <GamificationWatcher />
       <Toasts />
     </div>
   );

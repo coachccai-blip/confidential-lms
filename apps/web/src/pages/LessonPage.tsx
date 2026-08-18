@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { lessonNeighbours } from '@lms/core';
+import { lessonNeighbours, personalise, pickVariant } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { LessonBlocks, slugify } from '../components/LessonContent';
 import { ProgressBar } from '../components/Progress';
 import { findLesson, findModuleOfLesson, getCourseBySlug } from '../content';
-import { Shield, Watermark, useProtectedScreen } from '../protection';
+import { Shield, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import {
@@ -84,7 +84,6 @@ export function LessonPage() {
       }
     >
       <Shield reason={shieldReason} />
-      {user ? <Watermark email={user.email} phone={user.phone} fixed repeat={18} /> : null}
 
       <div className="reader protected" data-testid="protected-content">
         <article>
@@ -113,7 +112,7 @@ export function LessonPage() {
           </header>
 
           <div style={{ marginTop: 'var(--space-8)' }}>
-            <LessonBlocks blocks={lesson.blocks ?? []} fingerprint={fingerprint} />
+            <LessonBlocks blocks={lesson.blocks ?? []} fingerprint={fingerprint} lessonId={lesson.id} />
           </div>
 
           <div ref={sentinel} style={{ height: 1 }} aria-hidden="true" />
@@ -126,8 +125,13 @@ export function LessonPage() {
               <IconFingerprint size={18} />
             </span>
             <div style={{ flex: 1 }}>
-              <div className="callout__title">{l(D.lesson.fingerprintTitle)}</div>
-              <span style={{ fontSize: '0.83rem' }}>{l(D.lesson.fingerprintText)}</span>
+              <div className="callout__title">
+                {personalise(
+                  l(done ? (pickVariant(D.coach.completion, lesson.id) ?? D.coach.personalNoteTitle) : D.coach.personalNoteTitle),
+                  user?.firstName,
+                )}
+              </div>
+              <span style={{ fontSize: '0.83rem' }}>{l(D.coach.personalNoteText)}</span>
             </div>
             {!done ? (
               <button type="button" className="btn btn--secondary" onClick={() => completeLesson(lesson.id, l(lesson.title))}>

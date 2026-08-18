@@ -48,6 +48,7 @@ export const delfB1Course: Course = {
             { type: 'figure', figureId: 'epreuves-delf', caption: t('Les quatre épreuves, leurs durées et leur poids.', 'The four papers, their durations and their weight.', '四项考试的时长与分值。') },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Déroulé de la journée', 'How the day runs', '考试当天流程'),
               headers: [t('Épreuve', 'Paper', '科目'), t('Durée', 'Duration', '时长'), t('Points', 'Marks', '分值'), t('Ce qui est évalué', 'What is assessed', '考查内容')],
               rows: [
@@ -58,8 +59,52 @@ export const delfB1Course: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎓',
+              title: t('Les quatre épreuves, une par une', 'The four papers, one by one', '四项考试，逐一了解'),
+              hint: t(
+                'Sélectionnez une épreuve pour voir ce qui s’y joue vraiment.',
+                'Select a paper to see what is really at stake in it.',
+                '选择一项考试，看看其中真正的关键。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'co',
+                    label: t('Compréhension orale', 'Listening', '听力'),
+                    headline: t('25 points · deux écoutes', '25 points · two listenings', '25 分 · 两遍听力'),
+                    example: 'Lisez les questions avant la première écoute.',
+                    gloss: t('La première écoute sert à saisir la situation, la seconde à vérifier les détails. Lire les questions d’abord double le rendement.', 'The first listening is for grasping the situation, the second for checking details. Reading the questions first doubles your yield.', '第一遍听懂情境，第二遍核对细节。先读题目能让效果加倍。'),
+                  },
+                  {
+                    id: 'ce',
+                    label: t('Compréhension écrite', 'Reading', '阅读'),
+                    headline: t('25 points · deux documents', '25 points · two documents', '25 分 · 两篇材料'),
+                    example: 'Repérez d’abord le type de document.',
+                    gloss: t('Le type de texte annonce le type de questions : un règlement appelle du repérage, un article demande de l’inférence.', 'The kind of text announces the kind of questions: a set of rules calls for locating, an article calls for inference.', '文本类型预示题型：规章类考查信息定位，文章类考查推断。'),
+                  },
+                  {
+                    id: 'pe',
+                    label: t('Production écrite', 'Writing', '写作'),
+                    headline: t('25 points · 160 à 180 mots', '25 points · 160 to 180 words', '25 分 · 160 至 180 词'),
+                    example: 'Un avis, une justification, un exemple.',
+                    gloss: t('Le barème récompense la structure autant que la langue. Trois paragraphes valent mieux qu’un bloc, même mieux écrit.', 'The mark scheme rewards structure as much as language. Three paragraphs beat one block, even a better-written one.', '评分标准既看语言也看结构。三段胜过一整块，哪怕后者文笔更好。'),
+                  },
+                  {
+                    id: 'po',
+                    label: t('Production orale', 'Speaking', '口语'),
+                    headline: t('25 points · trois parties', '25 points · three parts', '25 分 · 三个部分'),
+                    example: 'Entretien, exercice en interaction, expression d’un point de vue.',
+                    gloss: t('La troisième partie pèse le plus. On y attend une opinion construite, pas une performance grammaticale.', 'The third part carries the most weight. A structured opinion is expected there, not a grammatical performance.', '第三部分分量最重。这里期待的是有条理的观点，而非语法表演。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('La note éliminatoire, premier piège', 'The disqualifying mark, first trap', '最低分要求：第一个陷阱'),
               text: t(
                 'Beaucoup de candidats négligent l’épreuve qu’ils redoutent le plus, en misant sur les trois autres. C’est la stratégie la plus risquée : viser 12 sur 25 partout est plus sûr que viser 22 sur trois épreuves et 4 sur la quatrième.',
@@ -67,9 +112,10 @@ export const delfB1Course: Course = {
                 '许多考生因为害怕某一科而放弃它，寄希望于其他三科。这是最危险的做法：每科都拿 12/25，比三科拿 22 分、一科只得 4 分要稳妥得多。',
               ),
             },
-            { type: 'heading', text: t('Ce que « B1 » veut dire concrètement', 'What “B1” actually means', '“B1”究竟意味着什么') },
+            { type: 'heading', emoji: '🔹', text: t('Ce que « B1 » veut dire concrètement', 'What “B1” actually means', '“B1”究竟意味着什么') },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Les descripteurs officiels, traduits en actes', 'The official descriptors, turned into actions', '官方能力描述的具体化'),
               entries: [
                 { label: t('Comprendre', 'Understand', '理解'), value: t('Suivre une conversation courante et l’essentiel d’une émission de radio sur un sujet familier.', 'Follow an everyday conversation and the gist of a radio programme on a familiar topic.', '能听懂日常对话，以及熟悉话题广播节目的主要内容。') },
@@ -92,7 +138,7 @@ export const delfB1Course: Course = {
             '注意力该放在哪里、按什么顺序阅读，以及如何避免因形式失分。',
           ),
           blocks: [
-            { type: 'heading', text: t('Compréhension de l’oral', 'Listening comprehension', '听力理解') },
+            { type: 'heading', emoji: '🗣️', text: t('Compréhension de l’oral', 'Listening comprehension', '听力理解') },
             {
               type: 'paragraph',
               text: t(
@@ -115,6 +161,7 @@ export const delfB1Course: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🪤',
               title: t('Le piège des distracteurs', 'The distractor trap', '干扰项陷阱'),
               text: t(
                 'Les enregistrements citent souvent trois chiffres ou trois lieux, dont un seul répond à la question. Écoutez la structure : « d’abord… finalement… », « on avait prévu… mais ». C’est presque toujours l’information qui suit « finalement » ou « mais » qui est attendue.',
@@ -122,7 +169,7 @@ export const delfB1Course: Course = {
                 '录音常会提到三个数字或三个地点，但只有一个是答案。注意结构词：“d’abord… finalement…”“on avait prévu… mais”。答案几乎总是出现在“finalement”或“mais”之后。',
               ),
             },
-            { type: 'heading', text: t('Compréhension des écrits', 'Reading comprehension', '阅读理解') },
+            { type: 'heading', emoji: '🔹', text: t('Compréhension des écrits', 'Reading comprehension', '阅读理解') },
             {
               type: 'paragraph',
               text: t(
@@ -133,6 +180,7 @@ export const delfB1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '🧠',
               title: t('Justifier une réponse : la règle des deux éléments', 'Justifying an answer: the two-element rule', '答案说明：两要素规则'),
               items: [
                 { fr: 'Vrai ou faux ? « L’auteur approuve la réforme. » Justification : citez la phrase du texte.', gloss: t('Sans citation, la réponse ne compte pas, même si le choix est juste.', 'Without a quotation the answer does not count, even if the choice is right.', '没有引文，即使选对也不给分。') },
@@ -143,6 +191,7 @@ export const delfB1Course: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🕰️',
               title: t('Gestion du temps', 'Time management', '时间管理'),
               text: t(
                 'Quinze minutes par texte, cinq minutes de relecture. Si une question résiste plus d’une minute, laissez-la et revenez-y : les questions valent le même nombre de points, quelle que soit leur difficulté.',
@@ -183,6 +232,7 @@ export const delfB1Course: Course = {
             { type: 'figure', figureId: 'plan-essai', caption: t('Le plan en quatre paragraphes, applicable à toutes les consignes B1.', 'The four-paragraph plan, usable for every B1 task.', '四段式提纲，适用于所有 B1 题目。') },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Répartition des 45 minutes', 'Splitting the 45 minutes', '45 分钟的分配'),
               entries: [
                 { label: t('5 minutes', '5 minutes', '5 分钟'), value: t('Analyser la consigne et noter trois idées, en français, sous forme de mots-clés.', 'Analyse the instruction and note three ideas, in French, as keywords.', '分析题目要求，用法语以关键词形式记下三个想法。') },
@@ -192,6 +242,7 @@ export const delfB1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Banque de formules pour la lettre', 'Phrase bank for the letter', '书信常用套语'),
               items: [
                 { fr: 'Madame, Monsieur,', gloss: t('Ouverture neutre quand on ignore le nom du destinataire.', 'Neutral opening when the addressee’s name is unknown.', '不知道收信人姓名时的中性称呼。') },
@@ -203,6 +254,7 @@ export const delfB1Course: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '⚠️',
               title: t('Le compte de mots', 'The word count', '字数统计'),
               text: t(
                 'Écrire 130 mots quand on en demande 160 fait perdre des points automatiquement. Écrire 250 mots en fait perdre aussi : le hors-sujet et les répétitions se multiplient. Comptez les mots de la première ligne, multipliez par le nombre de lignes : c’est assez précis et cela prend dix secondes.',
@@ -213,6 +265,7 @@ export const delfB1Course: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Trois gestes qui rapportent', 'Three moves that pay off', '三个加分动作'),
               text: t(
                 'Employer au moins un [[subjonctif|subjonctif]] correct, un [[connecteur|connecteur]] d’opposition et un exemple personnel daté. Ces trois éléments déclenchent presque toujours les points des critères « morphosyntaxe » et « cohérence ».',
@@ -251,7 +304,7 @@ export const delfB1Course: Course = {
                 [t('3. [[monologue|Monologue suivi]]', '3. [[monologue|Sustained monologue]]', '3. [[monologue|连续独白]]'), t('5 à 7 min', '5–7 min', '5–7 分钟'), t('Dégager le thème d’un court document et donner son avis', 'Identify the theme of a short document and give an opinion', '概括短文主题并表达观点'), t('Résumer le document sans jamais donner son avis', 'Summarising the document without ever giving an opinion', '只复述材料而不表明观点')],
               ],
             },
-            { type: 'heading', text: t('La troisième partie, celle qui départage', 'The third part, the decisive one', '第三部分：决定成败') },
+            { type: 'heading', emoji: '🔹', text: t('La troisième partie, celle qui départage', 'The third part, the decisive one', '第三部分：决定成败') },
             {
               type: 'paragraph',
               text: t(
@@ -262,6 +315,7 @@ export const delfB1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Amorces à réutiliser', 'Openers you can reuse', '可复用的开场句'),
               items: [
                 { fr: 'Ce document aborde la question de… Il pose un problème que je trouve d’actualité.', gloss: t('Annonce du thème en une phrase.', 'States the theme in one sentence.', '一句话点明主题。') },
@@ -273,6 +327,7 @@ export const delfB1Course: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('Que faire quand le mot manque', 'What to do when the word escapes you', '想不起单词时怎么办'),
               text: t(
                 'N’arrêtez jamais votre phrase. Employez une [[perpehrase|périphrase]] : « c’est un objet qui sert à… », « la personne qui s’occupe de… ». Le jury évalue la capacité à communiquer, pas le lexique parfait ; une reformulation réussie rapporte plus qu’un blanc de dix secondes.',

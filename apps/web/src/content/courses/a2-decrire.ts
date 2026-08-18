@@ -51,6 +51,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🏷️',
               title: t('Les adjectifs qui passent devant', 'The adjectives that go in front', '前置的形容词'),
               entries: [
                 { label: t('La taille', 'Size', '大小'), value: t('grand, petit, gros, long : un grand jardin, une petite rue', 'grand, petit, gros, long: un grand jardin, une petite rue', 'grand、petit、gros、long：un grand jardin、une petite rue') },
@@ -62,6 +63,7 @@ export const a2DecrireCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🧭',
               title: t('Un moyen mnémotechnique', 'A memory aid', '记忆窍门'),
               text: t(
                 'Beauté, Âge, Nombre, Grandeur, Sens général : les adjectifs qui répondent à ces cinq critères se placent avant le nom. Tous les autres — couleur, forme, nationalité, matière, religion — se placent après.',
@@ -69,9 +71,10 @@ export const a2DecrireCourse: Course = {
                 '美感、年龄、数量、大小、总体评价：符合这五类标准的形容词前置。其余——颜色、形状、国籍、材质、宗教——一律后置。',
               ),
             },
-            { type: 'heading', text: t('Les adjectifs à double sens', 'Adjectives with two meanings', '一词两义的形容词') },
+            { type: 'heading', emoji: '🔀', text: t('Les adjectifs à double sens', 'Adjectives with two meanings', '一词两义的形容词') },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('La place change le sens', 'Position changes the meaning', '位置改变词义'),
               headers: [t('Adjectif', 'Adjective', '形容词'), t('Avant le nom', 'Before the noun', '名词之前'), t('Après le nom', 'After the noun', '名词之后')],
               rows: [
@@ -83,6 +86,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🔀',
               title: t('Accords irréguliers à connaître', 'Irregular agreements to know', '需掌握的不规则配合'),
               items: [
                 { fr: 'un beau jardin → un bel arbre → une belle maison', gloss: t('Beau devient « bel » devant une voyelle. Idem : nouveau/nouvel, vieux/vieil.', 'Beau becomes “bel” before a vowel. Likewise: nouveau/nouvel, vieux/vieil.', '元音前 beau 变为 “bel”。同理：nouveau/nouvel、vieux/vieil。') },
@@ -115,6 +119,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '⚖️',
               caption: t('Comparatif et superlatif', 'Comparative and superlative', '比较级与最高级'),
               headers: [t('Degré', 'Degree', '级'), t('Formule', 'Formula', '结构'), t('Exemple', 'Example', '例句')],
               rows: [
@@ -125,8 +130,45 @@ export const a2DecrireCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '⚖️',
+              title: t('La table de comparaison', 'The comparison table', '比较结构表'),
+              hint: t(
+                'Croisez le degré et ce que vous comparez : la formule se compose.',
+                'Cross the degree with what you are comparing: the formula assembles itself.',
+                '将比较程度与比较对象交叉选择，结构随即组合而成。',
+              ),
+              widget: {
+                kind: 'matrix',
+                rowsLabel: t('Degré', 'Degree', '程度'),
+                columnsLabel: t('Ce qu’on compare', 'What is compared', '比较对象'),
+                rows: [
+                  { id: 'plus', label: t('Supériorité', 'Superiority', '较高') },
+                  { id: 'moins', label: t('Infériorité', 'Inferiority', '较低') },
+                  { id: 'egal', label: t('Égalité', 'Equality', '相等') },
+                ],
+                columns: [
+                  { id: 'adj', label: t('Un adjectif', 'An adjective', '形容词') },
+                  { id: 'nom', label: t('Un nom', 'A noun', '名词') },
+                  { id: 'verbe', label: t('Un verbe', 'A verb', '动词') },
+                ],
+                cells: [
+                  { row: 'plus', column: 'adj', answer: 'plus … que', example: 'Lyon est plus grand que Nantes.', gloss: t('L’adjectif ne change jamais de forme, contrairement à l’anglais.', 'The adjective never changes form, unlike in English.', '与英语不同，形容词本身从不变形。') },
+                  { row: 'plus', column: 'nom', answer: 'plus de … que', example: 'J’ai plus de livres que toi.', gloss: t('Devant un nom, « de » s’intercale obligatoirement.', 'Before a noun, “de” is compulsory.', '名词前必须插入 “de”。') },
+                  { row: 'plus', column: 'verbe', answer: 'plus que', example: 'Il travaille plus que moi.', gloss: t('Après un verbe, ni « de » ni article : « plus » seul.', 'After a verb, no “de” and no article: just “plus”.', '动词后既不加 “de” 也不加冠词，只用 “plus”。') },
+                  { row: 'moins', column: 'adj', answer: 'moins … que', example: 'Ce livre est moins cher que l’autre.', gloss: t('Symétrique de « plus », sans irrégularité.', 'Symmetrical to “plus”, with no irregularity.', '与 “plus” 对称，没有不规则形式。') },
+                  { row: 'moins', column: 'nom', answer: 'moins de … que', example: 'Il y a moins de monde que hier.', gloss: t('Même règle du « de » que pour la supériorité.', 'The same “de” rule as for superiority.', '与较高级的 “de” 规则相同。') },
+                  { row: 'moins', column: 'verbe', answer: 'moins que', example: 'Je dors moins que toi.', gloss: t('Là encore, rien entre le verbe et « moins ».', 'Again, nothing between the verb and “moins”.', '同样，动词与 “moins” 之间不加任何成分。') },
+                  { row: 'egal', column: 'adj', answer: 'aussi … que', example: 'Elle est aussi rapide que lui.', gloss: t('« Aussi » pour l’égalité d’un adjectif — pas « autant ».', '“Aussi” for equality of an adjective — not “autant”.', '形容词的相等用 “aussi”，而非 “autant”。') },
+                  { row: 'egal', column: 'nom', answer: 'autant de … que', example: 'J’ai autant de temps que toi.', gloss: t('Ici « autant », pas « aussi » : c’est l’erreur la plus fréquente.', 'Here “autant”, not “aussi”: this is the most frequent error.', '这里用 “autant” 而非 “aussi”：这是最常见的错误。') },
+                  { row: 'egal', column: 'verbe', answer: 'autant que', example: 'Il travaille autant que moi.', gloss: t('Après un verbe, « autant que » sans complément intermédiaire.', 'After a verb, “autant que” with nothing in between.', '动词后用 “autant que”，中间不加成分。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Deux irréguliers, et un seul vrai piège', 'Two irregulars, and only one real trap', '两个不规则形式，一个真正的陷阱'),
               text: t(
                 '**Bon** devient « meilleur » (jamais « plus bon ») et **bien** devient « mieux » (jamais « plus bien »). Le piège : « meilleur » est un adjectif, « mieux » un adverbe. « Ce gâteau est meilleur » mais « il cuisine mieux ».',
@@ -136,6 +178,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Comparer des noms et des actions', 'Comparing nouns and actions', '比较名词与动作'),
               items: [
                 { fr: 'J’ai plus de livres que toi.', gloss: t('Devant un nom : plus **de** / moins **de** / autant **de**.', 'Before a noun: plus **de** / moins **de** / autant **de**.', '名词前用：plus **de** / moins **de** / autant **de**。') },
@@ -168,6 +211,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🧠',
               title: t('Annoncer son avis', 'Stating your opinion', '提出看法'),
               entries: [
                 { label: t('Je pense que / Je crois que', 'Je pense que / Je crois que', 'Je pense que / Je crois que'), value: t('Les deux plus neutres. Suivis de l’indicatif : « je pense que c’est vrai ».', 'The two most neutral. Followed by the indicative: “je pense que c’est vrai”.', '最中性的两个，后接直陈式：“je pense que c’est vrai”。') },
@@ -178,6 +222,7 @@ export const a2DecrireCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Justifier et enchaîner', 'Justifying and linking', '论证与衔接'),
               headers: [t('Relation', 'Relation', '关系'), t('Connecteurs', 'Connectors', '连接词'), t('Exemple', 'Example', '例句')],
               rows: [
@@ -190,6 +235,7 @@ export const a2DecrireCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🧠',
               title: t('Nuancer vaut mieux qu’affirmer', 'Qualifying beats asserting', '有分寸胜过绝对'),
               text: t(
                 'Un avis A2 réussi n’est pas un avis tranché, c’est un avis **construit**. Trois formules suffisent : « d’un côté… de l’autre », « c’est vrai que… mais », « ça dépend de ». Les examinateurs valorisent nettement cette souplesse.',

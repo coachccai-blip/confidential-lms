@@ -2,12 +2,15 @@ import { useMemo, useState, type FormEvent } from 'react';
 import {
   CEFR_LEVELS,
   MIN_ADMIN_PASSWORD_LENGTH,
+  MIN_LEARNER_PASSWORD_LENGTH,
   buildRoster,
   encodeInvite,
+  fullName,
   parseFingerprint,
   ratePassword,
   readFingerprint,
   stripInvisible,
+  suggestPassword,
   summarizeEvents,
   watermarkText,
   type CefrLevel,
@@ -174,53 +177,80 @@ function AdminLockScreen() {
 function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAccount) => void }) {
   const { createLearner } = useApp();
   const { l } = useI18n();
-  const [displayName, setDisplayName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  // Un mot de passe est proposé d'emblée : l'enseignant n'a rien à inventer.
+  const [password, setPassword] = useState(() => suggestPassword());
   const [targetLevel, setTargetLevel] = useState<CefrLevel | ''>('');
   const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const outcome = createLearner({
-      displayName,
-      email,
-      targetLevel: targetLevel === '' ? null : targetLevel,
-      note,
-    });
-    if (!outcome.ok) {
-      setError(
-        l(
-          outcome.reason === 'name-required'
-            ? D.admin.errorNameRequired
-            : outcome.reason === 'email-invalid'
-              ? D.admin.errorEmailInvalid
-              : D.admin.errorEmailDuplicate,
-        ),
-      );
-      return;
+    setBusy(true);
+    try {
+      const outcome = await createLearner({
+        firstName,
+        lastName,
+        email,
+        password,
+        targetLevel: targetLevel === '' ? null : targetLevel,
+        note,
+      });
+      if (!outcome.ok) {
+        setError(
+          l(
+            outcome.reason === 'name-required'
+              ? D.admin.errorNameRequired
+              : outcome.reason === 'email-invalid'
+                ? D.admin.errorEmailInvalid
+                : outcome.reason === 'password-too-short'
+                  ? D.admin.errorPasswordShort(MIN_LEARNER_PASSWORD_LENGTH)
+                  : D.admin.errorEmailDuplicate,
+          ),
+        );
+        return;
+      }
+      setError(null);
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setNote('');
+      setTargetLevel('');
+      setPassword(suggestPassword());
+      onCreated(outcome.learner);
+    } finally {
+      setBusy(false);
     }
-    setError(null);
-    setDisplayName('');
-    setEmail('');
-    setNote('');
-    setTargetLevel('');
-    onCreated(outcome.learner);
   }
 
   return (
     <form onSubmit={onSubmit}>
       <div className="grid grid--2">
         <div className="field">
-          <label className="field__label" htmlFor="learner-name">
-            {l(D.admin.fieldName)}
+          <label className="field__label" htmlFor="learner-first">
+            {l(D.admin.fieldFirstName)}
           </label>
           <input
-            id="learner-name"
+            id="learner-first"
             className="input"
-            value={displayName}
-            onChange={(event) => setDisplayName(event.target.value)}
+            value={firstName}
+            onChange={(event) => setFirstName(event.target.value)}
             required
+          />
+          <span className="field__hint">{l(D.admin.fieldFirstNameHint)}</span>
+        </div>
+        <div className="field">
+          <label className="field__label" htmlFor="learner-last">
+            {l(D.admin.fieldLastName)}
+          </label>
+          <input
+            id="learner-last"
+            className="input"
+            value={lastName}
+            onChange={(event) => setLastName(event.target.value)}
           />
         </div>
         <div className="field">
@@ -235,6 +265,25 @@ function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAc
             onChange={(event) => setEmail(event.target.value)}
             required
           />
+        </div>
+        <div className="field">
+          <label className="field__label" htmlFor="learner-password">
+            {l(D.admin.fieldPassword)}
+          </label>
+          <div className="row" style={{ alignItems: 'stretch' }}>
+            <input
+              id="learner-password"
+              className="input"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              style={{ flex: 1, minWidth: 0 }}
+              required
+            />
+            <button type="button" className="btn btn--ghost" onClick={() => setPassword(suggestPassword())}>
+              {l(D.admin.regenerate)}
+            </button>
+          </div>
+          <span className="field__hint">{l(D.admin.fieldPasswordHint)}</span>
         </div>
         <div className="field">
           <label className="field__label" htmlFor="learner-level">
@@ -277,7 +326,7 @@ function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAc
         </div>
       ) : null}
 
-      <button type="submit" className="btn btn--primary">
+      <button type="submit" className="btn btn--primary" disabled={busy}>
         <IconUserPlus size={15} /> {l(D.admin.create)}
       </button>
     </form>
@@ -298,7 +347,7 @@ function InviteBlock({ learner }: { readonly learner: LearnerAccount }) {
       </span>
       <div style={{ minWidth: 0, flex: 1 }}>
         <div className="callout__title">{l(D.admin.createdTitle)}</div>
-        <span style={{ fontSize: '0.85rem' }}>{l(D.admin.createdText(learner.displayName))}</span>
+        <span style={{ fontSize: '0.85rem' }}>{l(D.admin.createdText(learner.firstName))}</span>
         <p className="muted" style={{ fontSize: '0.8rem', margin: 'var(--space-3) 0 var(--space-2)' }}>
           {l(D.admin.inviteIntro)}
         </p>
@@ -396,7 +445,7 @@ export function AdminPage() {
     }
     setReportInput('');
     if (outcome.known) {
-      pushToast({ tone: 'success', title: D.admin.importOk(outcome.report.displayName || outcome.report.code) });
+      pushToast({ tone: 'success', title: D.admin.importOk(outcome.report.firstName || outcome.report.code) });
     } else {
       pushToast({ tone: 'warning', title: D.admin.importUnknown });
     }
@@ -505,7 +554,7 @@ export function AdminPage() {
                   return (
                     <tr key={row.learner.id} style={isArchived ? { opacity: 0.55 } : undefined}>
                       <td>
-                        <strong>{row.learner.displayName}</strong>
+                        <strong>{fullName(row.learner)}</strong>
                         {isArchived ? (
                           <span className="badge" style={{ marginLeft: 8 }}>
                             {l(D.admin.archived)}

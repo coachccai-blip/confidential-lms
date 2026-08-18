@@ -51,17 +51,19 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '💼',
               caption: t('Choisir la formule d’appel', 'Choosing the salutation', '选择称呼'),
               headers: [t('Destinataire', 'Recipient', '收件人'), t('Formule', 'Salutation', '称呼'), t('Remarque', 'Note', '说明')],
               rows: [
                 [t('Inconnu, service', 'Unknown person, department', '陌生人、某部门'), t('Madame, Monsieur,', 'Madame, Monsieur,', 'Madame, Monsieur,'), t('Les deux, séparés par une virgule. Jamais « Cher Monsieur ».', 'Both, separated by a comma. Never “Cher Monsieur”.', '两者并列，用逗号分隔。切勿写 “Cher Monsieur”。')],
                 [t('Personne identifiée', 'Named person', '已知姓名'), t('Madame Durand,', 'Madame Durand,', 'Madame Durand,'), t('Le nom sans le prénom. Pas d’abréviation « Mme ».', 'Surname only, no first name. No “Mme” abbreviation.', '只写姓，不写名。不用缩写 “Mme”。')],
-                [t('Collègue habituel', 'Regular colleague', '常打交道的同事'), t('Bonjour Sophie,', 'Bonjour Sophie,', 'Bonjour Sophie,'), t('Standard interne dans la plupart des entreprises.', 'The internal standard in most companies.', '多数企业内部的标准写法。')],
+                [t('Collègue habituel', 'Regular colleague', '常打交道的同事'), t('Bonjour {prenom},', 'Bonjour {prenom},', 'Bonjour {prenom},'), t('Standard interne dans la plupart des entreprises.', 'The internal standard in most companies.', '多数企业内部的标准写法。')],
                 [t('Supérieur hiérarchique', 'Line manager', '上级'), t('Bonjour Madame, / Madame,', 'Bonjour Madame, / Madame,', 'Bonjour Madame, / Madame,'), t('Selon l’usage de l’entreprise ; observez avant d’imiter.', 'Depending on company practice; observe before imitating.', '视公司惯例而定；先观察再模仿。')],
               ],
             },
             {
               type: 'keyvalues',
+              emoji: '🎚️',
               title: t('Les formules de politesse finales', 'Closing formulas', '结尾套语'),
               entries: [
                 { label: t('Cordialement,', 'Cordialement,', 'Cordialement,'), value: t('Le passe-partout absolu. Convient à 90 % des courriels professionnels.', 'The universal default. Suitable for 90 % of professional emails.', '万能默认写法，适用于 90 % 的职场邮件。') },
@@ -71,8 +73,52 @@ export const b2ProfessionnelCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '✉️',
+              title: t('Le curseur de la formule finale', 'The closing-formula dial', '结尾套语刻度'),
+              hint: t(
+                'Choisissez le destinataire, {prenom} : la formule attendue s’affiche.',
+                'Pick the recipient, {prenom}: the expected closing appears.',
+                '{prenom}，选择收件人：相应的结尾套语随即显示。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'colleague',
+                    label: t('Collègue quotidien', 'Everyday colleague', '日常同事'),
+                    headline: t('Bien à toi / Bien à vous', 'Bien à toi / Bien à vous', 'Bien à toi / Bien à vous'),
+                    example: 'Bien à toi,',
+                    gloss: t('Court et cordial. Dans une équipe qui se tutoie, la formule longue paraîtrait glaciale.', 'Short and warm. In a team on first-name terms, a long formula would read as icy.', '简短而亲切。在互称 tu 的团队里，冗长的套语反而显得冷淡。'),
+                  },
+                  {
+                    id: 'internal',
+                    label: t('Interne, hors équipe', 'Internal, outside the team', '公司内部，非本团队'),
+                    headline: t('Cordialement', 'Cordialement', 'Cordialement'),
+                    example: 'Cordialement,',
+                    gloss: t('Le passe-partout absolu : il convient à environ 90 % des courriels professionnels français.', 'The universal default: it suits roughly 90 % of French professional emails.', '万能默认写法：约适用于 90 % 的法语职场邮件。'),
+                  },
+                  {
+                    id: 'client',
+                    label: t('Client ou partenaire', 'Client or partner', '客户或合作方'),
+                    headline: t('Bien cordialement', 'Bien cordialement', 'Bien cordialement'),
+                    example: 'Bien cordialement,',
+                    gloss: t('Un cran plus chaleureux, sans quitter le registre professionnel.', 'One notch warmer, without leaving the professional register.', '略显亲切一档，但仍属职场语体。'),
+                  },
+                  {
+                    id: 'formal',
+                    label: t('Candidature, courrier officiel', 'Job application, official letter', '求职、正式公函'),
+                    headline: t('Je vous prie d’agréer…', 'Je vous prie d’agréer…', 'Je vous prie d’agréer……'),
+                    example: 'Je vous prie d’agréer, Madame, l’expression de mes salutations distinguées.',
+                    gloss: t('La formule complète. Elle doit reprendre exactement la formule d’appel employée en tête du courrier.', 'The full formula. It must repeat exactly the salutation used at the top of the letter.', '完整套语。必须原样重复信件开头所用的称呼。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Les faux amis de la politesse', 'False friends of politeness', '礼貌用语中的“假朋友”'),
               text: t(
                 'Ne traduisez pas « Best regards » par « Meilleures salutations » : c’est un calque. N’écrivez pas « Salutations » seul, qui sonne sec. Et évitez « Merci d’avance », que certains lecteurs perçoivent comme une pression.',
@@ -80,13 +126,13 @@ export const b2ProfessionnelCourse: Course = {
                 '不要把 “Best regards” 直译为 “Meilleures salutations”，那是生硬的照搬。也不要单写 “Salutations”，显得冷淡。此外避免 “Merci d’avance”，部分读者会觉得是施压。',
               ),
             },
-            { type: 'heading', text: t('Le corps du message', 'The body of the message', '邮件正文') },
+            { type: 'heading', emoji: '✍️', text: t('Le corps du message', 'The body of the message', '邮件正文') },
             {
               type: 'quote',
               text: t(
-                'Objet : Demande de report de la réunion du 12 mars\n\nMadame Durand,\n\nJe me permets de vous écrire au sujet de la réunion prévue le 12 mars en début d’après-midi. Un déplacement client, confirmé ce matin, m’empêchera malheureusement d’y assister.\n\nSerait-il envisageable de la reporter au 14 ou au 15 mars ? Je reste disponible sur ces deux journées, à l’horaire qui vous conviendra.\n\nJe vous remercie par avance de votre compréhension et reste à votre disposition pour tout complément.\n\nBien cordialement,\nPaul Mercier',
-                'Subject: Request to postpone the meeting of 12 March\n\nMadame Durand,\n\nI am writing regarding the meeting scheduled for 12 March in the early afternoon. A client visit, confirmed this morning, will unfortunately prevent me from attending.\n\nWould it be possible to move it to 14 or 15 March? I am available on both days, at whatever time suits you.\n\nThank you in advance for your understanding; I remain available should you need any further information.\n\nBest regards,\nPaul Mercier',
-                '主题：关于推迟三月 12 日会议的请求\n\nMadame Durand，\n\n我写信是关于定于三月 12 日下午稍早时候的会议。今早确认的一次客户出差恐怕使我无法出席。\n\n是否有可能改到三月 14 日或 15 日？这两天我都有空，时间由您定。\n\n提前感谢您的理解，如需补充信息我随时候命。\n\n此致敬礼，\nPaul Mercier',
+                'Objet : Demande de report de la réunion du 12 mars\n\nMadame Durand,\n\nJe me permets de vous écrire au sujet de la réunion prévue le 12 mars en début d’après-midi. Un déplacement client, confirmé ce matin, m’empêchera malheureusement d’y assister.\n\nSerait-il envisageable de la reporter au 14 ou au 15 mars ? Je reste disponible sur ces deux journées, à l’horaire qui vous conviendra.\n\nJe vous remercie par avance de votre compréhension et reste à votre disposition pour tout complément.\n\nBien cordialement,\n{prenom}',
+                'Subject: Request to postpone the meeting of 12 March\n\nMadame Durand,\n\nI am writing regarding the meeting scheduled for 12 March in the early afternoon. A client visit, confirmed this morning, will unfortunately prevent me from attending.\n\nWould it be possible to move it to 14 or 15 March? I am available on both days, at whatever time suits you.\n\nThank you in advance for your understanding; I remain available should you need any further information.\n\nBest regards,\n{prenom}',
+                '主题：关于推迟三月 12 日会议的请求\n\nMadame Durand，\n\n我写信是关于定于三月 12 日下午稍早时候的会议。今早确认的一次客户出差恐怕使我无法出席。\n\n是否有可能改到三月 14 日或 15 日？这两天我都有空，时间由您定。\n\n提前感谢您的理解，如需补充信息我随时候命。\n\n此致敬礼，\n{prenom}',
               ),
               source: t('Courriel type — objet, motif, demande, disponibilité, politesse', 'Model email — subject, reason, request, availability, closing', '范例邮件 —— 主题、缘由、请求、可安排时间、致意'),
             },
@@ -114,6 +160,7 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '💼',
               caption: t('Vingt formules pour la réunion', 'Twenty meeting formulas', '会议二十句'),
               headers: [t('Intention', 'Purpose', '意图'), t('Formules', 'Formulas', '句式')],
               rows: [
@@ -128,6 +175,7 @@ export const b2ProfessionnelCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🏷️',
               title: t('Le désaccord français passe par l’atténuation', 'French disagreement runs through hedging', '法语中的异议靠缓和语气'),
               text: t(
                 'Dire « je ne suis pas d’accord » n’est pas impoli, mais reste abrupt en contexte professionnel. On préfère amortir : « je crains de ne pas partager », « je me demande si… ». Ce n’est pas de l’hypocrisie, c’est le registre attendu.',
@@ -137,6 +185,7 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🕰️',
               title: t('Gérer les moments difficiles', 'Handling awkward moments', '应对棘手时刻'),
               items: [
                 { fr: 'Pardon, je n’avais pas terminé.', gloss: t('Reprendre la parole après une interruption, sans agressivité.', 'Taking the floor back after an interruption, without aggression.', '被打断后接回话头，不带攻击性。') },
@@ -169,6 +218,7 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '✍️',
               title: t('La lettre de motivation en trois temps', 'The cover letter in three movements', '求职信的三段式'),
               entries: [
                 { label: t('Vous', 'You (the company)', '贵方'), value: t('Ce que vous savez de l’entreprise et pourquoi ce poste précis. Jamais de généralités.', 'What you know about the company and why this particular role. Never generalities.', '你对该公司的了解，以及为何是这个岗位。切忌泛泛而谈。') },
@@ -178,6 +228,7 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '❓',
               caption: t('Trois questions d’entretien et ce qu’elles cherchent', 'Three interview questions and what they are after', '三个面试问题及其考查点'),
               headers: [t('Question', 'Question', '问题'), t('Ce qu’on évalue', 'What is assessed', '考查点'), t('Stratégie', 'Strategy', '应答策略')],
               rows: [
@@ -189,6 +240,7 @@ export const b2ProfessionnelCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🎚️',
               title: t('Le vouvoiement est la règle', 'Vouvoiement is the rule', '面试一律用 vous'),
               text: t(
                 'En entretien, on vouvoie systématiquement, même dans une entreprise où tout le monde se tutoie au quotidien. Si le recruteur propose le tutoiement, suivez-le ; ne le proposez jamais vous-même.',
@@ -198,6 +250,7 @@ export const b2ProfessionnelCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💼',
               title: t('Formules utiles en entretien', 'Useful interview formulas', '面试实用句式'),
               items: [
                 { fr: 'Ce poste m’intéresse pour deux raisons précises.', gloss: t('Annoncer le nombre d’arguments structure immédiatement la réponse.', 'Announcing how many arguments you have instantly structures the answer.', '先说明有几点理由，能立刻使回答条理清晰。') },

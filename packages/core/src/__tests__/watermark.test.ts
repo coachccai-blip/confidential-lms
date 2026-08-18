@@ -6,8 +6,6 @@ import {
   encodeInvisible,
   readFingerprint,
   stripInvisible,
-  watermarkLabel,
-  watermarkPositionAt,
   watermarkText,
 } from '../watermark';
 
@@ -80,32 +78,5 @@ describe('filigrane invisible', () => {
       issuedAt: '2026-08-18T09:41:02.000Z',
     });
     expect(fingerprint.length).toBeLessThan(30);
-  });
-});
-
-describe('filigrane visible', () => {
-  it('change de position toutes les 30 secondes', () => {
-    const a = watermarkPositionAt(0);
-    const b = watermarkPositionAt(29_999);
-    const c = watermarkPositionAt(30_000);
-    expect(b).toEqual(a);
-    expect(c.step).toBe(a.step + 1);
-    expect([c.offsetX, c.offsetY]).not.toEqual([a.offsetX, a.offsetY]);
-  });
-
-  it('reste dans une plage d affichage raisonnable', () => {
-    for (let step = 0; step < 40; step += 1) {
-      const pos = watermarkPositionAt(step * 30_000);
-      expect(Math.abs(pos.offsetX)).toBeLessThanOrEqual(50);
-      expect(Math.abs(pos.offsetY)).toBeLessThanOrEqual(50);
-      expect(pos.angle).toBeLessThan(0);
-    }
-  });
-
-  it('compose un libelle avec email, telephone et horodatage', () => {
-    const label = watermarkLabel('marie@exemple.fr', '+33 6 11 22 33 44', new Date('2026-08-18T09:41:00Z'));
-    expect(label).toContain('marie@exemple.fr');
-    expect(label).toContain('+33 6 11 22 33 44');
-    expect(label).toContain('2026-08-18 09:41');
   });
 });

@@ -51,6 +51,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🕰️',
               caption: t('Saluer selon le moment', 'Greeting by time of day', '按时段问候'),
               headers: [
                 t('Formule', 'Phrase', '用语'),
@@ -68,6 +69,7 @@ export const a1PremiersMotsCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '👋',
               title: t('« Bonjour » ne se dit qu’une fois par jour', '“Bonjour” is said only once a day', '“Bonjour”一天只说一次'),
               text: t(
                 'Si vous recroisez la même personne dans la journée, on dit « rebonjour » en plaisantant, ou simplement rien. Redire « bonjour » à quelqu’un qu’on vient de saluer surprend toujours un francophone.',
@@ -75,7 +77,7 @@ export const a1PremiersMotsCourse: Course = {
                 '如果同一天再次遇到同一个人，法国人会开玩笑说 “rebonjour”，或者干脆什么都不说。对刚问候过的人再说一次 “bonjour” 总会让法语母语者感到意外。',
               ),
             },
-            { type: 'heading', text: t('Tu ou vous : la question qui compte', 'Tu or vous: the question that matters', 'Tu 还是 vous：真正重要的问题') },
+            { type: 'heading', emoji: '❓', text: t('Tu ou vous : la question qui compte', 'Tu or vous: the question that matters', 'Tu 还是 vous：真正重要的问题') },
             {
               type: 'paragraph',
               text: t(
@@ -86,6 +88,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('La règle du débutant', 'The beginner’s rule', '初学者法则'),
               items: [
                 { fr: 'Bonjour, comment allez-vous ?', gloss: t('Avec un adulte inconnu, un commerçant, un professeur. Toujours sûr.', 'With an adult you do not know, a shopkeeper, a teacher. Always safe.', '对陌生成年人、店员、老师使用。永远安全。') },
@@ -95,8 +98,52 @@ export const a1PremiersMotsCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎚️',
+              title: t('Tu ou vous : le curseur social', 'Tu or vous: the social dial', 'Tu 还是 vous：社交刻度'),
+              hint: t(
+                'Passez d’une situation à l’autre, {prenom}, pour voir ce qui se dit.',
+                'Move from one situation to the next, {prenom}, to see what is said.',
+                '{prenom}，在不同情境间切换，看看该怎么说。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'stranger',
+                    label: t('Un inconnu', 'A stranger', '陌生人'),
+                    headline: t('vous — toujours sûr', 'vous — always safe', 'vous —— 永远稳妥'),
+                    example: 'Bonjour, comment allez-vous ?',
+                    gloss: t('Commerçant, guichet, passant : le vouvoiement ne vexe jamais personne.', 'Shopkeeper, counter, passer-by: “vous” never offends anyone.', '店员、柜台、路人：用 vous 从不会冒犯任何人。'),
+                  },
+                  {
+                    id: 'work',
+                    label: t('Au travail', 'At work', '职场'),
+                    headline: t('vous, puis selon l’usage', 'vous, then as the workplace goes', 'vous，之后视惯例而定'),
+                    example: 'Bonjour Madame, vous avez une minute ?',
+                    gloss: t('On vouvoie d’abord et on observe : certaines entreprises se tutoient entièrement, d’autres pas du tout.', 'Start with “vous” and observe: some companies use “tu” throughout, others not at all.', '先用 vous 并观察：有些公司全员互称 tu，有些则完全不用。'),
+                  },
+                  {
+                    id: 'known',
+                    label: t('Un collègue proche', 'A close colleague', '关系近的同事'),
+                    headline: t('tu, une fois proposé', 'tu, once it has been offered', 'tu，在对方提出之后'),
+                    example: 'Salut, tu viens manger ?',
+                    gloss: t('Le passage au tutoiement se propose : « on peut se tutoyer ». Ne le prenez pas d’office.', 'The switch to “tu” is offered: “on peut se tutoyer”. Do not assume it.', '改用 tu 需由对方提出：“on peut se tutoyer”。不要自作主张。'),
+                  },
+                  {
+                    id: 'family',
+                    label: t('Famille et amis', 'Family and friends', '家人与朋友'),
+                    headline: t('tu, sans hésitation', 'tu, without hesitation', 'tu，无需犹豫'),
+                    example: 'Ça va ? Tu as passé un bon week-end ?',
+                    gloss: t('Vouvoyer un ami serait perçu comme une mise à distance délibérée.', 'Using “vous” with a friend would read as deliberately keeping them at a distance.', '对朋友用 vous 会被理解为刻意保持距离。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'success',
+              emoji: '💡',
               title: t('En cas de doute', 'When in doubt', '拿不准时'),
               text: t(
                 'Employez **vous**. Personne n’a jamais été vexé qu’on lui dise « vous ». Si votre interlocuteur préfère le tutoiement, il vous le dira : « on peut se tutoyer ».',
@@ -128,9 +175,10 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Les quatre phrases à savoir par cœur', 'The four sentences to know by heart', '必须背下的四句话'),
               items: [
-                { fr: 'Je m’appelle Marie Dubois.', gloss: t('Littéralement « je m’appelle » : le verbe est pronominal.', 'Literally “I call myself”: the verb is reflexive.', '字面意思是“我叫自己”：这是自反动词。') },
+                { fr: 'Je m’appelle {prenom}.', gloss: t('Votre phrase, {prenom} : littéralement « je m’appelle », car le verbe est pronominal.', 'Your own sentence, {prenom}: literally “I call myself”, because the verb is reflexive.', '{prenom}，这就是你的句子：字面意思是“我叫自己”，因为这是自反动词。') },
                 { fr: 'Je suis française. / Je suis chinois.', gloss: t('La nationalité s’accorde : française au féminin, chinois au masculin.', 'Nationality agrees: française for a woman, chinois for a man.', '国籍需性数配合：女性用 française，男性用 chinois。') },
                 { fr: 'J’habite à Lyon.', gloss: t('« à » devant une ville, toujours.', '“à” before a city, always.', '城市名前一律用 “à”。') },
                 { fr: 'Je suis étudiante. / Je suis ingénieur.', gloss: t('Pas d’article devant la profession, contrairement à l’anglais.', 'No article before the job, unlike English.', '职业前不加冠词，与英语不同。') },
@@ -138,6 +186,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('S’appeler au présent', 'S’appeler in the present', '现在时的 s’appeler'),
               note: t(
                 'Attention au double **l** aux personnes du singulier et à la troisième du pluriel : c’est une irrégularité d’orthographe, pas de prononciation.',
@@ -154,7 +203,7 @@ export const a1PremiersMotsCourse: Course = {
                 { pronoun: 'ils / elles', forms: ['s’appellent'] },
               ],
             },
-            { type: 'heading', text: t('Épeler son nom', 'Spelling your name', '拼读姓名') },
+            { type: 'heading', emoji: '✍️', text: t('Épeler son nom', 'Spelling your name', '拼读姓名') },
             {
               type: 'paragraph',
               text: t(
@@ -165,6 +214,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '✍️',
               title: t('Les accents, à dire quand on épelle', 'Accents, to be said when spelling', '拼读时要说出的符号'),
               entries: [
                 { label: t('é', 'é', 'é'), value: t('« e accent aigu » — été, café, étudiant', '“e accent aigu” — été, café, étudiant', '“e accent aigu” —— été、café、étudiant') },
@@ -177,6 +227,7 @@ export const a1PremiersMotsCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🪤',
               title: t('Le piège du prénom et du nom', 'The first-name / surname trap', '名与姓的陷阱'),
               text: t(
                 'En français, **le prénom** vient d’abord (Marie), **le nom** ensuite (Dubois) — l’inverse de l’ordre chinois. Sur un formulaire, « NOM » en majuscules désigne le nom de famille, et « Prénom » le prénom.',
@@ -208,6 +259,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔢',
               caption: t('Les dizaines qui posent problème', 'The tricky tens', '容易出错的整十数'),
               headers: [t('Nombre', 'Number', '数字'), t('Français', 'French', '法语'), t('Décomposition', 'Breakdown', '构成')],
               rows: [
@@ -221,6 +273,7 @@ export const a1PremiersMotsCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🏛️',
               title: t('En Belgique et en Suisse, c’est plus simple', 'In Belgium and Switzerland it is simpler', '在比利时和瑞士更简单'),
               text: t(
                 'On y dit « septante » (70), « nonante » (90), et « huitante » (80) dans une partie de la Suisse. Ces formes sont parfaitement correctes ; elles ne sont simplement pas utilisées en France.',
@@ -228,9 +281,10 @@ export const a1PremiersMotsCourse: Course = {
                 '在那里人们说 “septante”（70）、“nonante”（90），瑞士部分地区还说 “huitante”（80）。这些形式完全正确，只是法国不用。',
               ),
             },
-            { type: 'heading', text: t('Quelle heure est-il ?', 'What time is it?', '现在几点？') },
+            { type: 'heading', emoji: '🕰️', text: t('Quelle heure est-il ?', 'What time is it?', '现在几点？') },
             {
               type: 'examples',
+              emoji: '🕰️',
               title: t('Deux façons de dire la même heure', 'Two ways of giving the same time', '同一时刻的两种说法'),
               items: [
                 { fr: 'Il est quatorze heures trente.', gloss: t('Heure officielle : horaires, trains, rendez-vous formels.', 'Official time: timetables, trains, formal appointments.', '正式时间：时刻表、火车、正式约会。') },
@@ -241,6 +295,7 @@ export const a1PremiersMotsCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Jours, mois, dates', 'Days, months, dates', '星期、月份、日期'),
               entries: [
                 { label: t('Les jours', 'Days', '星期'), value: t('lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche — sans majuscule', 'lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche — no capital letter', 'lundi、mardi、mercredi、jeudi、vendredi、samedi、dimanche —— 不大写') },

@@ -51,6 +51,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🧭',
               caption: t('Les quatre étapes préparatoires', 'The four preparatory steps', '四个准备步骤'),
               headers: [t('Étape', 'Step', '步骤'), t('Question à se poser', 'Question to ask', '要问自己的问题'), t('Durée indicative', 'Rough time', '大致耗时')],
               rows: [
@@ -62,6 +63,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Trois plans classiques', 'Three classic outlines', '三种经典结构'),
               entries: [
                 { label: t('Dialectique', 'Dialectical', '正反合'), value: t('Thèse / antithèse / dépassement. Convient aux sujets formulés en question fermée : « Faut-il… ? »', 'Thesis / antithesis / synthesis. Suited to closed questions: “Faut-il… ?”', '正题 / 反题 / 超越。适用于封闭式提问：“Faut-il… ?”') },
@@ -72,6 +74,7 @@ export const c1AcademiqueCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Le troisième temps n’est pas un compromis', 'The third movement is not a compromise', '第三部分不是折中'),
               text: t(
                 'Le « dépassement » d’un plan dialectique ne consiste pas à dire « les deux thèses ont du bon ». Il déplace la question : il montre que l’opposition initiale reposait sur un présupposé qu’on peut abandonner. Sans ce déplacement, la troisième partie n’est qu’une redite tiède.',
@@ -79,7 +82,7 @@ export const c1AcademiqueCourse: Course = {
                 '正反合结构中的“合”并非说“两种观点都有道理”。它移动了问题本身：表明最初的对立建立在一个可以放弃的预设之上。没有这一移动，第三部分只是温吞的重复。',
               ),
             },
-            { type: 'heading', text: t('Introduction et conclusion', 'Introduction and conclusion', '引言与结论') },
+            { type: 'heading', emoji: '🧭', text: t('Introduction et conclusion', 'Introduction and conclusion', '引言与结论') },
             {
               type: 'paragraph',
               text: t(
@@ -112,6 +115,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📄',
               caption: t('Confronter les documents', 'Confronting the documents', '对照材料'),
               headers: [t('Relation', 'Relation', '关系'), t('Formulations', 'Wordings', '表述方式')],
               rows: [
@@ -124,6 +128,7 @@ export const c1AcademiqueCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🪤',
               title: t('Reformuler n’est pas paraphraser', 'Reformulating is not paraphrasing', '转述不等于换词复述'),
               text: t(
                 'Paraphraser, c’est remplacer chaque mot par un synonyme en gardant la structure. Reformuler, c’est **changer le point de vue de la phrase** : passer du verbe au nom, de l’actif au passif, du particulier au général. La différence est immédiatement visible pour un correcteur.',
@@ -133,6 +138,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🧭',
               title: t('Trois techniques de reformulation', 'Three reformulation techniques', '三种转述技巧'),
               items: [
                 { fr: 'Les prix ont fortement augmenté. → La forte hausse des prix…', gloss: t('Nominalisation : le verbe devient un nom, la phrase se compacte.', 'Nominalisation: the verb becomes a noun and the sentence compacts.', '名词化：动词变名词，句子被压缩。') },
@@ -165,6 +171,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Remplacer le « je »', 'Replacing “je”', '替代 “je” 的方式'),
               entries: [
                 { label: t('Le « on » d’analyse', 'The analytical “on”', '分析性的 “on”'), value: t('« On observe que », « on peut avancer que ». Standard dans les sciences humaines.', '“On observe que”, “on peut avancer que”. Standard in the humanities.', '“On observe que”“on peut avancer que”。人文学科的标准写法。') },
@@ -175,6 +182,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🧠',
               caption: t('Doser la certitude', 'Calibrating certainty', '把握确定性程度'),
               headers: [t('Degré', 'Degree', '程度'), t('Marqueurs', 'Markers', '标记语'), t('Effet', 'Effect', '效果')],
               rows: [
@@ -184,8 +192,41 @@ export const c1AcademiqueCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎓',
+              title: t('Le dosage de la certitude', 'Calibrating certainty', '确定性的分寸'),
+              hint: t(
+                'Croisez ce que vous avancez et votre degré de certitude.',
+                'Cross what you are claiming with how certain you are.',
+                '将所主张的内容与确定程度交叉选择。',
+              ),
+              widget: {
+                kind: 'matrix',
+                rowsLabel: t('Ce que vous avancez', 'What you are claiming', '你主张的内容'),
+                columnsLabel: t('Degré de certitude', 'Degree of certainty', '确定程度'),
+                rows: [
+                  { id: 'fact', label: t('Un fait établi', 'An established fact', '既定事实') },
+                  { id: 'reading', label: t('Une interprétation', 'An interpretation', '一种解读') },
+                  { id: 'hypo', label: t('Une hypothèse', 'A hypothesis', '一个假设') },
+                ],
+                columns: [
+                  { id: 'strong', label: t('Assumé', 'Asserted', '明确断言') },
+                  { id: 'hedged', label: t('Modalisé', 'Hedged', '有所保留') },
+                ],
+                cells: [
+                  { row: 'fact', column: 'strong', answer: 'les données montrent que', example: 'Les données montrent que la fréquentation a doublé.', gloss: t('Le bon usage : un fait vérifiable s’affirme. Le modaliser affaiblit inutilement le texte.', 'The right use: a verifiable fact should be asserted. Hedging it weakens the text for nothing.', '正确用法：可核实的事实应当断言。为其加限定只会无谓地削弱文章。') },
+                  { row: 'fact', column: 'hedged', answer: 'il semblerait que', example: 'Il semblerait que la fréquentation ait doublé.', gloss: t('À éviter : modaliser un chiffre que vous citez vous-même donne l’impression que vous n’y croyez pas.', 'To avoid: hedging a figure you cite yourself suggests you do not believe it.', '应避免：为自己引用的数据加限定，会让人以为你自己都不相信。') },
+                  { row: 'reading', column: 'strong', answer: 'ce texte prouve que', example: 'Ce texte prouve que l’auteur condamne son personnage.', gloss: t('Risqué : « prouver » engage bien plus qu’une lecture ne le permet. Un correcteur y verra une surinterprétation.', 'Risky: “prove” commits far more than a reading allows. A marker will read it as over-interpretation.', '有风险：“证明”所承担的远超一次解读所能支撑。阅卷人会视之为过度诠释。') },
+                  { row: 'reading', column: 'hedged', answer: 'tout porte à croire que', example: 'Tout porte à croire que l’auteur condamne son personnage.', gloss: t('Le registre juste : prudent mais affirmatif. C’est le plus utile de tous en écrit académique.', 'The right register: cautious yet affirmative. The most useful of all in academic writing.', '恰当的语体：谨慎而肯定。这是学术写作中最有用的一档。') },
+                  { row: 'hypo', column: 'strong', answer: 'il est établi que', example: 'Il est établi que ce dispositif réduira les écarts.', gloss: t('Faute de méthode : présenter une hypothèse comme acquise décrédibilise tout le reste du devoir.', 'A methodological error: presenting a hypothesis as settled undermines the whole paper.', '方法上的错误：把假设当作定论，会使整篇文章失去可信度。') },
+                  { row: 'hypo', column: 'hedged', answer: 'on pourrait supposer que', example: 'On pourrait supposer que ce dispositif réduira les écarts.', gloss: t('Correct : l’hypothèse est annoncée comme telle, ce qui autorise à la discuter ensuite.', 'Correct: the hypothesis is flagged as such, which makes it discussable afterwards.', '正确：明确标示为假设，从而可在其后加以讨论。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '⚠️',
               title: t('Trop de prudence tue l’argument', 'Too much caution kills the argument', '过度谨慎会毁掉论证'),
               text: t(
                 'Un texte où chaque phrase est modalisée — « il semblerait qu’on puisse peut-être envisager » — ne dit plus rien. La règle : moduler les **interprétations**, affirmer les **faits**. Un correcteur C1 sanctionne autant l’assertion brutale que l’effacement systématique.',
@@ -195,6 +236,7 @@ export const c1AcademiqueCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '📄',
               title: t('Citer sans plagier', 'Quoting without plagiarising', '引用而不抄袭'),
               items: [
                 { fr: 'Comme le note Bourdieu, « le goût classe et classe celui qui classe » (1979, p. 6).', gloss: t('Citation courte entre guillemets français, référence complète.', 'A short quotation in French guillemets, with a full reference.', '用法语书名号的短引文，附完整出处。') },

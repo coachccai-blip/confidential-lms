@@ -49,7 +49,7 @@ export const grammaireCourse: Course = {
                 '在法语中，每个名词都有[[genre|性]]：阳性或阴性。这并非逻辑问题——桌子本身并无阴性可言——而是词语的属性，必须掌握它才能让[[determinant|限定词]]和形容词正确配合。好消息是：名词词尾能让你在约 80% 的情况下猜对。',
               ),
             },
-            { type: 'heading', text: t('Les terminaisons fiables', 'Reliable endings', '可靠的词尾') },
+            { type: 'heading', emoji: '🔹', text: t('Les terminaisons fiables', 'Reliable endings', '可靠的词尾') },
             {
               type: 'table',
               headers: [
@@ -69,6 +69,7 @@ export const grammaireCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🏷️',
               title: t('Apprenez le nom avec son article', 'Learn the noun with its article', '记单词时连同冠词一起记'),
               text: t(
                 'Ne notez jamais « problème » seul dans votre carnet : notez « un problème ». Le déterminant fait partie du mot pour un apprenant, et ce réflexe supprime la moitié des fautes d’accord en production écrite.',
@@ -76,9 +77,10 @@ export const grammaireCourse: Course = {
                 '不要在笔记本上只写“problème”，而要写“un problème”。对学习者而言，限定词是词语的一部分；养成这个习惯能消除书面表达中一半的配合错误。',
               ),
             },
-            { type: 'heading', text: t('Les pièges classiques', 'Classic traps', '经典陷阱') },
+            { type: 'heading', emoji: '🪤', text: t('Les pièges classiques', 'Classic traps', '经典陷阱') },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('À mémoriser tels quels', 'Memorise these as they are', '原样记忆'),
               items: [
                 { fr: 'un problème, un système, un thème, un programme', gloss: t('Terminaison -ème / -amme, pourtant masculins.', 'Ending in -ème / -amme, yet masculine.', '虽以 -ème / -amme 结尾，却是阳性。') },
@@ -87,7 +89,7 @@ export const grammaireCourse: Course = {
                 { fr: 'le poste (l’emploi) / la poste (le service)', gloss: t('Le genre change le sens : soyez attentif.', 'Gender changes the meaning here: pay attention.', '性别不同，词义也不同，需注意。') },
               ],
             },
-            { type: 'heading', text: t('L’accord se propage', 'Agreement spreads', '配合会向外扩散') },
+            { type: 'heading', emoji: '🏷️', text: t('L’accord se propage', 'Agreement spreads', '配合会向外扩散') },
             {
               type: 'paragraph',
               text: t(
@@ -98,6 +100,7 @@ export const grammaireCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🪤',
               title: t('Une erreur, trois conséquences', 'One error, three consequences', '一个错误，三重后果'),
               items: [
                 { fr: 'Cette décision, prise hier, s’est révélée efficace.', gloss: t('Chaîne correcte au féminin.', 'Correct feminine chain.', '正确的阴性配合链。') },
@@ -148,9 +151,10 @@ export const grammaireCourse: Course = {
               ],
             },
             { type: 'figure', figureId: 'accord-arbre', caption: t('L’arbre de décision complet, en trois questions.', 'The full decision tree, in three questions.', '完整的三步决策树。') },
-            { type: 'heading', text: t('Le cas « être » : l’accord avec le sujet', 'The “être” case: agreement with the subject', '“être”的情况：与主语配合') },
+            { type: 'heading', emoji: '🏷️', text: t('Le cas « être » : l’accord avec le sujet', 'The “être” case: agreement with the subject', '“être”的情况：与主语配合') },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Auxiliaire être', 'Auxiliary être', '助动词 être'),
               items: [
                 { fr: 'Elle est partie à huit heures.', gloss: t('Sujet féminin singulier → partie.', 'Feminine singular subject → partie.', '主语为阴性单数 → partie。') },
@@ -158,9 +162,10 @@ export const grammaireCourse: Course = {
                 { fr: 'Les documents ont été envoyés.', gloss: t('[[voix-passive|Voix passive]] : accord avec le sujet.', '[[voix-passive|Passive voice]]: agreement with the subject.', '[[voix-passive|被动语态]]：与主语配合。') },
               ],
             },
-            { type: 'heading', text: t('Le cas « avoir » : la place du COD décide', 'The “avoir” case: the position of the object decides', '“avoir”的情况：由宾语位置决定') },
+            { type: 'heading', emoji: '🔹', text: t('Le cas « avoir » : la place du COD décide', 'The “avoir” case: the position of the object decides', '“avoir”的情况：由宾语位置决定') },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Auxiliaire avoir', 'Auxiliary avoir', '助动词 avoir'),
               items: [
                 { fr: 'J’ai lu ces trois romans.', gloss: t('COD après le verbe → pas d’accord.', 'Object after the verb → no agreement.', '宾语在动词之后 → 不配合。') },
@@ -170,8 +175,41 @@ export const grammaireCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🔀',
+              title: t('L’accord du participe, en deux questions', 'Participle agreement, in two questions', '过去分词配合：两个问题'),
+              hint: t(
+                'Choisissez l’auxiliaire, puis la place du complément d’objet direct.',
+                'Pick the auxiliary, then where the direct object sits.',
+                '先选择助动词，再选择直接宾语的位置。',
+              ),
+              widget: {
+                kind: 'matrix',
+                rowsLabel: t('Auxiliaire', 'Auxiliary', '助动词'),
+                columnsLabel: t('Place du COD', 'Position of the direct object', '直接宾语的位置'),
+                rows: [
+                  { id: 'avoir', label: t('avoir', 'avoir', 'avoir') },
+                  { id: 'etre', label: t('être', 'être', 'être') },
+                  { id: 'pron', label: t('verbe pronominal', 'reflexive verb', '自反动词') },
+                ],
+                columns: [
+                  { id: 'before', label: t('Avant le verbe', 'Before the verb', '动词之前') },
+                  { id: 'after', label: t('Après le verbe, ou absent', 'After the verb, or none', '动词之后，或没有') },
+                ],
+                cells: [
+                  { row: 'avoir', column: 'before', answer: t('accord avec le COD', 'agrees with the object', '与宾语配合').fr, example: 'Les lettres que j’ai écrites.', gloss: t('Le COD « que » précède le verbe : le participe s’accorde en genre et en nombre avec lui.', 'The object “que” precedes the verb, so the participle agrees with it in gender and number.', '宾语 “que” 位于动词之前，因此分词与之作性数配合。') },
+                  { row: 'avoir', column: 'after', answer: t('aucun accord', 'no agreement', '不配合').fr, example: 'J’ai écrit des lettres.', gloss: t('Le COD suit le verbe : le participe reste invariable, quel que soit le sujet.', 'The object follows the verb: the participle stays invariable, whatever the subject.', '宾语位于动词之后：无论主语为何，分词保持不变。') },
+                  { row: 'etre', column: 'before', answer: t('accord avec le sujet', 'agrees with the subject', '与主语配合').fr, example: 'Elles sont parties tôt.', gloss: t('Avec être, le participe se comporte comme un adjectif : il suit le sujet, jamais l’objet.', 'With être, the participle behaves like an adjective: it follows the subject, never the object.', '用 être 时，分词如同形容词：随主语变化，绝不随宾语。') },
+                  { row: 'etre', column: 'after', answer: t('accord avec le sujet', 'agrees with the subject', '与主语配合').fr, example: 'Marie est arrivée.', gloss: t('La place du complément ne change rien : avec être, c’est toujours le sujet qui commande.', 'The complement’s position changes nothing: with être, the subject always governs.', '补语位置无关紧要：用 être 时始终由主语决定。') },
+                  { row: 'pron', column: 'before', answer: t('accord avec le COD', 'agrees with the object', '与宾语配合').fr, example: 'Elle s’est lavée.', gloss: t('« Se » est ici le COD et précède le verbe : accord. C’est le cas le plus fréquent.', 'Here “se” is the object and precedes the verb, so it agrees. This is the most frequent case.', '此处 “se” 是宾语且位于动词前，故配合。这是最常见的情形。') },
+                  { row: 'pron', column: 'after', answer: t('aucun accord', 'no agreement', '不配合').fr, example: 'Elle s’est lavé les mains.', gloss: t('Le COD « les mains » suit le verbe ; « se » devient complément d’objet indirect, donc pas d’accord.', 'The object “les mains” follows the verb; “se” becomes an indirect object, so no agreement.', '宾语 “les mains” 位于动词后，“se” 变为间接宾语，故不配合。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Le piège des verbes pronominaux', 'The reflexive verb trap', '自反动词的陷阱'),
               text: t(
                 'Un [[verbe-pronominal|verbe pronominal]] se conjugue avec être, mais l’accord suit en réalité la règle du COD. « Elles se sont lavées » (se = COD, accord) mais « Elles se sont lavé les mains » (le COD est « les mains », placé après : pas d’accord).',
@@ -182,6 +220,7 @@ export const grammaireCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Le réflexe de relecture', 'The proofreading reflex', '复查时的固定动作'),
               text: t(
                 'Lors de la relecture, soulignez chaque participe passé et posez les trois questions. Cette vérification prend deux minutes et rapporte souvent un point entier sur le critère « morphosyntaxe ».',
@@ -225,6 +264,7 @@ export const grammaireCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Choisir en une seconde', 'Choosing in one second', '一秒钟做出选择'),
               headers: [
                 t('Pronom', 'Pronoun', '代词'),
@@ -242,6 +282,7 @@ export const grammaireCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('« dont » : le piège numéro un', '“dont”: trap number one', '“dont”：头号陷阱'),
               text: t(
                 'On emploie « dont » quand le verbe ou le nom de la subordonnée se construit avec « de » : parler **de** quelque chose, avoir besoin **de**, être fier **de**, le prix **de**. Erreur fréquente : « le livre dont j’ai besoin **de** » — le « de » est déjà contenu dans « dont ».',
@@ -251,6 +292,7 @@ export const grammaireCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Fusionner deux phrases', 'Merging two sentences', '合并两个句子'),
               items: [
                 { fr: 'Je connais un restaurant. Ce restaurant sert des plats végétariens. → Je connais un restaurant qui sert des plats végétariens.', gloss: t('L’antécédent est sujet → qui.', 'The antecedent is the subject → qui.', '先行词作主语 → qui。') },
@@ -283,6 +325,7 @@ export const grammaireCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '💡',
               caption: t('Le tableau à connaître par cœur', 'The table to know by heart', '必须熟记的表格'),
               headers: [
                 t('Relation', 'Relation', '关系'),
@@ -300,6 +343,7 @@ export const grammaireCourse: Course = {
             {
               type: 'callout',
               tone: 'danger',
+              emoji: '🪤',
               title: t('La faute qui coûte le plus cher', 'The costliest mistake', '代价最高的错误'),
               text: t(
                 '« Bien que » et « pour que » exigent TOUJOURS le subjonctif. « Bien qu’il **est** fatigué » est une faute lourde ; il faut « bien qu’il **soit** fatigué ». Inversement, « parce que » n’est jamais suivi du subjonctif.',
@@ -309,6 +353,7 @@ export const grammaireCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Exprimer la même idée de quatre façons', 'Expressing the same idea four ways', '用四种方式表达同一想法'),
               items: [
                 { fr: 'Le musée a fermé parce que les travaux ont commencé.', gloss: t('Cause, registre courant.', 'Cause, standard register.', '原因，通用语体。') },
@@ -320,6 +365,7 @@ export const grammaireCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '💡',
               title: t('Conseil de production écrite', 'Writing tip', '写作建议'),
               text: t(
                 'Visez trois connecteurs différents par paragraphe, jamais le même deux fois de suite. Un texte B2 qui enchaîne « et… et… et… » plafonne à la moyenne, quelle que soit la richesse des idées.',

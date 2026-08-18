@@ -17,11 +17,15 @@ import {
   createId,
   createLearner as createLearnerIn,
   createSecurityEvent,
+  credentialsOfInvite,
+  credentialsOfLearner,
   decodeReport,
+  findLearnerByEmail,
   mergeReport,
   registerDevice,
   restoreLearner as restoreLearnerIn,
   verifyAdminPassword,
+  verifyLearnerPassword,
   removeDevice as removeDeviceFrom,
   revokeOtherSessions,
   summarizeEvents,
@@ -29,6 +33,7 @@ import {
   type CreateLearnerInput,
   type CreateLearnerOutcome,
   type Device,
+  type InvitePayload,
   type LearnerReport,
   type QuizAttempt,
   type SecurityEvent,
@@ -55,10 +60,11 @@ export interface Toast {
 
 export interface SignInInput {
   readonly email: string;
-  readonly phone: string;
-  readonly displayName: string;
-  /** Code d'inscription reçu de l'enseignant, s'il y en a un. */
-  readonly enrolmentCode?: string | null;
+  readonly password: string;
+  readonly firstName: string;
+  readonly lastName?: string;
+  /** Invitation collée à l'instant, si l'apprenant arrive sur un appareil neuf. */
+  readonly invite?: InvitePayload | null;
 }
 
 /** Issue d'un import de remontée de progression. */
@@ -68,7 +74,8 @@ export type ImportOutcome =
 
 export type SignInOutcome =
   | { readonly ok: true }
-  | { readonly ok: false; readonly reason: 'device-limit'; readonly message: string };
+  | { readonly ok: false; readonly reason: 'device-limit'; readonly message: string }
+  | { readonly ok: false; readonly reason: 'bad-password' };
 
 export interface AppContextValue {
   readonly state: PersistedState;
@@ -79,7 +86,7 @@ export interface AppContextValue {
   readonly toasts: readonly Toast[];
   /** Charge utile injectee dans le texte servi a cet apprenant. */
   readonly fingerprint: string;
-  readonly signIn: (input: SignInInput) => SignInOutcome;
+  readonly signIn: (input: SignInInput) => Promise<SignInOutcome>;
   readonly signOut: () => void;
   readonly forgetDevice: (deviceId: string) => void;
   readonly revokeSession: (sessionId: string) => void;
@@ -103,8 +110,9 @@ export interface AppContextValue {
   readonly setAdminPassword: (password: string) => Promise<void>;
   readonly unlockAdmin: (password: string) => Promise<boolean>;
   readonly lockAdmin: () => void;
+  readonly markBadgesSeen: (ids: readonly string[]) => void;
   readonly changeAdminPassword: (current: string, next: string) => Promise<boolean>;
-  readonly createLearner: (input: CreateLearnerInput) => CreateLearnerOutcome;
+  readonly createLearner: (input: CreateLearnerInput) => Promise<CreateLearnerOutcome>;
   readonly archiveLearner: (learnerId: string) => void;
   readonly restoreLearner: (learnerId: string) => void;
   readonly importReport: (raw: string) => ImportOutcome;
@@ -211,21 +219,51 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
   );
 
   const signIn = useCallback(
-    (input: SignInInput): SignInOutcome => {
+    async (input: SignInInput): Promise<SignInOutcome> => {
       const now = new Date();
       const nowIso = now.toISOString();
       const environment = describeEnvironment();
       const current = loadState();
 
+      /*
+       * Deux régimes cohabitent.
+       *
+       * 1. Un compte créé par l'enseignant — présent dans ce navigateur, ou
+       *    porté par l'invitation que l'apprenant vient de coller. Le mot de
+       *    passe est alors vérifié contre le condensé salé du compte.
+       * 2. La démonstration publique, ouverte : aucun compte n'existe, on
+       *    laisse entrer et l'identité saisie sert de repère.
+       *
+       * Rappel : cette vérification s'exécute dans le navigateur. Elle empêche
+       * un tiers d'ouvrir le compte de quelqu'un d'autre avec sa seule adresse,
+       * elle ne remplace pas une authentification serveur.
+       */
+      const known = input.invite
+        ? credentialsOfInvite(input.invite)
+        : (() => {
+            const account = findLearnerByEmail(current.learners, input.email);
+            return account ? credentialsOfLearner(account) : null;
+          })();
+
+      if (known && !(await verifyLearnerPassword(known, input.password))) {
+        setState((previous) => ({ ...previous, events: appendEvent(previous, 'login-refused') }));
+        return { ok: false, reason: 'bad-password' };
+      }
+
+      const firstName = (known?.firstName ?? input.firstName).trim() || 'Apprenant';
+      const lastName = (known?.lastName ?? input.lastName ?? '').trim();
+      const email = (known?.email ?? input.email).trim().toLowerCase();
+      const displayName = `${firstName} ${lastName}`.trim();
+
       const user: User =
-        current.user && current.user.email === input.email
-          ? { ...current.user, phone: input.phone, displayName: input.displayName }
+        current.user && current.user.email === email
+          ? { ...current.user, firstName, displayName }
           : {
               id: createId('usr'),
-              role: input.email.startsWith('admin@') ? 'admin' : 'learner',
-              email: input.email,
-              phone: input.phone,
-              displayName: input.displayName,
+              role: email.startsWith('admin@') ? 'admin' : 'learner',
+              email,
+              firstName,
+              displayName,
               createdAt: nowIso,
             };
 
@@ -252,7 +290,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         };
       }
 
-      const enrolmentCode = input.enrolmentCode?.trim() ? input.enrolmentCode.trim() : current.enrolmentCode;
+      const enrolmentCode = known ? known.code : current.enrolmentCode;
 
       const session: SessionToken = {
         id: createId('ses'),
@@ -359,7 +397,12 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
   }, []);
 
   const setLocale = useCallback((locale: Locale) => {
-    setState((previous) => ({ ...previous, locale }));
+    setState((previous) => ({
+      ...previous,
+      locale,
+      // On mémorise chaque langue essayée : c'est ce qui débloque « polyglotte ».
+      localesUsed: previous.localesUsed.includes(locale) ? previous.localesUsed : [...previous.localesUsed, locale],
+    }));
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -481,6 +524,14 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
 
   const lockAdmin = useCallback(() => setAdminUnlocked(false), []);
 
+  /** Enregistre les badges déjà annoncés, pour ne pas les rejouer. */
+  const markBadgesSeen = useCallback((ids: readonly string[]) => {
+    setState((previous) => {
+      const merged = [...new Set([...previous.badgesSeen, ...ids])];
+      return merged.length === previous.badgesSeen.length ? previous : { ...previous, badgesSeen: merged };
+    });
+  }, []);
+
   const changeAdminPassword = useCallback(
     async (current: string, next: string): Promise<boolean> => {
       const lock = loadState().adminLock;
@@ -492,8 +543,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     [],
   );
 
-  const createLearner = useCallback((input: CreateLearnerInput): CreateLearnerOutcome => {
-    const outcome = createLearnerIn(loadState().learners, input, new Date().toISOString());
+  const createLearner = useCallback(async (input: CreateLearnerInput): Promise<CreateLearnerOutcome> => {
+    const outcome = await createLearnerIn(loadState().learners, input, new Date().toISOString());
     if (outcome.ok) {
       const created = outcome.learner;
       setState((previous) => ({ ...previous, learners: [created, ...previous.learners] }));
@@ -533,7 +584,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     return {
       kind: 'lumiere.report.v1',
       code: current.enrolmentCode ?? '',
-      displayName: current.user?.displayName ?? '',
+      firstName: current.user?.firstName ?? '',
       email: current.user?.email ?? '',
       exportedAt: new Date().toISOString(),
       completedLessons,
@@ -586,6 +637,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       setAdminPassword,
       unlockAdmin,
       lockAdmin,
+      markBadgesSeen,
       changeAdminPassword,
       createLearner,
       archiveLearner,
@@ -616,6 +668,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       setAdminPassword,
       unlockAdmin,
       lockAdmin,
+      markBadgesSeen,
       changeAdminPassword,
       createLearner,
       archiveLearner,

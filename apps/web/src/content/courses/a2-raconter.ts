@@ -51,6 +51,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔄',
               caption: t('Former le participe passé', 'Forming the past participle', '构成过去分词'),
               headers: [t('Groupe', 'Group', '类别'), t('Infinitif', 'Infinitive', '不定式'), t('Participe', 'Participle', '过去分词')],
               rows: [
@@ -60,7 +61,7 @@ export const a2RaconterCourse: Course = {
                 [t('Autres irréguliers', 'Other irregulars', '其他不规则'), t('voir, vouloir, pouvoir, écrire', 'voir, vouloir, pouvoir, écrire', 'voir、vouloir、pouvoir、écrire'), t('vu, voulu, pu, écrit', 'vu, voulu, pu, écrit', 'vu、voulu、pu、écrit')],
               ],
             },
-            { type: 'heading', text: t('Les quatorze verbes qui prennent être', 'The fourteen verbs that take être', '使用 être 的十四个动词') },
+            { type: 'heading', emoji: '🔄', text: t('Les quatorze verbes qui prennent être', 'The fourteen verbs that take être', '使用 être 的十四个动词') },
             {
               type: 'paragraph',
               text: t(
@@ -71,6 +72,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '💡',
               title: t('À apprendre par paires', 'Learn them in pairs', '成对记忆'),
               entries: [
                 { label: t('aller / venir', 'aller / venir', 'aller / venir'), value: t('je suis allé, je suis venu — et leurs dérivés : revenir, devenir', 'je suis allé, je suis venu — and their derivatives: revenir, devenir', 'je suis allé、je suis venu —— 及其派生词：revenir、devenir') },
@@ -84,6 +86,7 @@ export const a2RaconterCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🔄',
               title: t('Avec être, le participe s’accorde', 'With être, the participle agrees', '用 être 时分词要配合'),
               text: t(
                 'Avec **être**, le participe s’accorde avec le sujet comme un adjectif : « elle est partie », « elles sont parties ». Avec **avoir**, il ne s’accorde jamais avec le sujet : « elle a mangé », jamais « elle a mangée ».',
@@ -93,12 +96,13 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Passé composé en situation', 'Passé composé in context', '复合过去时的实际运用'),
               items: [
                 { fr: 'Hier, j’ai visité le musée du Louvre.', gloss: t('Action ponctuelle, terminée, avec avoir.', 'A single completed action, with avoir.', '一次性完成的动作，用 avoir。') },
-                { fr: 'Marie est arrivée à huit heures.', gloss: t('Verbe de déplacement : être + accord au féminin.', 'Verb of movement: être + feminine agreement.', '位移动词：être + 阴性配合。') },
+                { fr: '{prenom} est arrivé à huit heures.', gloss: t('Verbe de déplacement : être + accord avec le sujet. Au féminin, on écrirait « arrivée ».', 'Verb of movement: être + agreement with the subject. In the feminine it would be “arrivée”.', '位移动词：être + 与主语配合。阴性则写作 “arrivée”。') },
                 { fr: 'Nous nous sommes levés tôt.', gloss: t('Verbe pronominal : toujours être.', 'Reflexive verb: always être.', '自反动词：一律用 être。') },
-                { fr: 'Marie a arrivée à huit heures.', gloss: t('Deux erreurs : mauvais auxiliaire et accord impossible.', 'Two errors: wrong auxiliary and an impossible agreement.', '两处错误：助动词用错，且配合不成立。'), incorrect: true },
+                { fr: '{prenom} a arrivé à huit heures.', gloss: t('Mauvais auxiliaire : « arriver » est un verbe de déplacement, il exige être.', 'Wrong auxiliary: “arriver” is a verb of movement and requires être.', '助动词用错：“arriver” 是位移动词，必须用 être。'), incorrect: true },
               ],
             },
           ],
@@ -125,6 +129,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('L’imparfait de trois verbes', 'The imparfait of three verbs', '三个动词的未完成过去时'),
               note: t(
                 'Radical de « nous » au présent : nous parl**ons** → parl-, nous finiss**ons** → finiss-, nous fais**ons** → fais-. Terminaisons : -ais, -ais, -ait, -ions, -iez, -aient.',
@@ -143,6 +148,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Trois emplois de l’imparfait', 'Three uses of the imparfait', '未完成过去时的三种用法'),
               entries: [
                 { label: t('La description', 'Description', '描写'), value: t('Le décor, le temps qu’il faisait, l’état des choses : « Il faisait froid, la rue était vide. »', 'Setting, weather, state of things: “Il faisait froid, la rue était vide.”', '场景、天气、事物状态：“Il faisait froid, la rue était vide.”') },
@@ -153,6 +159,7 @@ export const a2RaconterCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🪤',
               title: t('Le piège du -i- à « nous » et « vous »', 'The -i- trap at “nous” and “vous”', '“nous” 与 “vous” 的 -i- 陷阱'),
               text: t(
                 'Pour les verbes dont le radical finit déjà par i, on écrit deux i : « nous étudiions », « vous riiez ». C’est correct, même si c’est surprenant à l’œil.',
@@ -184,6 +191,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🎬',
               caption: t('Décor ou événement', 'Backdrop or event', '背景还是事件'),
               headers: [t('Question', 'Question', '提问'), t('Imparfait', 'Imparfait', '未完成过去时'), t('Passé composé', 'Passé composé', '复合过去时')],
               rows: [
@@ -195,6 +203,7 @@ export const a2RaconterCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🔄',
               title: t('Le même verbe, deux sens', 'The same verb, two meanings', '同一动词，两种意思'),
               items: [
                 { fr: 'Quand j’étais petit, j’allais à la mer chaque été.', gloss: t('Imparfait deux fois : état durable + habitude.', 'Imparfait twice: lasting state + habit.', '两次未完成过去时：持续状态 + 习惯。') },
@@ -203,7 +212,50 @@ export const a2RaconterCourse: Course = {
                 { fr: 'J’ai su la vérité. / Je savais la vérité.', gloss: t('« J’ai su » = j’ai appris à ce moment-là ; « je savais » = je la connaissais déjà.', '“J’ai su” = I found out at that moment; “je savais” = I already knew it.', '“J’ai su” 指那一刻得知；“je savais” 指早已知道。') },
               ],
             },
-            { type: 'heading', text: t('Un récit modèle', 'A model narrative', '一篇范文') },
+            {
+              type: 'interactive',
+              emoji: '🎬',
+              title: t('Le même fait, deux caméras', 'The same fact, two cameras', '同一事实，两种镜头'),
+              hint: t(
+                'Changez de point de vue, {prenom} : la phrase se réécrit et son sens bascule.',
+                'Change the point of view, {prenom}: the sentence rewrites itself and its meaning shifts.',
+                '{prenom}，切换视角：句子随之改写，意义也随之改变。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'backdrop',
+                    label: t('Image fixe', 'Still image', '静止画面'),
+                    headline: t('imparfait — le décor', 'imparfait — the backdrop', '未完成过去时 —— 背景'),
+                    example: 'Il pleuvait sur la ville.',
+                    gloss: t('Aucune limite de temps : la pluie est un état, un fond sur lequel autre chose va se produire.', 'No time boundary: the rain is a state, a background against which something else will happen.', '没有时间界限：下雨是一种状态，是即将发生之事的背景。'),
+                  },
+                  {
+                    id: 'event',
+                    label: t('Plan qui avance', 'Shot that moves', '推进的镜头'),
+                    headline: t('passé composé — l’événement', 'passé composé — the event', '复合过去时 —— 事件'),
+                    example: 'Il a plu toute la journée.',
+                    gloss: t('« Toute la journée » borne l’action : elle a un début, une fin, et fait avancer le récit d’une case.', '“Toute la journée” bounds the action: it has a start, an end, and moves the story one step on.', '“Toute la journée” 为动作划定界限：有始有终，把故事推进一步。'),
+                  },
+                  {
+                    id: 'habit',
+                    label: t('Boucle répétée', 'Repeated loop', '反复循环'),
+                    headline: t('imparfait — l’habitude', 'imparfait — the habit', '未完成过去时 —— 习惯'),
+                    example: 'Chaque été, il pleuvait en août.',
+                    gloss: t('La répétition n’est pas comptée : c’est ce qui se passait, sans qu’on sache combien de fois.', 'The repetition is not counted: it is what used to happen, with no tally.', '重复次数不计：只是过去常常如此，不说明具体次数。'),
+                  },
+                  {
+                    id: 'rupture',
+                    label: t('Coupe nette', 'Hard cut', '硬切'),
+                    headline: t('imparfait + passé composé', 'imparfait + passé composé', '未完成过去时 + 复合过去时'),
+                    example: 'Il pleuvait quand le train est arrivé.',
+                    gloss: t('Le décor à l’imparfait, l’événement au passé composé : c’est le montage de base de tout récit français.', 'Backdrop in the imparfait, event in the passé composé: the basic edit of any French narrative.', '背景用未完成过去时，事件用复合过去时：这是法语叙事最基本的剪辑方式。'),
+                  },
+                ],
+              },
+            },
+            { type: 'heading', emoji: '🎬', text: t('Un récit modèle', 'A model narrative', '一篇范文') },
             {
               type: 'quote',
               text: t(
@@ -216,6 +268,7 @@ export const a2RaconterCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🧭',
               title: t('Une méthode simple pour choisir', 'A simple method for choosing', '选择时态的简单方法'),
               text: t(
                 'Demandez-vous : « est-ce que je pourrais mettre cette phrase dans un film, comme une image fixe ? » Si oui, imparfait. « Est-ce que ça fait avancer l’histoire d’une case ? » Si oui, passé composé.',

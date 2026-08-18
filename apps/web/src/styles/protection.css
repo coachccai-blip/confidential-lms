@@ -16,40 +16,7 @@
 }
 
 /* Filigrane visible, non interceptif, repete en mosaique. */
-.watermark {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  overflow: hidden;
-  border-radius: inherit;
-}
 
-.watermark__grid {
-  position: absolute;
-  inset: -25%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7vh 2vw;
-  align-content: space-around;
-  transition: transform 1400ms var(--ease);
-  will-change: transform;
-}
-
-.watermark__text {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  color: var(--watermark-color);
-  white-space: nowrap;
-  text-align: center;
-  font-weight: 600;
-}
-
-.watermark--fixed {
-  position: fixed;
-  z-index: 90;
-}
 
 /* Ecran de garde : masque le contenu en cas de perte de focus, d'onglet
    masque, ou de detection d'un enregistrement d'ecran. */

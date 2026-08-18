@@ -13,10 +13,14 @@ export type UserRole = 'admin' | 'learner';
 export interface User {
   readonly id: string;
   readonly role: UserRole;
-  /** Sert d'identifiant de connexion ET de marqueur de filigrane. */
+  /** Sert d'identifiant de connexion. */
   readonly email: string;
-  /** Second marqueur de filigrane (brief section 4.3). */
-  readonly phone: string;
+  /**
+   * Prénom. Repris dans le corps des leçons pour interpeller l'apprenant :
+   * c'est à la fois un ressort d'engagement et la marque qui rend une fuite
+   * attribuable, sans afficher d'adresse ni de numéro par-dessus le texte.
+   */
+  readonly firstName: string;
   readonly displayName: string;
   /** Argon2id cote serveur. Jamais expose au client en production. */
   readonly passwordHash?: string;
@@ -52,10 +56,14 @@ export type LessonKind = 'text' | 'video' | 'quiz';
 export interface LessonBlockHeading {
   readonly type: 'heading';
   readonly text: LocalizedText;
+  /** Un emoji au plus, posé devant le titre pour ancrer la section. */
+  readonly emoji?: string;
 }
 
 export interface LessonBlockParagraph {
   readonly type: 'paragraph';
+  /** Un emoji au plus, en tête de paragraphe. Jamais deux. */
+  readonly emoji?: string;
   readonly text: LocalizedText;
 }
 
@@ -68,6 +76,7 @@ export interface LessonBlockList {
 export interface LessonBlockCallout {
   readonly type: 'callout';
   readonly tone: 'info' | 'warning' | 'danger' | 'success';
+  readonly emoji?: string;
   readonly title: LocalizedText;
   readonly text: LocalizedText;
 }
@@ -81,6 +90,7 @@ export interface LessonBlockFigure {
 
 export interface LessonBlockTable {
   readonly type: 'table';
+  readonly emoji?: string;
   readonly caption?: LocalizedText;
   readonly headers: readonly LocalizedText[];
   readonly rows: readonly (readonly LocalizedText[])[];
@@ -94,6 +104,7 @@ export interface LessonBlockQuote {
 
 export interface LessonBlockKeyValues {
   readonly type: 'keyvalues';
+  readonly emoji?: string;
   readonly title: LocalizedText;
   readonly entries: readonly { readonly label: LocalizedText; readonly value: LocalizedText }[];
 }
@@ -106,6 +117,7 @@ export interface LessonBlockKeyValues {
  */
 export interface LessonBlockExamples {
   readonly type: 'examples';
+  readonly emoji?: string;
   readonly title: LocalizedText;
   readonly items: readonly {
     readonly fr: string;
@@ -118,10 +130,103 @@ export interface LessonBlockExamples {
 /** Tableau de conjugaison : les formes verbales ne sont jamais traduites. */
 export interface LessonBlockConjugation {
   readonly type: 'conjugation';
+  readonly emoji?: string;
   readonly title: LocalizedText;
   readonly note?: LocalizedText;
   readonly columns: readonly LocalizedText[];
   readonly rows: readonly { readonly pronoun: string; readonly forms: readonly string[] }[];
+}
+
+
+/* ------------------------------------------------------------------
+   Schémas manipulables.
+
+   Un tableau se lit ; un schéma se manipule. Ces cinq familles couvrent
+   ce que l'enseignement d'une langue demande le plus souvent : parcourir
+   une conjugaison, croiser deux critères, situer un fait dans le temps,
+   faire varier un même énoncé, et décomposer une phrase.
+
+   Chaque widget est utilisable au clavier : ce sont des boutons, pas des
+   zones sensibles au survol.
+   ------------------------------------------------------------------ */
+
+/** Une personne de la roue de conjugaison. */
+export interface WheelPerson {
+  readonly pronoun: string;
+  readonly form: string;
+  /** Transcription phonétique, affichée telle quelle. */
+  readonly phonetic?: string;
+  readonly note: LocalizedText;
+}
+
+/** Roue de conjugaison : on choisit une personne, la forme se détache. */
+export interface WidgetWheel {
+  readonly kind: 'wheel';
+  /** Infinitif au centre de la roue. */
+  readonly verb: string;
+  readonly persons: readonly WheelPerson[];
+}
+
+/** Croisement de deux critères : la case répond à la double question. */
+export interface WidgetMatrix {
+  readonly kind: 'matrix';
+  readonly rowsLabel: LocalizedText;
+  readonly columnsLabel: LocalizedText;
+  readonly rows: readonly { readonly id: string; readonly label: LocalizedText }[];
+  readonly columns: readonly { readonly id: string; readonly label: LocalizedText }[];
+  readonly cells: readonly {
+    readonly row: string;
+    readonly column: string;
+    /** Réponse mise en avant : article, terminaison, forme. */
+    readonly answer: string;
+    readonly example: string;
+    readonly gloss: LocalizedText;
+  }[];
+}
+
+/** Frise : chaque repère porte un temps verbal et son exemple. */
+export interface WidgetTimeline {
+  readonly kind: 'timeline';
+  readonly points: readonly {
+    readonly id: string;
+    readonly label: LocalizedText;
+    readonly headline: LocalizedText;
+    readonly example: string;
+    readonly gloss: LocalizedText;
+  }[];
+}
+
+/** Sélecteur linéaire : un même contenu à plusieurs crans. */
+export interface WidgetSwitcher {
+  readonly kind: 'switcher';
+  readonly steps: readonly {
+    readonly id: string;
+    readonly label: LocalizedText;
+    readonly headline: LocalizedText;
+    readonly example: string;
+    readonly gloss: LocalizedText;
+  }[];
+}
+
+/** Phrase décomposée : chaque segment révèle sa fonction. */
+export interface WidgetSentence {
+  readonly kind: 'sentence';
+  readonly segments: readonly {
+    readonly text: string;
+    /** Un segment sans rôle est un simple liant, non cliquable. */
+    readonly role?: LocalizedText;
+    readonly detail?: LocalizedText;
+  }[];
+}
+
+export type LessonWidget = WidgetWheel | WidgetMatrix | WidgetTimeline | WidgetSwitcher | WidgetSentence;
+
+export interface LessonBlockInteractive {
+  readonly type: 'interactive';
+  readonly title: LocalizedText;
+  readonly hint: LocalizedText;
+  readonly emoji?: string;
+  readonly widget: LessonWidget;
 }
 
 export type LessonBlock =
@@ -134,7 +239,8 @@ export type LessonBlock =
   | LessonBlockQuote
   | LessonBlockKeyValues
   | LessonBlockExamples
-  | LessonBlockConjugation;
+  | LessonBlockConjugation
+  | LessonBlockInteractive;
 
 export interface Lesson {
   readonly id: string;
@@ -283,7 +389,8 @@ export type SecurityEventType =
   | 'quiz-failed'
   | 'lesson-completed'
   | 'admin-unlocked'
-  | 'admin-unlock-failed';
+  | 'admin-unlock-failed'
+  | 'login-refused';
 
 export type SecuritySeverity = 'info' | 'warning' | 'critical';
 

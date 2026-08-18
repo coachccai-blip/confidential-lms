@@ -51,6 +51,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔀',
               title: t('Le subjonctif présent des verbes irréguliers', 'The present subjunctive of irregular verbs', '不规则动词的虚拟式现在时'),
               note: t(
                 'Pour les verbes réguliers, on prend la forme « ils » du présent : ils finiss**ent** → que je finisse. Seuls sept verbes sont vraiment irréguliers.',
@@ -69,6 +70,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔄',
               caption: t('Indicatif ou subjonctif : la frontière', 'Indicative or subjunctive: the dividing line', '直陈式还是虚拟式：分界线'),
               headers: [t('Attitude', 'Attitude', '态度'), t('Mode', 'Mood', '语式'), t('Exemple', 'Example', '例句')],
               rows: [
@@ -82,6 +84,7 @@ export const b2NuanceCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('« Espérer » ne prend pas le subjonctif', '“Espérer” does not take the subjunctive', '“Espérer” 不接虚拟式'),
               text: t(
                 'Contre toute logique, « j’espère qu’il **vient** » se construit à l’indicatif, alors que « je souhaite qu’il **vienne** » prend le subjonctif. C’est l’exception que les correcteurs repèrent immédiatement.',
@@ -91,6 +94,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🔄',
               title: t('Les conjonctions toujours suivies du subjonctif', 'Conjunctions always followed by the subjunctive', '恒接虚拟式的连词'),
               entries: [
                 { label: t('bien que / quoique', 'bien que / quoique', 'bien que / quoique'), value: t('Concession : « bien qu’il fasse froid, je sors. »', 'Concession: “bien qu’il fasse froid, je sors.”', '让步：“bien qu’il fasse froid, je sors.”') },
@@ -103,6 +107,7 @@ export const b2NuanceCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Éviter le subjonctif quand on peut', 'Avoiding the subjunctive when you can', '能避则避'),
               text: t(
                 'Si les deux propositions ont le même sujet, on remplace le subjonctif par un infinitif : « je veux **partir** » et non « je veux que je parte ». De même « avant de partir » plutôt que « avant que je parte ». C’est plus court et toujours correct.',
@@ -134,6 +139,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔬',
               caption: t('Les trois systèmes hypothétiques', 'The three hypothetical systems', '三种假设体系'),
               headers: [t('Degré', 'Degree', '程度'), t('Subordonnée en si', 'Si clause', 'si 从句'), t('Principale', 'Main clause', '主句'), t('Exemple', 'Example', '例句')],
               rows: [
@@ -143,8 +149,52 @@ export const b2NuanceCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🔬',
+              title: t('Le banc d’essai de l’hypothèse', 'The hypothesis test bench', '假设试验台'),
+              hint: t(
+                'Choisissez un degré de réalité, {prenom} : les deux temps se verrouillent l’un l’autre.',
+                'Pick a degree of reality, {prenom}: the two tenses lock onto each other.',
+                '{prenom}，选择一种现实程度：两个时态随即相互锁定。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'possible',
+                    label: t('C’est possible', 'It may happen', '有可能'),
+                    headline: t('si + présent → futur simple', 'si + present → simple future', 'si + 现在时 → 简单将来时'),
+                    example: 'S’il pleut, je prendrai un parapluie.',
+                    gloss: t('L’hypothèse reste ouverte : rien n’exclut que cela se produise.', 'The hypothesis stays open: nothing rules it out.', '假设仍然开放：没有任何因素排除其发生。'),
+                  },
+                  {
+                    id: 'unreal-present',
+                    label: t('Ce n’est pas le cas', 'It is not the case', '与现状相反'),
+                    headline: t('si + imparfait → conditionnel présent', 'si + imperfect → present conditional', 'si + 未完成过去时 → 条件式现在时'),
+                    example: 'Si j’avais le temps, je viendrais.',
+                    gloss: t('Irréel du présent : on sait que la condition n’est pas remplie aujourd’hui.', 'Unreal present: we know the condition is not met today.', '与现在事实相反：我们知道条件目前并不成立。'),
+                  },
+                  {
+                    id: 'unreal-past',
+                    label: t('C’était trop tard', 'It was too late', '已经太迟'),
+                    headline: t('si + plus-que-parfait → conditionnel passé', 'si + pluperfect → past conditional', 'si + 愈过去时 → 条件式过去时'),
+                    example: 'Si j’avais su, je ne serais pas venu.',
+                    gloss: t('Irréel du passé : le moment est passé, la phrase exprime un regret.', 'Unreal past: the moment has gone; the sentence expresses regret.', '与过去事实相反：时机已过，句子表达遗憾。'),
+                  },
+                  {
+                    id: 'forbidden',
+                    label: t('Jamais', 'Never', '绝不'),
+                    headline: t('si + conditionnel — impossible', 'si + conditional — impossible', 'si + 条件式 —— 不成立'),
+                    example: 'Si j’aurais su…',
+                    gloss: t('La faute la plus célèbre du français. Après un « si » d’hypothèse : imparfait ou plus-que-parfait, jamais de conditionnel.', 'The most famous mistake in French. After a hypothetical “si”: imperfect or pluperfect, never a conditional.', '法语中最著名的错误。表假设的 “si” 之后只能用未完成过去时或愈过去时，绝不用条件式。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Jamais de conditionnel après « si »', 'Never a conditional after “si”', '“si” 之后绝不用条件式'),
               text: t(
                 '« Si j’aurais su » est la faute la plus célèbre du français, au point d’être devenue une plaisanterie. La règle est absolue : après **si** d’hypothèse, on écrit imparfait ou plus-que-parfait, jamais conditionnel.',
@@ -152,9 +202,10 @@ export const b2NuanceCourse: Course = {
                 '“Si j’aurais su” 是法语中最著名的错误，甚至成了笑柄。规则是绝对的：表假设的 **si** 之后只能用未完成过去时或愈过去时，绝不用条件式。',
               ),
             },
-            { type: 'heading', text: t('Le conditionnel au-delà de l’hypothèse', 'The conditional beyond hypothesis', '假设之外的条件式') },
+            { type: 'heading', emoji: '🔄', text: t('Le conditionnel au-delà de l’hypothèse', 'The conditional beyond hypothesis', '假设之外的条件式') },
             {
               type: 'keyvalues',
+              emoji: '🔄',
               title: t('Trois autres emplois du conditionnel', 'Three other uses of the conditional', '条件式的另外三种用法'),
               entries: [
                 { label: t('La politesse', 'Politeness', '礼貌'), value: t('« Je voudrais un café » au lieu de « je veux ». Adoucit toute demande.', '“Je voudrais un café” instead of “je veux”. Softens any request.', '用 “Je voudrais un café” 代替 “je veux”，可缓和任何请求。') },
@@ -165,6 +216,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🔬',
               title: t('Repérer le degré de réalité', 'Spotting the degree of reality', '判断现实程度'),
               items: [
                 { fr: 'Si tu viens demain, on ira au cinéma.', gloss: t('Hypothèse ouverte : c’est encore possible.', 'Open hypothesis: it is still possible.', '开放性假设：仍有可能。') },
@@ -197,6 +249,7 @@ export const b2NuanceCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🧠',
               caption: t('Les outils de la concession', 'The tools of concession', '让步的工具'),
               headers: [t('Connecteur', 'Connector', '连接词'), t('Construction', 'Construction', '结构'), t('Registre', 'Register', '语体')],
               rows: [
@@ -210,6 +263,7 @@ export const b2NuanceCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🪤',
               title: t('« Or » n’est pas « ou »', '“Or” is not “ou”', '“Or” 不是 “ou”'),
               text: t(
                 '**Or** introduit un fait qui fait basculer le raisonnement : « Tous les experts prévoyaient une baisse. Or les chiffres ont augmenté. » Ne le confondez pas avec **ou**, qui propose une alternative. Les deux mots se prononcent différemment : [ɔʁ] contre [u].',
@@ -217,7 +271,7 @@ export const b2NuanceCourse: Course = {
                 '**Or** 引出扭转推理走向的事实：“Tous les experts prévoyaient une baisse. Or les chiffres ont augmenté.” 不要与表示选择的 **ou** 混淆。两词读音不同：[ɔʁ] 对 [u]。',
               ),
             },
-            { type: 'heading', text: t('Le mouvement concession-réfutation', 'The concession-refutation move', '让步—反驳的行文动作') },
+            { type: 'heading', emoji: '🧠', text: t('Le mouvement concession-réfutation', 'The concession-refutation move', '让步—反驳的行文动作') },
             {
               type: 'quote',
               text: t(
@@ -228,7 +282,46 @@ export const b2NuanceCourse: Course = {
               source: t('Paragraphe type — concéder, puis renverser', 'Model paragraph — concede, then overturn', '范例段落 —— 先让步，后扭转'),
             },
             {
+              type: 'interactive',
+              emoji: '🧠',
+              title: t('Le mouvement de concession, morceau par morceau', 'The concession move, piece by piece', '让步动作，逐段拆解'),
+              hint: t(
+                'Cliquez chaque segment : c’est l’enchaînement qui fait la copie B2.',
+                'Click each segment: it is the sequence that makes a B2 paper.',
+                '点击每个片段：正是这一衔接造就了 B2 水平的答卷。',
+              ),
+              widget: {
+                kind: 'sentence',
+                segments: [
+                  {
+                    text: 'Il est vrai que le télétravail réduit les trajets',
+                    role: t('1. La concession', '1. The concession', '1. 让步'),
+                    detail: t('On accorde à l’adversaire ce qui est incontestable. Le refuser rendrait tout le raisonnement suspect.', 'You grant the other side what is indisputable. Refusing it would make the whole argument look suspect.', '把无可争辩之处让给对方。否认它会让整个论证显得可疑。'),
+                  },
+                  { text: '.' },
+                  {
+                    text: 'On ne saurait le nier',
+                    role: t('2. Le renforcement', '2. The reinforcement', '2. 加强'),
+                    detail: t('On appuie la concession au lieu de l’expédier : le lecteur doit croire qu’on a vraiment envisagé l’autre thèse.', 'You lean into the concession instead of rushing it: the reader must believe the other view was genuinely considered.', '不是草草带过，而是加重让步：要让读者相信你确实考虑过对方观点。'),
+                  },
+                  { text: '.' },
+                  {
+                    text: 'Il reste néanmoins que',
+                    role: t('3. Le pivot', '3. The pivot', '3. 转折'),
+                    detail: t('Le connecteur qui renverse. « Néanmoins », « toutefois », « il n’en demeure pas moins que » jouent le même rôle.', 'The connector that overturns. “Néanmoins”, “toutefois”, “il n’en demeure pas moins que” all play the same role.', '实现扭转的连接词。“Néanmoins”“toutefois”“il n’en demeure pas moins que” 作用相同。'),
+                  },
+                  {
+                    text: 'cette organisation suppose trois conditions rarement réunies',
+                    role: t('4. L’objection décisive', '4. The decisive objection', '4. 决定性反驳'),
+                    detail: t('L’argument qu’on gardait. Il doit être plus précis que la concession, sinon le mouvement retombe à plat.', 'The argument you were holding back. It must be more precise than the concession, or the move falls flat.', '此前保留的论据。它必须比让步部分更具体，否则整个动作就落空了。'),
+                  },
+                  { text: '.' },
+                ],
+              },
+            },
+            {
               type: 'examples',
+              emoji: '🧠',
               title: t('Formules de concession et de restriction', 'Concession and restriction formulas', '让步与限定句式'),
               items: [
                 { fr: 'Certes, l’argument se défend. Il n’en demeure pas moins que…', gloss: t('Le couple concession / restriction le plus classique à l’écrit.', 'The most classic concession / restriction pair in writing.', '书面语中最经典的让步/限定组合。') },

@@ -51,6 +51,7 @@ export const a1NommerCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🏷️',
               caption: t('Le système des articles', 'The article system', '冠词体系'),
               headers: [
                 t('Type d’article', 'Type of article', '冠词类型'),
@@ -65,8 +66,45 @@ export const a1NommerCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎛️',
+              title: t('Le sélecteur d’article', 'The article picker', '冠词选择器'),
+              hint: t(
+                '{prenom}, choisissez un genre et une détermination : l’article correct apparaît.',
+                '{prenom}, pick a gender and a kind of determination: the correct article appears.',
+                '{prenom}，选择性别与限定类型，正确的冠词随即显示。',
+              ),
+              widget: {
+                kind: 'matrix',
+                rowsLabel: t('Genre et nombre', 'Gender and number', '性与数'),
+                columnsLabel: t('Type de détermination', 'Kind of determination', '限定类型'),
+                rows: [
+                  { id: 'm', label: t('Masculin', 'Masculine', '阳性') },
+                  { id: 'f', label: t('Féminin', 'Feminine', '阴性') },
+                  { id: 'p', label: t('Pluriel', 'Plural', '复数') },
+                ],
+                columns: [
+                  { id: 'def', label: t('Défini — on sait lequel', 'Definite — we know which', '定指') },
+                  { id: 'ind', label: t('Indéfini — un parmi d’autres', 'Indefinite — one among others', '不定指') },
+                  { id: 'part', label: t('Partitif — une quantité', 'Partitive — a quantity', '部分冠词') },
+                ],
+                cells: [
+                  { row: 'm', column: 'def', answer: 'le / l’', example: 'le livre, l’ami', gloss: t('Devant une voyelle, « le » s’élide en « l’ ».', 'Before a vowel, “le” elides to “l’”.', '元音前 “le” 省音为 “l’”。') },
+                  { row: 'm', column: 'ind', answer: 'un', example: 'un livre, un ami', gloss: t('Pas d’élision : « un » se maintient devant la voyelle, avec liaison.', 'No elision: “un” stays before a vowel, with liaison.', '不省音：“un” 在元音前保持不变，并发生联诵。') },
+                  { row: 'm', column: 'part', answer: 'du / de l’', example: 'du pain, de l’argent', gloss: t('On prélève une part d’une matière non comptée.', 'You take a portion of an uncounted substance.', '从不可数的整体中取一部分。') },
+                  { row: 'f', column: 'def', answer: 'la / l’', example: 'la table, l’école', gloss: t('Même élision que « le » devant une voyelle ou un h muet.', 'Same elision as “le” before a vowel or a silent h.', '与 “le” 相同，在元音或哑音 h 前省音。') },
+                  { row: 'f', column: 'ind', answer: 'une', example: 'une table, une école', gloss: t('Toujours « une », sans élision ni exception.', 'Always “une”, no elision, no exception.', '一律用 “une”，不省音，无例外。') },
+                  { row: 'f', column: 'part', answer: 'de la / de l’', example: 'de la confiture, de l’eau', gloss: t('« De l’ » s’emploie aux deux genres devant une voyelle.', '“De l’” is used for both genders before a vowel.', '元音前两种性别都用 “de l’”。') },
+                  { row: 'p', column: 'def', answer: 'les', example: 'les livres, les écoles', gloss: t('Liaison en [z] devant une voyelle : c’est souvent le seul indice sonore du pluriel.', 'A [z] liaison before a vowel: often the only audible clue of the plural.', '元音前联诵为 [z]：这往往是复数唯一可听的线索。') },
+                  { row: 'p', column: 'ind', answer: 'des', example: 'des livres, des écoles', gloss: t('Après une négation, « des » devient « de » : « je n’ai pas de livres ».', 'After a negative, “des” becomes “de”: “je n’ai pas de livres”.', '否定之后 “des” 变为 “de”：“je n’ai pas de livres”。') },
+                  { row: 'p', column: 'part', answer: 'des', example: 'des épinards, des pâtes', gloss: t('Au pluriel, partitif et indéfini se confondent en « des ».', 'In the plural, partitive and indefinite merge into “des”.', '复数时，部分冠词与不定冠词合并为 “des”。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('Devant une voyelle, le et la deviennent l’', 'Before a vowel, le and la become l’', '元音前 le 与 la 变为 l’'),
               text: t(
                 '« l’ami », « l’école », « l’heure » — le **h** de « heure » est muet, il compte comme une voyelle. Quelques mots ont un h dit aspiré qui bloque l’élision : « le héros », « la haine ».',
@@ -74,7 +112,7 @@ export const a1NommerCourse: Course = {
                 '“l’ami”“l’école”“l’heure” —— “heure” 的 **h** 不发音，视同元音。少数词带有所谓的送气 h，阻止省音：“le héros”“la haine”。',
               ),
             },
-            { type: 'heading', text: t('Deviner le genre : des indices fiables', 'Guessing the gender: reliable clues', '判断词性：可靠的线索') },
+            { type: 'heading', emoji: '🏷️', text: t('Deviner le genre : des indices fiables', 'Guessing the gender: reliable clues', '判断词性：可靠的线索') },
             {
               type: 'paragraph',
               text: t(
@@ -85,6 +123,7 @@ export const a1NommerCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🏷️',
               title: t('Terminaisons qui trahissent le genre', 'Endings that reveal the gender', '暴露词性的词尾'),
               entries: [
                 { label: t('Féminin', 'Feminine', '阴性'), value: t('-tion, -sion, -té, -ette, -ance, -ence, -ure : la nation, la liberté, la voiture', '-tion, -sion, -té, -ette, -ance, -ence, -ure: la nation, la liberté, la voiture', '-tion、-sion、-té、-ette、-ance、-ence、-ure：la nation、la liberté、la voiture') },
@@ -96,6 +135,7 @@ export const a1NommerCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Apprenez le nom avec son article', 'Learn the noun with its article', '把名词和冠词一起记'),
               text: t(
                 'N’écrivez jamais « table » dans votre carnet de vocabulaire, écrivez « **une** table ». Le genre s’apprend en même temps que le mot ; le rattraper après coup demande dix fois plus d’efforts.',
@@ -127,6 +167,7 @@ export const a1NommerCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔀',
               caption: t('Les pluriels irréguliers', 'Irregular plurals', '不规则复数'),
               headers: [t('Terminaison', 'Ending', '词尾'), t('Pluriel', 'Plural', '复数'), t('Exemple', 'Example', '例子')],
               rows: [
@@ -139,6 +180,7 @@ export const a1NommerCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🗣️',
               title: t('La liaison rend le pluriel audible', 'Liaison makes the plural audible', '联诵让复数变得可听'),
               text: t(
                 'Devant une voyelle, le s de « les » se prononce [z] : « les amis » [lezami], « les écoles » [lezekɔl]. C’est souvent le seul indice sonore du pluriel : ne le supprimez pas.',
@@ -146,9 +188,10 @@ export const a1NommerCourse: Course = {
                 '元音前，“les” 的 s 读作 [z]：“les amis” [lezami]、“les écoles” [lezekɔl]。这往往是复数唯一可听的线索，不要省略。',
               ),
             },
-            { type: 'heading', text: t('L’adjectif suit le nom', 'The adjective follows the noun', '形容词随名词变化') },
+            { type: 'heading', emoji: '🏷️', text: t('L’adjectif suit le nom', 'The adjective follows the noun', '形容词随名词变化') },
             {
               type: 'examples',
+              emoji: '🏷️',
               title: t('Accorder l’adjectif en genre et en nombre', 'Agreeing the adjective in gender and number', '形容词的性数配合'),
               items: [
                 { fr: 'un petit livre vert', gloss: t('Les adjectifs de taille se placent avant, les couleurs après.', 'Size adjectives go before, colours after.', '表示大小的形容词前置，颜色形容词后置。') },
@@ -181,6 +224,7 @@ export const a1NommerCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '❓',
               caption: t('Trois façons de poser la même question', 'Three ways of asking the same question', '同一问题的三种问法'),
               headers: [t('Forme', 'Form', '形式'), t('Exemple', 'Example', '例子'), t('Registre', 'Register', '语体')],
               rows: [
@@ -191,6 +235,7 @@ export const a1NommerCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Les mots interrogatifs essentiels', 'The essential question words', '必备疑问词'),
               entries: [
                 { label: t('Qui', 'Qui', 'Qui'), value: t('la personne : Qui est-ce ? C’est ma sœur.', 'the person: Qui est-ce ? C’est ma sœur.', '问人：Qui est-ce ? C’est ma sœur.') },
@@ -200,7 +245,7 @@ export const a1NommerCourse: Course = {
                 { label: t('Combien', 'Combien', 'Combien'), value: t('la quantité : Ça coûte combien ? Combien de frères as-tu ?', 'quantity: Ça coûte combien ? Combien de frères as-tu ?', '问数量：Ça coûte combien ? Combien de frères as-tu ?') },
               ],
             },
-            { type: 'heading', text: t('La négation encadre le verbe', 'The negative wraps around the verb', '否定包住动词') },
+            { type: 'heading', emoji: '🔄', text: t('La négation encadre le verbe', 'The negative wraps around the verb', '否定包住动词') },
             {
               type: 'paragraph',
               text: t(
@@ -210,7 +255,54 @@ export const a1NommerCourse: Course = {
               ),
             },
             {
+              type: 'interactive',
+              emoji: '🧩',
+              title: t('Anatomie d’une négation', 'Anatomy of a negative', '否定句的构造'),
+              hint: t(
+                'Cliquez chaque morceau, {prenom} : dans cet exemple, chaque mot a une fonction précise.',
+                'Click each piece, {prenom}: in this example, every word has a precise function.',
+                '{prenom}，逐个点击：在这个例子里，每个词都有明确的功能。',
+              ),
+              widget: {
+                kind: 'sentence',
+                segments: [
+                  {
+                    text: 'Je',
+                    role: t('Sujet', 'Subject', '主语'),
+                    detail: t('Le pronom sujet ne se supprime jamais en français, contrairement à l’espagnol ou au chinois.', 'The subject pronoun is never dropped in French, unlike Spanish or Chinese.', '法语中主语代词绝不省略，这与西班牙语或中文不同。'),
+                  },
+                  {
+                    text: 'n’',
+                    role: t('Première partie de la négation', 'First half of the negative', '否定的第一部分'),
+                    detail: t('« Ne », élidé devant une voyelle. À l’oral courant il disparaît presque toujours — mais jamais à l’écrit.', '“Ne”, elided before a vowel. In everyday speech it almost always vanishes — but never in writing.', '“Ne” 在元音前省音。日常口语中几乎总是脱落——但书面语中绝不省略。'),
+                  },
+                  {
+                    text: 'ai',
+                    role: t('Verbe conjugué', 'Conjugated verb', '变位动词'),
+                    detail: t('C’est lui que la négation encadre : « ne » avant, « pas » après.', 'This is what the negative wraps around: “ne” before, “pas” after.', '否定正是包住它：“ne” 在前，“pas” 在后。'),
+                  },
+                  {
+                    text: 'pas',
+                    role: t('Seconde partie de la négation', 'Second half of the negative', '否定的第二部分'),
+                    detail: t('C’est « pas » qui porte réellement le sens négatif à l’oral, puisque « ne » tombe.', 'It is “pas” that actually carries the negative meaning in speech, since “ne” drops.', '口语中真正承载否定意义的是 “pas”，因为 “ne” 会脱落。'),
+                  },
+                  {
+                    text: 'de',
+                    role: t('Article transformé', 'Transformed article', '被改变的冠词'),
+                    detail: t('Après une négation, un / une / des deviennent « de ». On ne dit pas « je n’ai pas une voiture ».', 'After a negative, un / une / des become “de”. You do not say “je n’ai pas une voiture”.', '否定之后，un / une / des 变为 “de”。不能说 “je n’ai pas une voiture”。'),
+                  },
+                  {
+                    text: 'voiture',
+                    role: t('Complément d’objet', 'Object', '宾语'),
+                    detail: t('Le nom perd son article d’origine mais garde son genre : c’est « une voiture » qui est niée.', 'The noun loses its original article but keeps its gender: it is “une voiture” that is being negated.', '名词失去原有冠词但保留性别：被否定的是 “une voiture”。'),
+                  },
+                  { text: '.' },
+                ],
+              },
+            },
+            {
               type: 'examples',
+              emoji: '🏷️',
               title: t('Négation et article', 'Negation and article', '否定与冠词'),
               items: [
                 { fr: 'Je ne comprends pas.', gloss: t('La phrase la plus utile de tout le niveau A1.', 'The single most useful sentence at A1 level.', 'A1 阶段最有用的一句话。') },

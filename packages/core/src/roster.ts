@@ -19,6 +19,10 @@
    - Les comptes créés ici vivent dans ce navigateur. Ils atteignent
      l'apprenant par une **invitation** qu'il colle sur son appareil, et
      reviennent par une **remontée de progression** qu'il réexporte.
+   - Le mot de passe **apprenant** relève de la même logique : son condensé
+     voyage dans l'invitation et la vérification se fait sur l'appareil de
+     l'apprenant. Il empêche un camarade d'ouvrir son compte avec sa seule
+     adresse ; il ne protège pas le contenu contre son titulaire.
    ------------------------------------------------------------------ */
 
 import { createId } from './ids';
@@ -29,8 +33,17 @@ export interface LearnerAccount {
   readonly id: string;
   /** Code lisible communiqué à l'apprenant : sert de clé de rapprochement. */
   readonly code: string;
-  readonly displayName: string;
+  /**
+   * Prénom, obligatoire : il est repris dans le corps des leçons pour
+   * interpeller l'apprenant, et c'est lui qui rend une fuite attribuable.
+   */
+  readonly firstName: string;
+  /** Nom de famille, facultatif : sert au repérage dans la liste, pas au contenu. */
+  readonly lastName: string;
   readonly email: string;
+  /** Condensé du mot de passe choisi par l'enseignant, et son sel. */
+  readonly passwordHash: string;
+  readonly passwordSalt: string;
   /** Niveau visé, ou `null` si l'apprenant part de zéro sans cible. */
   readonly targetLevel: CefrLevel | null;
   readonly note: string;
@@ -38,11 +51,16 @@ export interface LearnerAccount {
   readonly archivedAt: string | null;
 }
 
+/** Nom complet affiché dans la liste de l'enseignant. */
+export function fullName(learner: Pick<LearnerAccount, 'firstName' | 'lastName'>): string {
+  return `${learner.firstName} ${learner.lastName}`.trim();
+}
+
 /** Instantané de progression exporté par un apprenant, importé par l'admin. */
 export interface LearnerReport {
   readonly kind: 'lumiere.report.v1';
   readonly code: string;
-  readonly displayName: string;
+  readonly firstName: string;
   readonly email: string;
   readonly exportedAt: string;
   /** Étapes terminées, identifiant de leçon → date de fin. */
@@ -55,10 +73,18 @@ export interface LearnerReport {
 
 /** Charge utile d'invitation, encodée puis transmise à l'apprenant. */
 export interface InvitePayload {
-  readonly kind: 'lumiere.invite.v1';
+  readonly kind: 'lumiere.invite.v2';
   readonly code: string;
-  readonly displayName: string;
+  readonly firstName: string;
+  readonly lastName: string;
   readonly email: string;
+  /**
+   * Le condensé du mot de passe voyage avec l'invitation : c'est la seule
+   * façon, sans serveur, de vérifier la saisie sur l'appareil de l'apprenant.
+   * Il est salé, donc illisible ; il reste néanmoins attaquable hors ligne.
+   */
+  readonly passwordHash: string;
+  readonly passwordSalt: string;
   readonly targetLevel: CefrLevel | null;
 }
 
@@ -90,32 +116,55 @@ export function normalizeCode(input: string): string {
 /* ---------------------------- Comptes ------------------------------ */
 
 export interface CreateLearnerInput {
-  readonly displayName: string;
+  readonly firstName: string;
+  readonly lastName?: string;
   readonly email: string;
+  readonly password: string;
   readonly targetLevel?: CefrLevel | null;
   readonly note?: string;
 }
 
 export type CreateLearnerOutcome =
   | { readonly ok: true; readonly learner: LearnerAccount }
-  | { readonly ok: false; readonly reason: 'name-required' | 'email-invalid' | 'email-duplicate' };
+  | {
+      readonly ok: false;
+      readonly reason: 'name-required' | 'email-invalid' | 'email-duplicate' | 'password-too-short';
+    };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function createLearner(
+/** Longueur minimale du mot de passe d'un apprenant. */
+export const MIN_LEARNER_PASSWORD_LENGTH = 8;
+
+/**
+ * Valide les champs avant création. Séparé de `createLearner` parce que le
+ * calcul du condensé est asynchrone : l'appelant veut connaître l'erreur de
+ * saisie sans avoir à attendre `crypto.subtle`.
+ */
+export function validateLearnerInput(
+  existing: readonly LearnerAccount[],
+  input: CreateLearnerInput,
+): Exclude<CreateLearnerOutcome, { ok: true }> | null {
+  const firstName = input.firstName.trim();
+  const email = input.email.trim().toLowerCase();
+
+  if (firstName.length === 0) return { ok: false, reason: 'name-required' };
+  if (!EMAIL_RE.test(email)) return { ok: false, reason: 'email-invalid' };
+  if (input.password.length < MIN_LEARNER_PASSWORD_LENGTH) return { ok: false, reason: 'password-too-short' };
+  if (existing.some((learner) => learner.email === email && learner.archivedAt === null)) {
+    return { ok: false, reason: 'email-duplicate' };
+  }
+  return null;
+}
+
+export async function createLearner(
   existing: readonly LearnerAccount[],
   input: CreateLearnerInput,
   now: string,
   random: () => number = Math.random,
-): CreateLearnerOutcome {
-  const displayName = input.displayName.trim();
-  const email = input.email.trim().toLowerCase();
-
-  if (displayName.length === 0) return { ok: false, reason: 'name-required' };
-  if (!EMAIL_RE.test(email)) return { ok: false, reason: 'email-invalid' };
-  if (existing.some((learner) => learner.email === email && learner.archivedAt === null)) {
-    return { ok: false, reason: 'email-duplicate' };
-  }
+): Promise<CreateLearnerOutcome> {
+  const invalid = validateLearnerInput(existing, input);
+  if (invalid) return invalid;
 
   let code = createEnrolmentCode(random);
   let guard = 0;
@@ -124,19 +173,40 @@ export function createLearner(
     guard += 1;
   }
 
+  const passwordSalt = createSalt(random);
+
   return {
     ok: true,
     learner: {
       id: createId('lrn', random),
       code,
-      displayName,
-      email,
+      firstName: input.firstName.trim(),
+      lastName: (input.lastName ?? '').trim(),
+      email: input.email.trim().toLowerCase(),
+      passwordHash: await hashPassword(input.password, passwordSalt),
+      passwordSalt,
       targetLevel: input.targetLevel ?? null,
       note: (input.note ?? '').trim(),
       createdAt: now,
       archivedAt: null,
     },
   };
+}
+
+/**
+ * Propose un mot de passe lisible : deux mots courants, un nombre, un tiret.
+ * L'enseignant le dicte sans ambiguïté et l'apprenant le retient.
+ */
+const PASSWORD_WORDS = [
+  'azur', 'brise', 'cedre', 'delta', 'ecume', 'foret', 'givre', 'hublot',
+  'ilot', 'jardin', 'lagune', 'maree', 'nuage', 'olive', 'prisme', 'quartz',
+  'rivage', 'sable', 'tresse', 'vallon',
+] as const;
+
+export function suggestPassword(random: () => number = Math.random): string {
+  const pick = () => PASSWORD_WORDS[Math.floor(random() * PASSWORD_WORDS.length)] ?? 'azur';
+  const number = 10 + Math.floor(random() * 90);
+  return `${pick()}-${pick()}-${number}`;
 }
 
 export function archiveLearner(
@@ -185,10 +255,13 @@ function fromBase64Url(encoded: string): string | null {
 /** Encode un compte en invitation collable par l'apprenant. */
 export function encodeInvite(learner: LearnerAccount): string {
   const payload: InvitePayload = {
-    kind: 'lumiere.invite.v1',
+    kind: 'lumiere.invite.v2',
     code: learner.code,
-    displayName: learner.displayName,
+    firstName: learner.firstName,
+    lastName: learner.lastName,
     email: learner.email,
+    passwordHash: learner.passwordHash,
+    passwordSalt: learner.passwordSalt,
     targetLevel: learner.targetLevel,
   };
   return toBase64Url(JSON.stringify(payload));
@@ -202,17 +275,30 @@ export function decodeInvite(encoded: string): InvitePayload | null {
     const parsed: unknown = JSON.parse(json);
     if (typeof parsed !== 'object' || parsed === null) return null;
     const record = parsed as Record<string, unknown>;
-    if (record['kind'] !== 'lumiere.invite.v1') return null;
+    if (record['kind'] !== 'lumiere.invite.v2') return null;
     const code = record['code'];
-    const displayName = record['displayName'];
+    const firstName = record['firstName'];
     const email = record['email'];
+    const passwordHash = record['passwordHash'];
+    const passwordSalt = record['passwordSalt'];
     const level = record['targetLevel'];
-    if (typeof code !== 'string' || typeof displayName !== 'string' || typeof email !== 'string') return null;
+    if (
+      typeof code !== 'string' ||
+      typeof firstName !== 'string' ||
+      typeof email !== 'string' ||
+      typeof passwordHash !== 'string' ||
+      typeof passwordSalt !== 'string'
+    ) {
+      return null;
+    }
     return {
-      kind: 'lumiere.invite.v1',
+      kind: 'lumiere.invite.v2',
       code,
-      displayName,
+      firstName,
+      lastName: typeof record['lastName'] === 'string' ? record['lastName'] : '',
       email,
+      passwordHash,
+      passwordSalt,
       targetLevel: typeof level === 'string' ? (level as CefrLevel) : null,
     };
   } catch {
@@ -241,7 +327,7 @@ export function decodeReport(encoded: string): LearnerReport | null {
     return {
       kind: 'lumiere.report.v1',
       code,
-      displayName: typeof record['displayName'] === 'string' ? record['displayName'] : '',
+      firstName: typeof record['firstName'] === 'string' ? record['firstName'] : '',
       email: typeof record['email'] === 'string' ? record['email'] : '',
       exportedAt: typeof record['exportedAt'] === 'string' ? record['exportedAt'] : '',
       completedLessons: asStringMap(record['completedLessons']),
@@ -384,6 +470,64 @@ function timingSafeEqual(a: string, b: string): boolean {
   let diff = 0;
   for (let i = 0; i < a.length; i += 1) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
+}
+
+/* --------------------- Connexion d'un apprenant --------------------- */
+
+/**
+ * Ce qu'il faut pour vérifier une connexion : soit le compte présent dans ce
+ * navigateur (l'enseignant se connecte chez lui), soit l'invitation que
+ * l'apprenant vient de coller (premier accès sur son appareil).
+ */
+export interface LearnerCredentials {
+  readonly code: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly passwordHash: string;
+  readonly passwordSalt: string;
+  readonly targetLevel: CefrLevel | null;
+}
+
+export function credentialsOfLearner(learner: LearnerAccount): LearnerCredentials {
+  return {
+    code: learner.code,
+    firstName: learner.firstName,
+    lastName: learner.lastName,
+    email: learner.email,
+    passwordHash: learner.passwordHash,
+    passwordSalt: learner.passwordSalt,
+    targetLevel: learner.targetLevel,
+  };
+}
+
+export function credentialsOfInvite(invite: InvitePayload): LearnerCredentials {
+  return {
+    code: invite.code,
+    firstName: invite.firstName,
+    lastName: invite.lastName,
+    email: invite.email,
+    passwordHash: invite.passwordHash,
+    passwordSalt: invite.passwordSalt,
+    targetLevel: invite.targetLevel,
+  };
+}
+
+/** Retrouve un compte actif par son adresse, insensible à la casse. */
+export function findLearnerByEmail(
+  learners: readonly LearnerAccount[],
+  email: string,
+): LearnerAccount | null {
+  const needle = email.trim().toLowerCase();
+  return learners.find((learner) => learner.email === needle && learner.archivedAt === null) ?? null;
+}
+
+export async function verifyLearnerPassword(
+  credentials: LearnerCredentials,
+  password: string,
+): Promise<boolean> {
+  const candidate = await hashPassword(password, credentials.passwordSalt);
+  return timingSafeEqual(candidate, credentials.passwordHash);
 }
 
 export type PasswordStrength = 'too-short' | 'weak' | 'fair' | 'strong';

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { decodeInvite } from '@lms/core';
+import { decodeInvite, type InvitePayload } from '@lms/core';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
@@ -21,17 +21,17 @@ export function LoginPage() {
   const { l } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState('marie.dubois@exemple.fr');
-  const [phone, setPhone] = useState('+33 6 12 34 56 78');
-  const [name, setName] = useState('Marie Dubois');
+  const [firstName, setFirstName] = useState('Marie');
   const [password, setPassword] = useState('demo-lumiere');
   const [invite, setInvite] = useState('');
-  const [enrolmentCode, setEnrolmentCode] = useState<string | null>(null);
+  const [applied, setApplied] = useState<InvitePayload | null>(null);
   const [inviteNotice, setInviteNotice] = useState<{ ok: boolean; text: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   if (user) return <Navigate to="/app" replace />;
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
 
@@ -39,27 +39,28 @@ export function LoginPage() {
       setError(l(D.login.errorEmail));
       return;
     }
-    if (phone.replace(/\D/g, '').length < 8) {
-      setError(l(D.login.errorPhone));
-      return;
-    }
     if (password.length < 8) {
       setError(l(D.login.errorPassword));
       return;
     }
 
-    const outcome = signIn({
-      email: email.trim(),
-      phone: phone.trim(),
-      displayName: name.trim() || 'Apprenant',
-      enrolmentCode,
-    });
-    if (!outcome.ok) {
-      setError(outcome.message);
-      return;
+    setBusy(true);
+    try {
+      const outcome = await signIn({
+        email: email.trim(),
+        password,
+        firstName: firstName.trim(),
+        invite: applied,
+      });
+      if (!outcome.ok) {
+        setError(outcome.reason === 'bad-password' ? l(D.login.errorWrongPassword) : outcome.message);
+        return;
+      }
+      pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
+      navigate('/app');
+    } finally {
+      setBusy(false);
     }
-    pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
-    navigate('/app');
   }
 
   /**
@@ -69,13 +70,15 @@ export function LoginPage() {
   function applyInvite() {
     const decoded = decodeInvite(invite);
     if (!decoded) {
+      setApplied(null);
       setInviteNotice({ ok: false, text: l(D.login.inviteFailed) });
       return;
     }
-    setName(decoded.displayName);
+    setFirstName(decoded.firstName);
     setEmail(decoded.email);
-    setEnrolmentCode(decoded.code);
-    setInviteNotice({ ok: true, text: l(D.login.inviteOk(decoded.displayName)) });
+    setPassword('');
+    setApplied(decoded);
+    setInviteNotice({ ok: true, text: l(D.login.inviteOk(decoded.firstName)) });
   }
 
   return (
@@ -159,10 +162,18 @@ export function LoginPage() {
           </div>
 
           <div className="field">
-            <label className="field__label" htmlFor="name">
-              {l(D.login.name)}
+            <label className="field__label" htmlFor="firstName">
+              {l(D.login.firstName)}
             </label>
-            <input id="name" className="input" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+            <input
+              id="firstName"
+              className="input"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              autoComplete="given-name"
+              required
+            />
+            <span className="field__hint">{l(D.login.firstNameHint)}</span>
           </div>
 
           <div className="field">
@@ -179,21 +190,6 @@ export function LoginPage() {
               required
             />
             <span className="field__hint">{l(D.login.emailHint)}</span>
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor="phone">
-              {l(D.login.phone)}
-            </label>
-            <input
-              id="phone"
-              className="input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              autoComplete="tel"
-              required
-            />
-            <span className="field__hint">{l(D.login.phoneHint)}</span>
           </div>
 
           <div className="field">
@@ -220,7 +216,7 @@ export function LoginPage() {
             </div>
           ) : null}
 
-          <button type="submit" className="btn btn--primary btn--lg btn--block">
+          <button type="submit" className="btn btn--primary btn--lg btn--block" disabled={busy}>
             {l(D.login.submit)}
           </button>
 

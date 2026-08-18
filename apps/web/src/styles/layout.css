@@ -147,6 +147,10 @@
 }
 
 .user-chip__meta {
+  /* Sans colonne explicite, les deux `span` en ligne se collent l'un à
+     l'autre et `text-overflow` reste sans effet sur un inline. */
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 

@@ -643,3 +643,317 @@
   line-height: 1.35;
   color: var(--on-deep);
 }
+
+
+/* ------------------------------------------------------------------
+   Voix d'accompagnement : les phrases qui appellent l'apprenant par son
+   prenom. Assez marquees pour se distinguer du cours, assez discretes
+   pour ne pas interrompre la lecture.
+   ------------------------------------------------------------------ */
+
+.prose .coach {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  margin: var(--space-6) 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--accent-soft);
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.prose .coach--open {
+  margin-top: 0;
+}
+
+.coach__icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.quiz__coach {
+  margin-top: var(--space-4);
+  font-size: 0.92rem;
+  color: var(--on-deep-secondary);
+}
+
+.result__label--sub {
+  margin-top: var(--space-2);
+  font-size: 0.86rem;
+  opacity: 0.78;
+}
+
+/* ------------------------------------------------------------------
+   Gamification.
+
+   Les badges non obtenus restent visibles, en gris : un objectif caché
+   ne motive personne. L'anneau de niveau reprend l'anneau de progression
+   déjà employé au tableau de bord, pour ne pas multiplier les langages.
+   ------------------------------------------------------------------ */
+
+.game__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.ring {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  transform: rotate(-90deg);
+}
+
+.ring__track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 7;
+}
+
+.ring__value {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dasharray 700ms var(--ease);
+}
+
+.ring__label {
+  fill: var(--text);
+  font-size: 1.6rem;
+  font-weight: 680;
+  transform: rotate(90deg);
+  transform-origin: 40px 40px;
+}
+
+.game__figures {
+  min-width: 0;
+}
+
+.game__xp {
+  font-size: 1.15rem;
+  font-weight: 660;
+  color: var(--text);
+}
+
+.game__next {
+  margin-top: 2px;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.game__streak {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-3);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.game__streak-hint {
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.game__section {
+  padding-top: var(--space-5);
+}
+
+.game__section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+  font-size: 0.74rem;
+  font-weight: 620;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.badges {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.badge-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  /* Un badge non obtenu reste lisible mais visiblement en retrait. */
+  opacity: 0.5;
+  transition: opacity var(--speed) var(--ease), border-color var(--speed) var(--ease);
+}
+
+.badge-tile--earned {
+  opacity: 1;
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.badge-tile__emoji {
+  flex: none;
+  font-size: 1.35rem;
+  line-height: 1;
+  filter: grayscale(1);
+}
+
+.badge-tile--earned .badge-tile__emoji {
+  filter: none;
+  animation: badge-in 420ms var(--ease);
+}
+
+@keyframes badge-in {
+  0% {
+    transform: scale(0.4) rotate(-18deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.badge-tile__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 0.8rem;
+}
+
+.badge-tile__text strong {
+  color: var(--text);
+  font-weight: 620;
+}
+
+.badge-tile__text span {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.game__scale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.game__scale li {
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+/* --- Puce de niveau dans la barre latérale --- */
+
+.levelchip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(148, 197, 245, 0.07);
+  border: 1px solid var(--deep-border);
+}
+
+.levelchip__level {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 620;
+  color: var(--on-deep);
+}
+
+.levelchip__xp {
+  font-size: 0.74rem;
+  color: var(--on-deep-muted);
+}
+
+.levelchip__streak {
+  margin-left: auto;
+  font-size: 0.76rem;
+  font-weight: 620;
+  color: var(--on-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring__value,
+  .badge-tile--earned .badge-tile__emoji {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Apparition à la lecture.
+
+   `.reveal` est un simple conteneur : il ne doit rien changer à la mise
+   en page, sans quoi il casserait les marges du texte.
+   ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+}
+
+.reveal--in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Les marges du contenu appartiennent aux blocs, pas au conteneur. */
+.prose .reveal > * {
+  margin-top: 0;
+}
+
+/* `.prose h2 + *` ne s'applique plus, le titre étant désormais imbriqué :
+   on resserre l'espace après le conteneur qui porte le titre. */
+.prose > .reveal:has(h2) + .reveal {
+  margin-top: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* L'impression et la recherche dans la page doivent tout voir. */
+@media print {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -7,6 +7,7 @@ import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import { IconBook, IconChevronRight, IconPlay, IconShieldCheck, IconSparkle } from '../components/Icons';
 import { CourseCatalogue } from '../components/CourseCatalogue';
+import { GamificationPanel } from '../components/Gamification';
 
 export function DashboardPage() {
   const { user, state } = useApp();
@@ -32,7 +33,7 @@ export function DashboardPage() {
         : `/app/cours/${current.slug}/lecon/${resumeLesson.id}`
       : '/app/catalogue';
 
-  const firstName = (user?.displayName ?? '').split(' ')[0] ?? '';
+  const firstName = user?.firstName ?? '';
 
   return (
     <AppShell title={l(D.nav.dashboard)} wide>
@@ -116,6 +117,10 @@ export function DashboardPage() {
           </div>
         </section>
       ) : null}
+
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <GamificationPanel />
+      </div>
 
       <figure className="figure" style={{ marginBottom: 'var(--space-8)' }}>
         <Figure figureId="cecrl-echelle" locale={locale} />

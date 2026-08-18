@@ -62,6 +62,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Formation de l’imparfait : un radical, six terminaisons', 'Building the imperfect: one stem, six endings', '未完成过去时的构成：一个词干，六个词尾'),
               note: t(
                 'Le [[radical|radical]] se prend sur la forme « nous » du présent : nous finiss-ons → je finiss-ais. Une seule exception dans toute la langue : être (j’étais).',
@@ -78,9 +79,10 @@ export const conjugaisonCourse: Course = {
                 { pronoun: 'ils / elles', forms: ['parlaient', 'finissaient', 'prenaient', 'étaient'] },
               ],
             },
-            { type: 'heading', text: t('Le même fait, deux lectures', 'The same fact, two readings', '同一事实，两种解读') },
+            { type: 'heading', emoji: '🔹', text: t('Le même fait, deux lectures', 'The same fact, two readings', '同一事实，两种解读') },
             {
               type: 'examples',
+              emoji: '🕰️',
               title: t('Le choix du temps change le sens', 'The choice of tense changes the meaning', '时态的选择改变意义'),
               items: [
                 { fr: 'Quand j’étais étudiant, je travaillais le week-end.', gloss: t('Habitude passée, répétée.', 'A repeated past habit.', '过去反复发生的习惯。') },
@@ -90,8 +92,52 @@ export const conjugaisonCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '⏳',
+              title: t('Quatre plans, quatre temps', 'Four shots, four tenses', '四个镜头，四种时态'),
+              hint: t(
+                'Situez le fait par rapport au récit : le temps s’impose de lui-même.',
+                'Place the fact relative to the narrative: the tense follows on its own.',
+                '把事实相对于叙述定位，时态便自然确定。',
+              ),
+              widget: {
+                kind: 'timeline',
+                points: [
+                  {
+                    id: 'anterior',
+                    label: t('Avant le récit', 'Before the story', '叙述之前'),
+                    headline: t('plus-que-parfait', 'pluperfect', '愈过去时'),
+                    example: 'Il avait déjà mangé quand je suis arrivé.',
+                    gloss: t('Un fait antérieur à un autre fait passé. C’est le seul temps qui empile deux passés.', 'A fact anterior to another past fact. The only tense that stacks two pasts.', '先于另一过去事件的事实。唯一叠加两个过去的时态。'),
+                  },
+                  {
+                    id: 'backdrop',
+                    label: t('Pendant, en fond', 'During, in the background', '其间，作为背景'),
+                    headline: t('imparfait', 'imparfait', '未完成过去时'),
+                    example: 'Il pleuvait, la rue était vide.',
+                    gloss: t('Le décor, l’habitude, l’action en cours : rien de tout cela ne fait avancer le récit.', 'Setting, habit, ongoing action: none of it moves the story on.', '背景、习惯、正在进行的动作：这些都不推进叙述。'),
+                  },
+                  {
+                    id: 'event',
+                    label: t('L’événement', 'The event', '事件'),
+                    headline: t('passé composé', 'passé composé', '复合过去时'),
+                    example: 'Soudain, le téléphone a sonné.',
+                    gloss: t('Ce qui arrive et fait avancer l’histoire d’une case. À l’écrit littéraire, le passé simple prend sa place.', 'What happens and moves the story one step on. In literary writing, the passé simple takes its place.', '发生并把故事推进一步的事。在文学书面语中，由简单过去时取代。'),
+                  },
+                  {
+                    id: 'after',
+                    label: t('Après, vu du passé', 'After, seen from the past', '从过去看的之后'),
+                    headline: t('conditionnel présent', 'present conditional', '条件式现在时'),
+                    example: 'Il a dit qu’il viendrait.',
+                    gloss: t('Le futur dans le passé. Ce n’est pas une hypothèse : c’est la concordance des temps.', 'The future in the past. Not a hypothesis: this is sequence of tenses.', '过去将来。这不是假设，而是时态呼应。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'info',
+              emoji: '🎬',
               title: t('Le test du film', 'The film test', '电影测试法'),
               text: t(
                 'Imaginez votre récit comme un film. Ce qui serait un décor, une musique de fond ou une explication en voix off va à l’imparfait. Ce qui serait une action visible à l’écran va au passé composé.',
@@ -123,6 +169,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Plus-que-parfait : auxiliaire à l’imparfait + participe', 'Pluperfect: auxiliary in the imperfect + participle', '愈过去时：助动词未完成过去时 + 分词'),
               columns: [t('avec avoir', 'with avoir', '用 avoir'), t('avec être', 'with être', '用 être'), t('pronominal', 'reflexive', '自反动词')],
               rows: [
@@ -136,6 +183,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Marquer l’antériorité', 'Marking anteriority', '标示先时性'),
               items: [
                 { fr: 'Quand je suis arrivé, la réunion avait déjà commencé.', gloss: t('La réunion précède mon arrivée.', 'The meeting comes before my arrival.', '会议发生在我到达之前。') },
@@ -143,7 +191,7 @@ export const conjugaisonCourse: Course = {
                 { fr: 'Si j’avais su, je serais venu plus tôt.', gloss: t('Regret : plus-que-parfait + [[conditionnel|conditionnel]] passé.', 'Regret: pluperfect + past [[conditionnel|conditional]].', '表示遗憾：愈过去时 + [[conditionnel|条件式]]过去时。') },
               ],
             },
-            { type: 'heading', text: t('Le discours rapporté au passé', 'Reported speech in the past', '过去时中的转述') },
+            { type: 'heading', emoji: '🔹', text: t('Le discours rapporté au passé', 'Reported speech in the past', '过去时中的转述') },
             {
               type: 'paragraph',
               text: t(
@@ -154,6 +202,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Le décalage à appliquer', 'The shift to apply', '需要应用的时态推移'),
               headers: [t('Discours direct', 'Direct speech', '直接引语'), t('Discours rapporté au passé', 'Reported in the past', '过去时转述')],
               rows: [
@@ -166,6 +215,7 @@ export const conjugaisonCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🕰️',
               title: t('Les marqueurs de temps changent aussi', 'Time markers change too', '时间标记也要相应改变'),
               text: t(
                 'On ne se contente pas de reculer les verbes : hier devient la veille, demain devient le lendemain, maintenant devient alors, ici devient là. Oublier ce déplacement rend le texte incohérent même si les temps sont justes.',
@@ -205,6 +255,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Un radical commun, deux séries de terminaisons', 'One shared stem, two sets of endings', '共同词干，两套词尾'),
               note: t(
                 'Les terminaisons du conditionnel sont exactement celles de l’imparfait. Radicaux irréguliers à mémoriser : être → ser-, avoir → aur-, aller → ir-, faire → fer-, pouvoir → pourr-, vouloir → voudr-, devoir → devr-, venir → viendr-.',
@@ -223,6 +274,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Qui fait quoi', 'Who does what', '各司其职'),
               entries: [
                 { label: t('Futur proche', 'Near future', '最近将来时'), value: t('aller + infinitif. Événement imminent ou certain : « Il va pleuvoir. » Domine à l’oral.', 'aller + infinitive. Imminent or certain event: “Il va pleuvoir.” Dominant in speech.', 'aller + 不定式。即将或必然发生：“Il va pleuvoir.”，口语中最常用。') },
@@ -233,6 +285,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🔬',
               title: t('Les trois systèmes hypothétiques', 'The three conditional systems', '三种假设句型'),
               items: [
                 { fr: 'Si j’ai le temps, je viendrai.', gloss: t('Hypothèse réalisable : si + présent, futur.', 'Achievable hypothesis: si + present, future.', '可实现的假设：si + 现在时，主句将来时。') },
@@ -266,6 +319,7 @@ export const conjugaisonCourse: Course = {
             { type: 'figure', figureId: 'modes-temps', caption: t('Les quatre modes du verbe français et ce qu’ils expriment.', 'The four moods of the French verb and what they express.', '法语动词的四种语式及其表达功能。') },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Formation : radical de « ils » au présent + terminaisons', 'Formation: “ils” stem of the present + endings', '构成：现在时“ils”词干 + 词尾'),
               note: t(
                 'ils finiss-ent → que je finisse. Sept verbes seulement sont irréguliers : être, avoir, aller, faire, pouvoir, savoir, vouloir. Les apprendre suffit pour tout le B1 et le B2.',
@@ -282,7 +336,7 @@ export const conjugaisonCourse: Course = {
                 { pronoun: 'qu’ils / elles', forms: ['parlent', 'finissent', 'soient', 'aient', 'aillent'] },
               ],
             },
-            { type: 'heading', text: t('Les quatre familles de déclencheurs', 'The four families of triggers', '四类触发表达') },
+            { type: 'heading', emoji: '🔹', text: t('Les quatre familles de déclencheurs', 'The four families of triggers', '四类触发表达') },
             {
               type: 'list',
               items: [
@@ -311,6 +365,7 @@ export const conjugaisonCourse: Course = {
             {
               type: 'callout',
               tone: 'danger',
+              emoji: '🪤',
               title: t('Le contraste qui piège tout le monde', 'The contrast that traps everyone', '人人都会踩的对比陷阱'),
               text: t(
                 '« Je pense qu’il **vient** » (indicatif : le fait est posé comme réel) mais « Je ne pense pas qu’il **vienne** » (subjonctif : la négation introduit le doute). De même, « espérer que » est suivi de l’indicatif, alors que « souhaiter que » appelle le subjonctif.',
@@ -320,6 +375,7 @@ export const conjugaisonCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🔄',
               title: t('Le subjonctif en situation', 'The subjunctive in context', '语境中的虚拟式'),
               items: [
                 { fr: 'Il faut que vous soyez présents à neuf heures.', gloss: t('Obligation → subjonctif obligatoire.', 'Obligation → compulsory subjunctive.', '义务 → 必须用虚拟式。') },
@@ -331,6 +387,7 @@ export const conjugaisonCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Stratégie d’évitement légitime', 'A legitimate avoidance strategy', '正当的规避策略'),
               text: t(
                 'À l’oral, si le subjonctif ne vient pas, changez de construction : « Il faut que tu partes » devient « Tu dois partir ». C’est correct, naturel, et cela vaut mieux qu’une forme fautive. À l’écrit en revanche, le subjonctif est attendu et rapporte des points.',

@@ -51,6 +51,7 @@ export const c1OralCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🗣️',
               caption: t('Les grandes chutes de l’oral courant', 'The main deletions in everyday speech', '日常口语的主要脱落现象'),
               headers: [t('Phénomène', 'Phenomenon', '现象'), t('Écrit', 'Written', '书面'), t('Prononcé', 'Spoken', '口语'), t('Fréquence', 'Frequency', '频率')],
               rows: [
@@ -64,6 +65,7 @@ export const c1OralCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Comprendre ne veut pas dire imiter', 'Understanding does not mean imitating', '听懂不等于要模仿'),
               text: t(
                 'Vous devez **reconnaître** ces formes instantanément ; vous n’êtes pas obligé de les produire. Un locuteur non natif qui prononce « je ne sais pas » en entier reste parfaitement naturel. En revanche, celui qui ne comprend pas « chais pas » perd la moitié de la conversation.',
@@ -72,7 +74,44 @@ export const c1OralCourse: Course = {
               ),
             },
             {
+              type: 'interactive',
+              emoji: '👂',
+              title: t('Ce que l’oreille doit reconstituer', 'What the ear has to rebuild', '耳朵需要还原的成分'),
+              hint: t(
+                'Cliquez chaque morceau pour voir ce qui a été prononcé — ou pas.',
+                'Click each piece to see what was actually uttered — or not.',
+                '点击每个部分，看看实际发出了什么音——或没发出。',
+              ),
+              widget: {
+                kind: 'sentence',
+                segments: [
+                  {
+                    text: 'Il',
+                    role: t('Réduit à [i], puis avalé', 'Reduced to [i], then swallowed', '弱化为 [i]，随后被吞'),
+                    detail: t('Devant « y », le pronom disparaît complètement : « il y a » se dit « y a ». C’est systématique, pas relâché.', 'Before “y”, the pronoun vanishes entirely: “il y a” is said “y a”. This is systematic, not sloppy.', '在 “y” 之前，该代词完全消失：“il y a” 说成 “y a”。这是常态，并非马虎。'),
+                  },
+                  {
+                    text: 'ne',
+                    role: t('Absent à l’oral', 'Absent in speech', '口语中不出现'),
+                    detail: t('La chute du « ne » est quasi systématique en conversation. À l’écrit, en revanche, elle est une faute.', 'Dropping “ne” is almost systematic in conversation. In writing, however, it is a mistake.', '对话中省略 “ne” 几乎是常态。但在书面语中，这是错误。'),
+                  },
+                  {
+                    text: 'y en a',
+                    role: t('Bloc soudé [jɑ̃na]', 'A welded block [jɑ̃na]', '连成一体的 [jɑ̃na]'),
+                    detail: t('Trois mots, une seule masse sonore. C’est ce bloc qu’il faut apprendre à reconnaître d’un coup, sans le découper.', 'Three words, one sound mass. This is the block to learn to recognise at once, without slicing it up.', '三个词，一团声音。要学会整体识别这个块，不必逐词切分。'),
+                  },
+                  {
+                    text: 'plus',
+                    role: t('Le s ne se prononce pas', 'The s is not pronounced', 's 不发音'),
+                    detail: t('Dans la négation « ne… plus », le s est muet : [ply]. Prononcé [plys], le mot signifierait le contraire — « davantage ».', 'In the negative “ne… plus”, the s is silent: [ply]. Pronounced [plys], the word would mean the opposite — “more”.', '在否定结构 “ne… plus” 中，s 不发音：[ply]。若读作 [plys]，词义则相反——“更多”。'),
+                  },
+                  { text: '.' },
+                ],
+              },
+            },
+            {
               type: 'examples',
+              emoji: '🗣️',
               title: t('Décoder à l’oreille', 'Decoding by ear', '用耳朵解码'),
               items: [
                 { fr: '« Y en a plus » = Il n’y en a plus.', gloss: t('Trois chutes cumulées : il, ne, et la liaison.', 'Three deletions at once: il, ne, and the liaison.', '三重脱落叠加：il、ne 以及联诵。') },
@@ -105,6 +144,7 @@ export const c1OralCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🎚️',
               caption: t('Quatre registres, un même sens', 'Four registers, one meaning', '四种语体，同一含义'),
               headers: [t('Soutenu', 'Formal', '正式'), t('Courant', 'Standard', '通用'), t('Familier', 'Colloquial', '口语'), t('Très familier', 'Slang', '俚俗')],
               rows: [
@@ -116,8 +156,52 @@ export const c1OralCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎚️',
+              title: t('Le cadran des registres', 'The register dial', '语体刻度盘'),
+              hint: t(
+                'Un même contenu, quatre crans. Trouvez celui qui correspond à votre situation, {prenom}.',
+                'One content, four notches. Find the one that matches your situation, {prenom}.',
+                '同一内容，四个刻度。{prenom}，找到与你所处情境相符的那一档。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'soutenu',
+                    label: t('Soutenu', 'Formal', '正式'),
+                    headline: t('rapport, discours, lettre officielle', 'report, speech, official letter', '报告、演讲、正式信函'),
+                    example: 'Je vous saurais gré de bien vouloir vous restaurer avant la séance.',
+                    gloss: t('Vocabulaire rare, syntaxe complète, aucune ellipse. Employé à l’oral courant, il produit un effet comique.', 'Rare vocabulary, complete syntax, no ellipsis. Used in ordinary speech, it comes across as comic.', '词汇少见、句法完整、不省略。若用于日常口语则显得滑稽。'),
+                  },
+                  {
+                    id: 'courant',
+                    label: t('Courant', 'Standard', '通用'),
+                    headline: t('le choix sûr en toute situation', 'the safe choice in any situation', '任何场合都稳妥的选择'),
+                    example: 'Vous pouvez manger avant la réunion.',
+                    gloss: t('Ni marqué ni relâché. C’est le registre à produire quand on hésite : il ne détonne nulle part.', 'Neither marked nor casual. This is the register to produce when unsure: it jars nowhere.', '既不刻意也不随便。拿不准时就用这一档：在任何场合都不突兀。'),
+                  },
+                  {
+                    id: 'familier',
+                    label: t('Familier', 'Colloquial', '口语'),
+                    headline: t('collègues proches, amis', 'close colleagues, friends', '亲近的同事、朋友'),
+                    example: 'Tu peux bouffer un truc avant la réu.',
+                    gloss: t('Chute du « ne », mots familiers, abréviations. À reconnaître absolument, à produire avec discernement.', 'Dropped “ne”, colloquial words, abbreviations. Recognise it without fail, produce it with judgement.', '省略 “ne”、口语词汇、缩略形式。必须能听懂，使用则需审时度势。'),
+                  },
+                  {
+                    id: 'argotique',
+                    label: t('Très familier', 'Slang', '俚俗'),
+                    headline: t('entre proches, jamais au travail', 'among close friends, never at work', '仅限熟人之间，绝不用于职场'),
+                    example: 'Va te goinfrer avant, on a une réu chelou.',
+                    gloss: t('Argot et verlan. Comprenez-le pour suivre une conversation ; ne l’employez pas hors du cercle qui l’emploie déjà.', 'Slang and verlan. Understand it to follow a conversation; do not use it outside the circle that already does.', '俚语与倒读语。听懂它以跟上对话；但不要在本就不使用它的圈子之外说出口。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('Le verlan, à comprendre seulement', 'Verlan: for comprehension only', '倒读语：只需听懂'),
               text: t(
                 'Le verlan inverse les syllabes : **meuf** (femme), **ouf** (fou), **relou** (lourd), **chelou** (louche), **teuf** (fête). Ces mots sont entrés dans l’usage courant des moins de quarante ans. Comprenez-les ; ne les employez pas dans un contexte professionnel.',
@@ -127,6 +211,7 @@ export const c1OralCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '🪤',
               title: t('Erreurs de registre typiques', 'Typical register mistakes', '典型的语体错误'),
               items: [
                 { fr: 'Dans un courriel à un client : « J’ai bossé sur le dossier. »', gloss: t('« Bossé » est familier : écrivez « j’ai travaillé sur le dossier ».', '“Bossé” is colloquial: write “j’ai travaillé sur le dossier”.', '“Bossé” 属口语：应写 “j’ai travaillé sur le dossier”。'), incorrect: true },
@@ -159,6 +244,7 @@ export const c1OralCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Trois procédés à décoder', 'Three devices to decode', '三种需要解码的手法'),
               entries: [
                 { label: t('La litote', 'Litotes', '曲言法'), value: t('Dire moins pour signifier plus : « ce n’est pas mauvais » = c’est très bon ; « il n’est pas bête » = il est brillant.', 'Saying less to mean more: “ce n’est pas mauvais” = it is very good; “il n’est pas bête” = he is brilliant.', '以少言多：“ce n’est pas mauvais” 意为非常好；“il n’est pas bête” 意为他很聪明。') },
@@ -168,6 +254,7 @@ export const c1OralCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Ce qu’on dit, ce qu’on veut dire', 'What is said, what is meant', '所说与所指'),
               headers: [t('Formule', 'Phrase', '说法'), t('Sens littéral', 'Literal meaning', '字面义'), t('Sens réel', 'Actual meaning', '实际义')],
               rows: [
@@ -180,6 +267,7 @@ export const c1OralCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '⚠️',
               title: t('L’ironie ne se traduit pas, elle s’entend', 'Irony is not translated, it is heard', '反讽靠听，不靠译'),
               text: t(
                 'L’ironie française est rarement signalée par un mot ; elle repose sur une **intonation descendante** et un léger ralentissement. À l’écrit, elle passe par le contexte ou l’exagération manifeste. En cas de doute réel, une question neutre — « tu es sérieux ? » — reste toujours acceptable.',

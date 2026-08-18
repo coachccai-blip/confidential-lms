@@ -7,3 +7,5 @@ export * from './security';
 export * from './device';
 export * from './ids';
 export * from './roster';
+export * from './personalise';
+export * from './gamification';

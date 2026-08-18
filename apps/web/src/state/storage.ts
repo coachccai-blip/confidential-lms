@@ -34,6 +34,10 @@ export interface PersistedState {
   readonly reports: readonly LearnerReport[];
   /** Code d'inscription porté par la session en cours, s'il y en a un. */
   readonly enrolmentCode: string | null;
+  /** Langues d'interface déjà employées : alimente le badge « polyglotte ». */
+  readonly localesUsed: readonly Locale[];
+  /** Badges déjà notifiés, pour ne pas réannoncer les mêmes. */
+  readonly badgesSeen: readonly string[];
 }
 
 export const STORAGE_KEY = 'magmatica.state.v1';
@@ -56,6 +60,8 @@ export const EMPTY_STATE: PersistedState = {
   learners: [],
   reports: [],
   enrolmentCode: null,
+  localesUsed: [DEFAULT_LOCALE],
+  badgesSeen: [],
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

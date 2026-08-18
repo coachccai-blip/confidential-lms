@@ -51,6 +51,7 @@ export const c2LitteratureCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '💡',
               title: t('Le passé simple : trois modèles', 'The passé simple: three patterns', '简单过去时的三种模式'),
               note: t(
                 'Les formes de troisième personne — **il fit**, **ils firent** — représentent à elles seules la grande majorité des occurrences réelles : le récit est presque toujours à la troisième personne.',
@@ -68,7 +69,30 @@ export const c2LitteratureCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '📜',
+              title: t('La roue du passé simple', 'The wheel of the passé simple', '简单过去时转轮'),
+              hint: t(
+                'Cliquez une personne : les deux formes du bas concentrent l’essentiel des occurrences réelles.',
+                'Click a person: the two bottom forms account for nearly all real occurrences.',
+                '点击任一人称：下方两个形式几乎涵盖了全部实际用例。',
+              ),
+              widget: {
+                kind: 'wheel',
+                verb: 'être',
+                persons: [
+                  { pronoun: 'je', form: 'fus', phonetic: '[ʒə fy]', note: t('Rarissime hors du récit à la première personne, très littéraire.', 'Extremely rare outside first-person narrative, and highly literary.', '除第一人称叙事外极为罕见，文学色彩浓厚。') },
+                  { pronoun: 'tu', form: 'fus', phonetic: '[ty fy]', note: t('Pratiquement introuvable : le passé simple ne s’adresse à personne.', 'Practically never found: the passé simple addresses nobody.', '几乎见不到：简单过去时不用于对话。') },
+                  { pronoun: 'il / elle', form: 'fut', phonetic: '[il fy]', note: t('La forme reine. Le récit est presque toujours à la troisième personne du singulier.', 'The dominant form. Narrative is nearly always in the third person singular.', '最主要的形式。叙事几乎总用第三人称单数。') },
+                  { pronoun: 'nous', form: 'fûmes', phonetic: '[nu fym]', note: t('L’accent circonflexe marque toutes les 1res personnes du pluriel au passé simple.', 'The circumflex marks every first-person plural in the passé simple.', '长音符标示简单过去时所有第一人称复数形式。') },
+                  { pronoun: 'vous', form: 'fûtes', phonetic: '[vu fyt]', note: t('Forme de récit soutenu, essentiellement dans les textes anciens.', 'A formal narrative form, essentially in older texts.', '正式叙事形式，主要见于古旧文本。') },
+                  { pronoun: 'ils / elles', form: 'furent', phonetic: '[il fyʁ]', note: t('La seconde forme réellement fréquente, avec « il fut ».', 'The second genuinely frequent form, alongside “il fut”.', '与 “il fut” 并列，是另一个真正高频的形式。') },
+                ],
+              },
+            },
+            {
               type: 'table',
+              emoji: '✍️',
               caption: t('Répartition des temps dans un récit écrit', 'How tenses divide up a written narrative', '书面叙事中的时态分工'),
               headers: [t('Temps', 'Tense', '时态'), t('Fonction', 'Function', '功能'), t('Équivalent oral', 'Spoken equivalent', '口语对应')],
               rows: [
@@ -81,6 +105,7 @@ export const c2LitteratureCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🔄',
               title: t('Le présent de narration', 'The narrative present', '叙述现在时'),
               text: t(
                 'Un récit au passé peut basculer soudainement au présent pour rapprocher une scène du lecteur : « Il marchait depuis une heure. Soudain, une porte s’ouvre. » Ce n’est jamais une faute de concordance : c’est un effet de mise en scène, et un correcteur C2 attend que vous le reconnaissiez comme tel.',
@@ -129,6 +154,7 @@ export const c2LitteratureCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📖',
               caption: t('Les figures à connaître', 'Figures worth knowing', '值得掌握的修辞格'),
               headers: [t('Figure', 'Figure', '修辞格'), t('Définition', 'Definition', '定义'), t('Exemple', 'Example', '例子')],
               rows: [
@@ -143,6 +169,7 @@ export const c2LitteratureCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '💬',
               title: t('La formule qui transforme un relevé en analyse', 'The formula that turns a list into an analysis', '把罗列变成分析的句式'),
               text: t(
                 'Utilisez systématiquement le schéma : **procédé → citation → effet → sens**. « L’anaphore de "rien" (l. 4-7) martèle la négation et transforme la description en réquisitoire. » Sans le troisième et le quatrième temps, il n’y a pas d’analyse.',
@@ -152,6 +179,7 @@ export const c2LitteratureCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Du relevé à l’interprétation', 'From listing to interpretation', '从罗列到阐释'),
               items: [
                 { fr: 'On relève une métaphore filée au deuxième paragraphe.', gloss: t('Constat pur : aucune valeur analytique.', 'A bare observation: no analytical value.', '纯粹的观察：没有分析价值。'), incorrect: true },
@@ -184,6 +212,7 @@ export const c2LitteratureCourse: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🕰️',
               title: t('Les quatre temps du travail', 'The four stages of the work', '工作的四个阶段'),
               entries: [
                 { label: t('1. Lecture et relevés', '1. Reading and note-taking', '1. 阅读与摘录'), value: t('Trois lectures : sens général, procédés, structure. On note tout, on trie ensuite.', 'Three readings: general sense, devices, structure. Note everything, sort afterwards.', '读三遍：整体理解、修辞手法、结构。先全部记下，再筛选。') },
@@ -195,6 +224,7 @@ export const c2LitteratureCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🧭',
               title: t('Les trois plans à éviter', 'Three outlines to avoid', '三种应避免的提纲'),
               text: t(
                 '**« Le fond puis la forme »** sépare artificiellement ce qui fait sens ensemble. **« Paragraphe 1, paragraphe 2, paragraphe 3 »** n’est pas un plan, c’est une paraphrase. **« La vie de l’auteur »** est hors sujet : le commentaire porte sur le texte, non sur la biographie.',
@@ -204,6 +234,7 @@ export const c2LitteratureCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Un exemple d’axes bien construits', 'An example of well-built axes', '构建得当的轴线示例'),
               headers: [t('Axe', 'Axis', '轴线'), t('Hypothèse', 'Hypothesis', '假设'), t('Relevés attendus', 'Expected evidence', '预期证据')],
               rows: [

@@ -47,6 +47,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Le déroulé, minute par minute', 'The timing, minute by minute', '逐分钟流程'),
               entries: [
                 { label: t('1re écoute', '1st listening', '第一遍听'), value: t('Ne rien écrire, ou presque : identifier la situation, les intervenants et la thèse dominante.', 'Write almost nothing: identify the situation, the speakers and the dominant thesis.', '几乎不做笔记：辨明情境、发言人与主导观点。') },
@@ -56,8 +57,52 @@ export const dalfC2Course: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎙️',
+              title: t('Le curseur de l’implication', 'The involvement dial', '介入程度刻度'),
+              hint: t(
+                'La même information, à quatre degrés d’engagement de l’auteur.',
+                'The same information, at four degrees of authorial commitment.',
+                '同一信息，作者介入程度的四个层级。',
+              ),
+              widget: {
+                kind: 'switcher',
+                steps: [
+                  {
+                    id: 'report',
+                    label: t('Compte rendu', 'Report', '转述'),
+                    headline: t('effacement total', 'complete self-effacement', '完全隐身'),
+                    example: 'L’auteur soutient que la mesure est prématurée.',
+                    gloss: t('L’épreuve de C2 commence ici : restituer sans jamais laisser paraître son propre avis. C’est plus difficile qu’argumenter.', 'The C2 paper starts here: restating without ever letting your own view show. This is harder than arguing.', 'C2 考试从这里开始：转述而绝不流露己见。这比论证更难。'),
+                  },
+                  {
+                    id: 'framing',
+                    label: t('Mise en perspective', 'Framing', '置于语境'),
+                    headline: t('cadrage sans jugement', 'framing without judgement', '定位而不评判'),
+                    example: 'Cette position s’inscrit dans un débat ouvert depuis vingt ans.',
+                    gloss: t('On situe sans trancher. Le lecteur gagne un repère, l’auteur ne s’engage toujours pas.', 'You situate without deciding. The reader gains a bearing; the author still does not commit.', '定位而不下结论。读者获得参照，作者仍不表态。'),
+                  },
+                  {
+                    id: 'nuance',
+                    label: t('Nuance', 'Qualification', '限定'),
+                    headline: t('réserve mesurée', 'measured reservation', '有节制的保留'),
+                    example: 'Cette lecture, convaincante sur le fond, laisse toutefois un point de côté.',
+                    gloss: t('Première trace de l’auteur. La réserve doit porter sur un point identifiable, sinon elle passe pour une précaution de style.', 'The author’s first trace. The reservation must bear on an identifiable point, or it reads as a stylistic precaution.', '作者的第一处痕迹。保留必须针对某个可指认之处，否则会被视为文体上的托辞。'),
+                  },
+                  {
+                    id: 'stand',
+                    label: t('Prise de position', 'Taking a stand', '明确立场'),
+                    headline: t('engagement assumé', 'open commitment', '公开表态'),
+                    example: 'Cette prudence méthodologique nous paraît difficilement tenable.',
+                    gloss: t('Réservé à la seconde partie de l’épreuve. L’employer dans le compte rendu est la faute la plus lourdement sanctionnée.', 'Reserved for the second part of the paper. Using it in the report is the most heavily penalised error.', '仅限考试的第二部分。在转述中使用是扣分最重的错误。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'danger',
+              emoji: '🚨',
               title: t('La confusion fatale', 'The fatal confusion', '致命的混淆'),
               text: t(
                 'Le compte rendu est **neutre** : il restitue ce que disent les intervenants, sans jugement. Le développement est **personnel** : vous y prenez position. Mélanger les deux — glisser son avis dans le compte rendu — est la faute la plus fréquente et la plus lourdement sanctionnée à ce niveau.',
@@ -67,6 +112,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Marquer la frontière par les formules', 'Marking the boundary with set phrases', '用句式划清界线'),
               items: [
                 { fr: 'Les intervenants s’accordent à reconnaître que… / L’un d’eux objecte cependant que…', gloss: t('Compte rendu : attribution systématique, aucun jugement.', 'Report: systematic attribution, no judgement.', '汇报：始终注明出处，不作评判。') },
@@ -99,6 +145,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Restituer une intention, pas seulement un contenu', 'Reporting an intention, not just content', '复述意图，而不仅是内容'),
               entries: [
                 { label: t('Ironie', 'Irony', '反讽'), value: t('« L’orateur feint de louer la mesure pour mieux en souligner l’inefficacité. »', '“The speaker feigns praise for the measure the better to underline its ineffectiveness.”', '“发言人佯装称赞该措施，实则突出其无效。”') },
@@ -110,6 +157,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Du mot à l’intention', 'From word to intention', '从字面到意图'),
               items: [
                 { fr: 'Entendu : « Cette réforme, si tant est qu’on puisse l’appeler ainsi… »', gloss: t('Restitution : « L’intervenant conteste jusqu’à la dénomination de la mesure. »', 'Report: “The speaker disputes even the naming of the measure.”', '复述：“发言人甚至质疑该措施的名称本身。”') },
@@ -120,6 +168,7 @@ export const dalfC2Course: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('L’entraînement le plus efficace', 'The most effective training', '最有效的训练'),
               text: t(
                 'Écoutez dix minutes d’une matinale de radio française, puis enregistrez-vous en restituant le contenu pendant trois minutes, sans notes. Réécoutez-vous : vous entendrez immédiatement où vous avez paraphrasé au lieu de reformuler.',
@@ -159,6 +208,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'table',
+              emoji: '🏷️',
               caption: t('Quatre genres, quatre contraintes', 'Four genres, four constraints', '四种文体，四种要求'),
               headers: [t('Genre', 'Genre', '文体'), t('Destinataire', 'Addressee', '读者'), t('Registre', 'Register', '语体'), t('Marque distinctive', 'Distinctive feature', '显著特征')],
               rows: [
@@ -170,6 +220,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Répartition des 3 h 30', 'Splitting the 3 h 30', '3 小时 30 分钟的分配'),
               entries: [
                 { label: t('45 min', '45 min', '45 分钟'), value: t('Lecture du dossier et relevé des idées, par thème et non par document.', 'Reading the dossier and noting ideas, by theme rather than by document.', '阅读材料并按主题（而非按文献）记录观点。') },
@@ -181,6 +232,7 @@ export const dalfC2Course: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('Le dossier n’est pas un stock de citations', 'The dossier is not a stock of quotations', '材料不是引文仓库'),
               text: t(
                 'Un article C2 ne juxtapose pas les sources : il les digère. Chaque idée empruntée doit être fondue dans votre propre argumentation, attribuée si nécessaire, mais jamais recopiée. Un texte qui enchaîne « selon le document 2… selon le document 3… » relève encore du C1.',
@@ -212,6 +264,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Cinq procédés à maîtriser', 'Five devices to master', '需掌握的五种手法'),
               entries: [
                 { label: t('[[litote|Litote]]', '[[litote|Litotes]]', '[[litote|曲言法]]'), value: t('« Le bilan n’est pas des plus flatteurs. » Dire moins pour signifier davantage.', '“Le bilan n’est pas des plus flatteurs.” Saying less to mean more.', '“Le bilan n’est pas des plus flatteurs.” 以少言多。') },
@@ -223,6 +276,7 @@ export const dalfC2Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('La même idée, deux niveaux', 'The same idea, two levels', '同一想法，两种水平'),
               items: [
                 { fr: 'Le gouvernement a changé d’avis, ce qui est surprenant et pose problème.', gloss: t('Correct, mais scolaire : niveau B2.', 'Correct, but school-like: B2 level.', '正确却显生硬：B2 水平。') },
@@ -233,6 +287,7 @@ export const dalfC2Course: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('Le test de la lecture à voix haute', 'The read-aloud test', '朗读检验法'),
               text: t(
                 'Relisez votre texte à voix haute. Si vous manquez de souffle, vos phrases sont trop longues. Si le rythme est monotone, alternez : une phrase longue, une phrase courte. Le C2 s’entend autant qu’il se lit.',

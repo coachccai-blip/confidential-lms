@@ -135,11 +135,11 @@ export const D = {
         ),
       },
       {
-        title: t('Filigrane nominatif', 'Named watermark', '实名水印'),
+        title: t('Contenu nominatif', 'Named content', '实名内容'),
         text: t(
-          'Votre email et votre téléphone s’affichent sur chaque écran, et une empreinte invisible marque chaque texte.',
-          'Your email and phone appear on every screen, and an invisible fingerprint marks every text.',
-          '每个页面都显示您的邮箱与电话，每段文字都嵌入隐形指纹。',
+          'Les leçons vous appellent par votre prénom, et une empreinte invisible marque chaque texte servi.',
+          'The lessons address you by your first name, and an invisible fingerprint marks every text served.',
+          '课程会以您的名字称呼您，并在每段文字中嵌入隐形指纹。',
         ),
       },
       {
@@ -157,32 +157,31 @@ export const D = {
       '这是公开的网页演示。系统级截屏拦截需使用 README 中描述的桌面端与移动端应用。',
     ),
     title: t('Connexion apprenant', 'Learner sign-in', '学员登录'),
-    name: t('Nom complet', 'Full name', '姓名'),
+    firstName: t('Prénom', 'First name', '名字'),
+    firstNameHint: t(
+      'Les leçons vous appelleront par ce prénom.',
+      'The lessons will address you by this first name.',
+      '课程将以这个名字称呼您。',
+    ),
     email: t('Adresse email', 'Email address', '电子邮箱'),
     emailHint: t(
-      'Affichée dans le filigrane de chaque écran de contenu.',
-      'Shown in the watermark on every content screen.',
-      '将显示在每个内容页面的水印中。',
-    ),
-    phone: t('Téléphone', 'Phone number', '电话号码'),
-    phoneHint: t(
-      'Second marqueur de traçabilité, exigé par la politique de diffusion.',
-      'Second tracing marker, required by the distribution policy.',
-      '第二个溯源标记，依据内容分发政策要求。',
+      'Votre identifiant de connexion.',
+      'Your sign-in identifier.',
+      '您的登录标识。',
     ),
     password: t('Mot de passe', 'Password', '密码'),
     submit: t('Accéder à mes cours', 'Open my courses', '进入我的课程'),
     demoTitle: t('Mode démonstration', 'Demo mode', '演示模式'),
     demoText: t(
-      'Aucun serveur n’est interrogé : l’authentification, les sessions et la progression sont simulées localement pour rendre les protections observables. Une adresse commençant par admin@ ouvre l’espace d’administration.',
-      'No server is contacted: authentication, sessions and progress are simulated locally so the protections stay observable. An address starting with admin@ opens the admin area.',
-      '不会访问任何服务器：登录、会话与学习进度均在本地模拟，以便观察各项保护机制。使用 admin@ 开头的邮箱可进入管理后台。',
+      'Sans compte créé par un enseignant, l’accès est libre : n’importe quelle adresse et n’importe quel mot de passe d’au moins 8 caractères ouvrent la démonstration. Avec une invitation, le mot de passe choisi par l’enseignant est exigé. Une adresse commençant par admin@ ouvre l’espace d’administration.',
+      'Without an account created by a teacher, access is open: any address and any password of at least 8 characters open the demo. With an invitation, the password chosen by the teacher is required. An address starting with admin@ opens the admin area.',
+      '若没有教师创建的账户，则可自由访问：任意邮箱加任意不少于 8 位的密码即可打开演示。若持有邀请，则须输入教师设定的密码。使用 admin@ 开头的邮箱可进入管理后台。',
     ),
     errorEmail: t('Adresse email invalide.', 'Invalid email address.', '邮箱地址无效。'),
-    errorPhone: t(
-      'Numéro de téléphone invalide — il sert au filigrane de traçabilité.',
-      'Invalid phone number — it is used by the tracing watermark.',
-      '电话号码无效——它用于生成溯源水印。',
+    errorWrongPassword: t(
+      'Mot de passe incorrect pour ce compte.',
+      'Incorrect password for this account.',
+      '该账户的密码不正确。',
     ),
     errorPassword: t(
       'Le mot de passe doit contenir au moins 8 caractères.',
@@ -340,7 +339,8 @@ export const D = {
       ),
     role: { admin: t('Administrateur', 'Administrator', '管理员'), learner: t('Apprenant', 'Learner', '学员') },
     memberSince: (date: string) => t(`inscrit le ${date}`, `member since ${date}`, `注册于 ${date}`),
-    identity: t('Identité de filigrane', 'Watermark identity', '水印身份'),
+    identity: t('Identité traçable', 'Traceable identity', '可溯源身份'),
+    fieldFirstName: t('Prénom', 'First name', '名字'),
     reportTitle: t('Transmettre ma progression', 'Send my progress', '发送我的学习进度'),
     reportIntro: t(
       'Cette plateforme fonctionne sans serveur : votre progression reste sur cet appareil. Pour que votre enseignant la voie, copiez le relevé ci-dessous et envoyez-le-lui.',
@@ -357,22 +357,21 @@ export const D = {
     ),
     reportCode: (code: string) => t(`Code d’inscription : ${code}`, `Enrolment code: ${code}`, `报名代码：${code}`),
     fieldEmail: t('Email', 'Email', '邮箱'),
-    fieldPhone: t('Téléphone', 'Phone', '电话'),
     fieldLearnerId: t('Identifiant apprenant', 'Learner ID', '学员编号'),
     fieldDeviceFp: t('Empreinte appareil', 'Device fingerprint', '设备指纹'),
     identityNote: t(
-      'Ces valeurs composent l’empreinte injectée dans chaque leçon que vous consultez.',
-      'These values make up the fingerprint injected into every lesson you read.',
-      '这些信息构成注入到您所阅读的每节课中的指纹。',
+      'Votre identifiant et celui de cet appareil composent l’empreinte invisible injectée dans chaque leçon. Votre prénom, lui, apparaît en clair dans le texte des cours.',
+      'Your identifier and this device’s make up the invisible fingerprint injected into every lesson. Your first name, in turn, appears in plain sight in the course text.',
+      '您的编号与本设备编号共同构成注入每节课的隐形指纹；而您的名字则明确出现在课文之中。',
     ),
     protectionsTitle: t('État des protections', 'Protection status', '保护状态'),
     statusOn: t('Actif', 'Active', '已启用'),
     statusDesktop: t('Application desktop requise', 'Desktop app required', '需桌面端应用'),
     protections: [
       t(
-        'Filigrane visible email + téléphone, repositionné toutes les 30 s',
-        'Visible email + phone watermark, repositioned every 30 s',
-        '显示邮箱与电话的水印，每 30 秒变换位置',
+        'Prénom de l’apprenant inscrit dans le corps des leçons',
+        'Learner’s first name written into the body of the lessons',
+        '学员名字写入课文正文',
       ),
       t(
         'Empreinte invisible injectée dans chaque texte servi',
@@ -614,8 +613,27 @@ export const D = {
       '为每位学员创建一个账户，然后把邀请发给他。之后用该代码来匹配他回传的进度。',
     ),
     newLearner: t('Nouvel apprenant', 'New learner', '新增学员'),
-    fieldName: t('Nom affiché', 'Display name', '显示姓名'),
+    fieldFirstName: t('Prénom', 'First name', '名字'),
+    fieldFirstNameHint: t(
+      'Repris dans le corps des leçons pour interpeller l’apprenant.',
+      'Used inside the lessons to address the learner.',
+      '将出现在课文中，用于称呼学员。',
+    ),
+    fieldLastName: t('Nom de famille (facultatif)', 'Surname (optional)', '姓氏（可选）'),
     fieldEmail: t('Adresse électronique', 'Email address', '电子邮箱'),
+    fieldPassword: t('Mot de passe', 'Password', '密码'),
+    fieldPasswordHint: t(
+      'À communiquer à l’apprenant avec son invitation. Il pourra le lire dans l’invitation, pas ici : notez-le maintenant.',
+      'To be given to the learner along with their invitation. They will not be able to read it later — note it down now.',
+      '请随邀请一并告知学员。之后无法再查看，请立即记下。',
+    ),
+    regenerate: t('Autre', 'Another', '换一个'),
+    errorPasswordShort: (n: number) =>
+      t(
+        `Le mot de passe doit compter au moins ${n} caractères.`,
+        `The password must be at least ${n} characters long.`,
+        `密码至少需要 ${n} 个字符。`,
+      ),
     fieldLevel: t('Niveau visé', 'Target level', '目标等级'),
     fieldNote: t('Note interne', 'Internal note', '内部备注'),
     fieldNotePlaceholder: t(
@@ -785,6 +803,152 @@ export const D = {
     ),
   },
 
+  /* ------------------------------------------------------------------
+     Voix d'accompagnement.
+
+     Ces phrases encadrent chaque leçon et portent le prénom de l'apprenant.
+     Elles sont écrites en plusieurs variantes : une leçon donnée en tire
+     toujours la même, mais deux leçons voisines n'ouvrent pas pareil.
+     ------------------------------------------------------------------ */
+  coach: {
+    greetings: [
+      t('Bonjour {prenom} 👋 Prenons cette leçon tranquillement.', 'Hello {prenom} 👋 Let’s take this lesson calmly.', '{prenom}，你好 👋 我们慢慢来学这一课。'),
+      t('Content de vous retrouver, {prenom} ☀️ On y va.', 'Good to see you again, {prenom} ☀️ Off we go.', '很高兴又见到你，{prenom} ☀️ 我们开始吧。'),
+      t('{prenom}, cette leçon est faite pour être relue. Prenez votre temps 🕰️', '{prenom}, this lesson is meant to be reread. Take your time 🕰️', '{prenom}，这一课值得重读。慢慢来 🕰️'),
+      t('On continue, {prenom} 🚀 Chaque leçon ajoute une pièce au tableau.', 'Let’s carry on, {prenom} 🚀 Each lesson adds a piece to the picture.', '继续加油，{prenom} 🚀 每一课都为整体添上一块拼图。'),
+      t('Bienvenue {prenom} 📘 Une notion, quelques exemples, et c’est acquis.', 'Welcome {prenom} 📘 One idea, a few examples, and it sticks.', '欢迎你，{prenom} 📘 一个知识点、几个例子，就能掌握。'),
+      t('{prenom}, installez-vous : on va décortiquer ça ensemble 🔍', '{prenom}, settle in: we are going to unpack this together 🔍', '{prenom}，坐好，我们一起把它拆解开 🔍'),
+      t('Ravi de vous revoir, {prenom} 🌊 On avance à votre rythme.', 'Glad to see you back, {prenom} 🌊 We move at your pace.', '很高兴你回来了，{prenom} 🌊 按你的节奏推进。'),
+      t('Nouvelle étape, {prenom} 🧭 Celle-ci éclaire les suivantes.', 'New step, {prenom} 🧭 This one lights up the next ones.', '新的一步，{prenom} 🧭 这一课会照亮后面的内容。'),
+    ],
+    midway: [
+      t('Vous tenez le bon fil, {prenom} 💪 La suite découle de ce qui précède.', 'You are on the right track, {prenom} 💪 What follows flows from this.', '你抓住要点了，{prenom} 💪 后面的内容由此展开。'),
+      t('Pause d’une seconde, {prenom} : relisez le tableau ci-dessus avant de continuer 👀', 'One second, {prenom}: reread the table above before going on 👀', '停一秒，{prenom}：继续之前请重读上面的表格 👀'),
+      t('C’est ici que ça se joue, {prenom} ⚡ Le reste n’est que déclinaison.', 'This is the crux, {prenom} ⚡ The rest is just variation.', '关键就在这里，{prenom} ⚡ 其余不过是变化形式。'),
+      t('Encore un effort, {prenom} 🌱 Cette notion sert dans tous les cours suivants.', 'One more push, {prenom} 🌱 This idea is used in every later course.', '再坚持一下，{prenom} 🌱 这个知识点在之后的所有课程中都会用到。'),
+      t('{prenom}, si un point résiste, revenez au premier exemple 🔁', '{prenom}, if something resists, go back to the first example 🔁', '{prenom}，如果哪里没弄懂，就回到第一个例子 🔁'),
+      t('Belle progression, {prenom} ✨ La moitié la plus dense est derrière vous.', 'Nice progress, {prenom} ✨ The densest half is behind you.', '进展不错，{prenom} ✨ 最难的一半已经过去了。'),
+    ],
+    completion: [
+      t('Leçon terminée, {prenom} 🎉 Une de plus au compteur.', 'Lesson finished, {prenom} 🎉 One more in the bag.', '本课完成，{prenom} 🎉 又拿下一课。'),
+      t('Bravo {prenom} 🏅 Vous pouvez enchaîner ou revenir plus tard.', 'Well done {prenom} 🏅 Carry on now or come back later.', '做得好，{prenom} 🏅 可以继续，也可以稍后再来。'),
+      t('C’est acquis, {prenom} ✅ Le prochain point s’appuie dessus.', 'That’s learned, {prenom} ✅ The next point builds on it.', '已经掌握了，{prenom} ✅ 下一个知识点以此为基础。'),
+      t('Excellent, {prenom} 🌟 Votre progression vient d’avancer.', 'Excellent, {prenom} 🌟 Your progress just moved up.', '很棒，{prenom} 🌟 你的进度又前进了。'),
+    ],
+    quizIntro: [
+      t('À vous de jouer, {prenom} 🎯 Six questions, aucune piège gratuit.', 'Your turn, {prenom} 🎯 Six questions, no gratuitous traps.', '轮到你了，{prenom} 🎯 六道题，没有无谓的陷阱。'),
+      t('{prenom}, ce quiz vérifie la compréhension, pas la mémoire 🧠', '{prenom}, this quiz tests understanding, not memory 🧠', '{prenom}，这次测验考查理解，而非记忆 🧠'),
+      t('Prenez votre temps, {prenom} ⏳ Chaque réponse est commentée ensuite.', 'Take your time, {prenom} ⏳ Every answer is explained afterwards.', '慢慢来，{prenom} ⏳ 每道题之后都有讲解。'),
+    ],
+    quizPassed: (name: string, score: number) =>
+      t(
+        `Réussi, ${name} 🎉 ${score} % — le seuil est franchi.`,
+        `Passed, ${name} 🎉 ${score} % — you are over the threshold.`,
+        `通过了，${name} 🎉 ${score} %，已越过合格线。`,
+      ),
+    quizFailed: (name: string, score: number) =>
+      t(
+        `${score} % cette fois, ${name}. Relisez les corrections : elles pointent exactement ce qui manque 🔍`,
+        `${score} % this time, ${name}. Read the corrections: they point at exactly what is missing 🔍`,
+        `这次 ${score} %，${name}。请看讲解，它们准确指出了欠缺之处 🔍`,
+      ),
+    personalNoteTitle: t('Cet exemplaire porte votre nom', 'This copy carries your name', '此副本带有您的姓名'),
+    personalNoteText: t(
+      'Votre prénom est inscrit dans le corps de cette leçon, et une empreinte invisible y est jointe. Un extrait recopié reste attribuable.',
+      'Your first name is written into the body of this lesson, and an invisible fingerprint comes with it. A copied excerpt remains attributable.',
+      '您的名字已写入本课正文，并附带隐形指纹。被复制的片段仍可追溯来源。',
+    ),
+  },
+
+  /* ------------------------------------------------------------------
+     Gamification. Le barème est affiché : un apprenant doit pouvoir
+     deviner ce qui lui rapporte des points sans lire de règlement.
+     ------------------------------------------------------------------ */
+  game: {
+    title: t('Votre progression', 'Your progress', '你的成长'),
+    levelLabel: (n: number) => t(`Niveau ${n}`, `Level ${n}`, `第 ${n} 级`),
+    xpLabel: (n: number) => t(n > 1 ? `${n} points` : `${n} point`, n > 1 ? `${n} points` : `${n} point`, `${n} 点`),
+    toNext: (n: number) =>
+      t(
+        n > 1 ? `${n} points avant le niveau suivant` : `${n} point avant le niveau suivant`,
+        n > 1 ? `${n} points to the next level` : `${n} point to the next level`,
+        `距下一级还差 ${n} 点`,
+      ),
+    maxLevel: t('Niveau maximal atteint 👑', 'Top level reached 👑', '已达最高等级 👑'),
+    // L'accord se fait à un : « 1 jour », « 2 jours ». L'anglais suit la même règle.
+    streak: (n: number) =>
+      t(
+        n > 1 ? `${n} jours d’affilée` : `${n} jour d’affilée`,
+        n > 1 ? `${n} days in a row` : `${n} day in a row`,
+        `连续 ${n} 天`,
+      ),
+    streakNone: t('Série à démarrer', 'Streak not started', '连续记录尚未开始'),
+    streakHint: t(
+      'Une étape terminée aujourd’hui prolonge la série.',
+      'One step completed today keeps the streak alive.',
+      '今天完成一步即可延续记录。',
+    ),
+    badgesTitle: t('Badges', 'Badges', '徽章'),
+    badgesCount: (earned: number, total: number) =>
+      t(`${earned} sur ${total}`, `${earned} of ${total}`, `${earned} / ${total}`),
+    locked: t('Pas encore débloqué', 'Not unlocked yet', '尚未解锁'),
+    scoreTitle: t('Comment gagner des points', 'How to earn points', '如何获得点数'),
+    scoreLesson: (n: number) => t(`+${n} par leçon terminée`, `+${n} per lesson completed`, `每完成一课 +${n}`),
+    scoreQuiz: (n: number) => t(`+${n} par quiz réussi`, `+${n} per quiz passed`, `每通过一次测验 +${n}`),
+    scorePerfect: (n: number) => t(`+${n} pour un sans-faute`, `+${n} for a perfect score`, `满分额外 +${n}`),
+    scoreCourse: (n: number) => t(`+${n} par cours achevé`, `+${n} per course finished`, `每完成一门课程 +${n}`),
+    levelUpTitle: t('Niveau supérieur 🎉', 'Level up 🎉', '升级了 🎉'),
+    levelUpText: (name: string, n: number) =>
+      t(
+        `Bravo ${name}, vous passez au niveau ${n}.`,
+        `Well done ${name}, you have reached level ${n}.`,
+        `恭喜 ${name}，你已升至第 ${n} 级。`,
+      ),
+    badgeUnlockedTitle: t('Nouveau badge', 'New badge', '获得新徽章'),
+    badges: {
+      'first-lesson': {
+        name: t('Premier pas', 'First step', '第一步'),
+        hint: t('Terminer une première leçon.', 'Finish a first lesson.', '完成第一节课。'),
+      },
+      'first-quiz': {
+        name: t('Première cible', 'First target', '首中靶心'),
+        hint: t('Réussir un premier quiz.', 'Pass a first quiz.', '通过第一次测验。'),
+      },
+      'five-lessons': {
+        name: t('Cinq leçons', 'Five lessons', '五节课'),
+        hint: t('Terminer cinq leçons, tous cours confondus.', 'Finish five lessons, across all courses.', '在所有课程中累计完成五节课。'),
+      },
+      'streak-3': {
+        name: t('Trois jours', 'Three days', '三天'),
+        hint: t('Travailler trois jours de suite.', 'Study three days in a row.', '连续三天学习。'),
+      },
+      'perfect-quiz': {
+        name: t('Sans-faute', 'Flawless', '满分'),
+        hint: t('Obtenir 100 % à un quiz.', 'Score 100 % on a quiz.', '在一次测验中获得 100 %。'),
+      },
+      polyglot: {
+        name: t('Polyglotte', 'Polyglot', '多语者'),
+        hint: t('Consulter le site dans les trois langues.', 'View the site in all three languages.', '用三种语言浏览本站。'),
+      },
+      'course-done': {
+        name: t('Cours achevé', 'Course finished', '课程完成'),
+        hint: t('Terminer toutes les étapes d’un cours.', 'Finish every step of a course.', '完成一门课程的全部步骤。'),
+      },
+      'streak-7': {
+        name: t('Une semaine', 'One week', '一周'),
+        hint: t('Travailler sept jours de suite.', 'Study seven days in a row.', '连续七天学习。'),
+      },
+      'night-owl': {
+        name: t('Oiseau de nuit', 'Night owl', '夜猫子'),
+        hint: t('Terminer une étape tard dans la nuit.', 'Finish a step late at night.', '在深夜完成一步。'),
+      },
+      'level-done': {
+        name: t('Palier franchi', 'Level cleared', '通关一级'),
+        hint: t('Terminer les trois cours d’un niveau du CECRL.', 'Finish all three courses of one CEFR level.', '完成某一 CEFR 等级的三门课程。'),
+      },
+    },
+  },
+
   securityEvents: {
     login: t('Connexion réussie', 'Successful sign-in', '登录成功'),
     logout: t('Déconnexion', 'Sign-out', '退出登录'),
@@ -810,5 +974,6 @@ export const D = {
       'Admin password rejected',
       '管理员密码被拒绝',
     ),
+    'login-refused': t('Mot de passe refusé à la connexion', 'Password rejected at sign-in', '登录时密码被拒绝'),
   },
 } as const;

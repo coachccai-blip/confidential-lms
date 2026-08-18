@@ -2,6 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_ADMIN_PASSWORD,
   archiveLearner,
+  credentialsOfInvite,
+  credentialsOfLearner,
+  findLearnerByEmail,
+  fullName,
+  suggestPassword,
+  validateLearnerInput,
+  verifyLearnerPassword,
   buildRoster,
   createAdminLock,
   createEnrolmentCode,
@@ -34,8 +41,12 @@ function makeLearner(overrides: Partial<LearnerAccount> = {}): LearnerAccount {
   return {
     id: 'lrn_1',
     code: 'LUM-ABCD-2345',
-    displayName: 'Chen Wei',
+    firstName: 'Wei',
+    lastName: 'Chen',
     email: 'chen.wei@exemple.cn',
+    // Condensé de « azur-lagune-42 » avec ce sel, calculé dans le test dédié.
+    passwordHash: 'a'.repeat(64),
+    passwordSalt: '0123456789abcdef',
     targetLevel: 'B1',
     note: '',
     createdAt: NOW,
@@ -43,6 +54,13 @@ function makeLearner(overrides: Partial<LearnerAccount> = {}): LearnerAccount {
     ...overrides,
   };
 }
+
+const VALID_INPUT = {
+  firstName: 'Wei',
+  lastName: 'Chen',
+  email: 'Chen.Wei@Exemple.cn',
+  password: 'azur-lagune-42',
+};
 
 describe('codes d’inscription', () => {
   it('produit un code lisible, sans caractère ambigu', () => {
@@ -58,27 +76,38 @@ describe('codes d’inscription', () => {
 });
 
 describe('création de comptes', () => {
-  it('crée un compte et lui attribue un code', () => {
-    const outcome = createLearner([], { displayName: 'Chen Wei', email: 'Chen.Wei@Exemple.cn' }, NOW, seeded(3));
+  it('crée un compte, lui attribue un code et condense le mot de passe', async () => {
+    const outcome = await createLearner([], VALID_INPUT, NOW, seeded(3));
     expect(outcome.ok).toBe(true);
     if (!outcome.ok) return;
+    expect(outcome.learner.firstName).toBe('Wei');
     expect(outcome.learner.email).toBe('chen.wei@exemple.cn');
     expect(outcome.learner.code).toMatch(/^LUM-/);
     expect(outcome.learner.archivedAt).toBeNull();
+    expect(outcome.learner.passwordHash).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it('refuse un nom vide, un courriel invalide, un doublon', () => {
+  it('ne conserve jamais le mot de passe en clair', async () => {
+    const outcome = await createLearner([], VALID_INPUT, NOW, seeded(3));
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) return;
+    expect(JSON.stringify(outcome.learner)).not.toContain('lagune');
+  });
+
+  it('refuse un prénom vide, un courriel invalide, un mot de passe court, un doublon', () => {
     const existing = [makeLearner()];
-    expect(createLearner(existing, { displayName: '  ', email: 'a@b.fr' }, NOW).ok).toBe(false);
-    expect(createLearner(existing, { displayName: 'X', email: 'pas-un-email' }, NOW).ok).toBe(false);
-    const duplicate = createLearner(existing, { displayName: 'X', email: 'chen.wei@exemple.cn' }, NOW);
-    expect(duplicate.ok).toBe(false);
-    if (!duplicate.ok) expect(duplicate.reason).toBe('email-duplicate');
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, firstName: '  ' })?.reason).toBe('name-required');
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'pas-un-email' })?.reason).toBe('email-invalid');
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, password: 'court' })?.reason).toBe('password-too-short');
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'chen.wei@exemple.cn' })?.reason).toBe(
+      'email-duplicate',
+    );
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'autre@exemple.fr' })).toBeNull();
   });
 
   it('autorise à réutiliser le courriel d’un compte archivé', () => {
     const existing = [makeLearner({ archivedAt: NOW })];
-    expect(createLearner(existing, { displayName: 'X', email: 'chen.wei@exemple.cn' }, NOW).ok).toBe(true);
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'chen.wei@exemple.cn' })).toBeNull();
   });
 
   it('archive puis restaure sans perdre le compte', () => {
@@ -87,6 +116,57 @@ describe('création de comptes', () => {
     expect(archived[0]?.archivedAt).toBe(NOW);
     expect(restoreLearner(archived, 'lrn_1')[0]?.archivedAt).toBeNull();
   });
+
+  it('compose le nom complet en tolérant un nom de famille absent', () => {
+    expect(fullName({ firstName: 'Wei', lastName: 'Chen' })).toBe('Wei Chen');
+    expect(fullName({ firstName: 'Wei', lastName: '' })).toBe('Wei');
+  });
+
+  it('propose un mot de passe dictable et assez long', () => {
+    const password = suggestPassword(seeded(5));
+    expect(password).toMatch(/^[a-z]+-[a-z]+-\d{2}$/);
+    expect(password.length).toBeGreaterThanOrEqual(8);
+  });
+});
+
+describe('connexion d’un apprenant', () => {
+  it('accepte le mot de passe choisi par l’enseignant et refuse les autres', async () => {
+    const outcome = await createLearner([], VALID_INPUT, NOW, seeded(3));
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) return;
+    const credentials = credentialsOfLearner(outcome.learner);
+    expect(await verifyLearnerPassword(credentials, 'azur-lagune-42')).toBe(true);
+    expect(await verifyLearnerPassword(credentials, 'azur-lagune-43')).toBe(false);
+    expect(await verifyLearnerPassword(credentials, '')).toBe(false);
+  });
+
+  it('vérifie aussi bien depuis l’invitation que depuis le compte local', async () => {
+    const outcome = await createLearner([], VALID_INPUT, NOW, seeded(3));
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) return;
+    const invite = decodeInvite(encodeInvite(outcome.learner));
+    expect(invite).not.toBeNull();
+    if (!invite) return;
+    expect(await verifyLearnerPassword(credentialsOfInvite(invite), 'azur-lagune-42')).toBe(true);
+    expect(await verifyLearnerPassword(credentialsOfInvite(invite), 'mauvais')).toBe(false);
+  });
+
+  it('retrouve un compte par son adresse, sans tenir compte de la casse', () => {
+    const learners = [makeLearner(), makeLearner({ id: 'lrn_2', email: 'lea@exemple.fr', archivedAt: NOW })];
+    expect(findLearnerByEmail(learners, '  CHEN.WEI@exemple.CN ')?.id).toBe('lrn_1');
+    // Un compte archivé ne permet plus de se connecter.
+    expect(findLearnerByEmail(learners, 'lea@exemple.fr')).toBeNull();
+    expect(findLearnerByEmail(learners, 'inconnu@exemple.fr')).toBeNull();
+  });
+
+  it('sale le condensé : deux comptes du même mot de passe diffèrent', async () => {
+    const a = await createLearner([], VALID_INPUT, NOW, seeded(3));
+    const b = await createLearner([], { ...VALID_INPUT, email: 'autre@exemple.fr' }, NOW, seeded(9));
+    expect(a.ok && b.ok).toBe(true);
+    if (!a.ok || !b.ok) return;
+    expect(a.learner.passwordSalt).not.toBe(b.learner.passwordSalt);
+    expect(a.learner.passwordHash).not.toBe(b.learner.passwordHash);
+  });
 });
 
 describe('invitations', () => {
@@ -94,17 +174,27 @@ describe('invitations', () => {
     const learner = makeLearner();
     const decoded = decodeInvite(encodeInvite(learner));
     expect(decoded).toEqual({
-      kind: 'lumiere.invite.v1',
+      kind: 'lumiere.invite.v2',
       code: learner.code,
-      displayName: learner.displayName,
+      firstName: 'Wei',
+      lastName: 'Chen',
       email: learner.email,
+      passwordHash: learner.passwordHash,
+      passwordSalt: learner.passwordSalt,
       targetLevel: 'B1',
     });
   });
 
   it('survit aux caractères accentués et chinois', () => {
-    const learner = makeLearner({ displayName: '陈伟 · Élodie Français' });
-    expect(decodeInvite(encodeInvite(learner))?.displayName).toBe('陈伟 · Élodie Français');
+    const learner = makeLearner({ firstName: '伟', lastName: 'Élodie Français' });
+    expect(decodeInvite(encodeInvite(learner))?.firstName).toBe('伟');
+    expect(decodeInvite(encodeInvite(learner))?.lastName).toBe('Élodie Français');
+  });
+
+  it('refuse une invitation privée de son condensé', () => {
+    const learner = makeLearner();
+    const truncated = { kind: 'lumiere.invite.v2', code: learner.code, firstName: 'Wei', email: learner.email };
+    expect(decodeInvite(btoa(JSON.stringify(truncated)))).toBeNull();
   });
 
   it('refuse une invitation illisible ou d’un autre format', () => {
@@ -118,7 +208,7 @@ describe('remontées de progression', () => {
   const report: LearnerReport = {
     kind: 'lumiere.report.v1',
     code: 'LUM-ABCD-2345',
-    displayName: 'Chen Wei',
+    firstName: 'Wei',
     email: 'chen.wei@exemple.cn',
     exportedAt: '2026-03-02T08:00:00.000Z',
     completedLessons: { les_a1pm_1: '2026-03-01T09:00:00.000Z', les_a1pm_2: '2026-03-02T07:00:00.000Z' },
@@ -161,7 +251,7 @@ describe('tableau de suivi', () => {
     {
       kind: 'lumiere.report.v1',
       code: 'LUM-ABCD-2345',
-      displayName: 'Chen Wei',
+      firstName: 'Wei',
       email: 'chen.wei@exemple.cn',
       exportedAt: '2026-03-02T08:00:00.000Z',
       completedLessons: { a: '2026-03-01T09:00:00.000Z', b: '2026-03-02T07:00:00.000Z' },

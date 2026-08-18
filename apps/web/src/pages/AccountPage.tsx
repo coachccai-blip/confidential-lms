@@ -61,8 +61,8 @@ export function AccountPage() {
               <dd className="mono">{user?.email}</dd>
             </div>
             <div className="keyvalues__row">
-              <dt>{l(D.account.fieldPhone)}</dt>
-              <dd className="mono">{user?.phone}</dd>
+              <dt>{l(D.account.fieldFirstName)}</dt>
+              <dd>{user?.firstName}</dd>
             </div>
             <div className="keyvalues__row">
               <dt>{l(D.account.fieldLearnerId)}</dt>

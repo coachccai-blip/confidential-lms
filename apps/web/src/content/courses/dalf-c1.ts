@@ -48,6 +48,7 @@ export const dalfC1Course: Course = {
             { type: 'figure', figureId: 'synthese-c1', caption: t('Le circuit complet, du dossier au texte final.', 'The full circuit, from dossier to final text.', '从材料到成稿的完整流程。') },
             {
               type: 'keyvalues',
+              emoji: '🎓',
               title: t('Les 2 h 10 de l’épreuve, minutées', 'The 2 h 10 of the paper, timed', '2 小时 10 分钟的时间分配'),
               entries: [
                 { label: t('30 min — lecture active', '30 min — active reading', '30 分钟——精读'), value: t('Une couleur par idée, pas par document. Repérer ce qui se répète d’un texte à l’autre.', 'One colour per idea, not per document. Spot what recurs across texts.', '按观点而非按文章标色。找出各篇之间重复出现的内容。') },
@@ -58,6 +59,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'table',
+              emoji: '🧭',
               caption: t('Le tableau croisé, cœur de la méthode', 'The cross-reference grid, heart of the method', '交叉表：方法的核心'),
               headers: [t('Idée', 'Idea', '观点'), t('Doc 1', 'Doc 1', '文献 1'), t('Doc 2', 'Doc 2', '文献 2'), t('Doc 3', 'Doc 3', '文献 3')],
               rows: [
@@ -69,6 +71,7 @@ export const dalfC1Course: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '💡',
               title: t('Comment le plan émerge du tableau', 'How the plan emerges from the grid', '提纲如何从表格中产生'),
               text: t(
                 'Une ligne cochée dans tous les documents devient un point de consensus, à placer en premier. Une ligne cochée dans un seul document est un point de divergence, à traiter ensuite. Le plan est donc dicté par le dossier, jamais choisi à l’avance.',
@@ -100,6 +103,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '📄',
               title: t('Trois degrés de reformulation', 'Three degrees of reformulation', '改写的三个层次'),
               items: [
                 { fr: 'Original : « Les jeunes diplômés peinent à trouver un premier emploi stable. »', gloss: t('Le texte source.', 'The source text.', '原文。') },
@@ -110,6 +114,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🧭',
               title: t('Quatre techniques de reformulation', 'Four reformulation techniques', '四种改写技巧'),
               entries: [
                 { label: t('[[nominalisation|Nominalisation]]', '[[nominalisation|Nominalisation]]', '[[nominalisation|名词化]]'), value: t('« les prix augmentent » → « la hausse des prix »', '“les prix augmentent” → “la hausse des prix”', '“les prix augmentent” → “la hausse des prix”') },
@@ -119,8 +124,52 @@ export const dalfC1Course: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '⏰',
+              title: t('Les deux heures de la synthèse, minute par minute', 'The two hours of the synthesis, minute by minute', '综述的两小时，分秒安排'),
+              hint: t(
+                'Chaque étape a son budget. Le dépassement de la première coûte la dernière.',
+                'Each stage has its budget. Overrunning the first costs you the last.',
+                '每个阶段都有时间预算。第一步超时，最后一步就没了。',
+              ),
+              widget: {
+                kind: 'timeline',
+                points: [
+                  {
+                    id: 'read',
+                    label: t('0 → 25 min', '0 → 25 min', '0 → 25 分钟'),
+                    headline: t('Lecture et repérage', 'Reading and locating', '通读与定位'),
+                    example: 'Une couleur par document, un mot-clé par paragraphe.',
+                    gloss: t('On lit tout avant d’écrire quoi que ce soit. Commencer à rédiger au premier document produit un collage, pas une synthèse.', 'You read everything before writing anything. Starting to draft at the first document produces a collage, not a synthesis.', '写任何东西之前先通读全部材料。从第一份材料就开始动笔，得到的是拼贴而非综述。'),
+                  },
+                  {
+                    id: 'grid',
+                    label: t('25 → 50 min', '25 → 50 min', '25 → 50 分钟'),
+                    headline: t('Tableau de confrontation', 'Confrontation grid', '对照表'),
+                    example: 'Une ligne par idée, une colonne par document.',
+                    gloss: t('Les convergences et les divergences apparaissent d’elles-mêmes : ce tableau est le plan, il ne reste qu’à le lire.', 'Convergences and divergences surface on their own: this grid is the outline, all that remains is to read it.', '一致与分歧会自行浮现：这张表就是提纲，剩下的只是读它。'),
+                  },
+                  {
+                    id: 'write',
+                    label: t('50 → 105 min', '50 → 105 min', '50 → 105 分钟'),
+                    headline: t('Rédaction', 'Drafting', '撰写'),
+                    example: 'Introduction, deux ou trois axes, pas de conclusion personnelle.',
+                    gloss: t('On rédige d’un trait, sans revenir en arrière. Les corrections viennent après, jamais pendant.', 'You draft in one pass, without going back. Corrections come afterwards, never during.', '一气呵成，不回头修改。修订留到之后，绝不在写作中进行。'),
+                  },
+                  {
+                    id: 'check',
+                    label: t('105 → 120 min', '105 → 120 min', '105 → 120 分钟'),
+                    headline: t('Relecture ciblée', 'Targeted proofreading', '定向复查'),
+                    example: 'Accords, nombre de mots, attribution des idées.',
+                    gloss: t('Trois passes rapides valent mieux qu’une relecture générale : on cherche une chose à la fois.', 'Three quick passes beat one general reread: you look for one thing at a time.', '三遍快速专项检查胜过一遍笼统重读：每次只找一类问题。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'danger',
+              emoji: '🪤',
               title: t('Les trois fautes éliminatoires', 'The three disqualifying errors', '三类致命错误'),
               text: t(
                 'Donner son opinion (« il me semble que… »), traiter les documents séparément (« le document 1 dit que… »), ou dépasser de plus de 10 % le nombre de mots. Chacune coûte plusieurs points, et la première dénature l’exercice.',
@@ -130,6 +179,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '📄',
               title: t('Formules pour attribuer sans citer', 'Formulas to attribute without quoting', '不引用而标明出处的句式'),
               items: [
                 { fr: 'Les trois auteurs s’accordent sur…', gloss: t('Point de consensus : ouvre la première partie.', 'Point of consensus: opens the first part.', '共识点：用作第一部分的开头。') },
@@ -179,6 +229,7 @@ export const dalfC1Course: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('L’erreur qui coûte le plus', 'The costliest error', '代价最大的错误'),
               text: t(
                 'Lire ses notes. Le jury sanctionne immédiatement un exposé récité. Préparez des mots-clés, jamais des phrases : vous devez regarder les examinateurs et reformuler en direct. C’est précisément cette capacité qui définit le C1.',
@@ -188,6 +239,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'examples',
+              emoji: '🎚️',
               title: t('Formules d’exposé en registre soutenu', 'Presentation formulas in a formal register', '正式语体的陈述句式'),
               items: [
                 { fr: 'Ce dossier réunit trois documents qui interrogent, chacun à sa manière, la place de…', gloss: t('Présentation globale, sans énumération plate.', 'Global presentation, avoiding a flat list.', '整体介绍，避免平铺直叙的罗列。') },
@@ -220,6 +272,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'table',
+              emoji: '📊',
               caption: t('Trois registres, un même contenu', 'Three registers, the same content', '三种语体，同一内容'),
               headers: [t('Familier', 'Informal', '口语'), t('Courant', 'Standard', '通用'), t('[[soutenu|Soutenu]]', '[[soutenu|Formal]]', '[[soutenu|正式]]')],
               rows: [
@@ -230,6 +283,7 @@ export const dalfC1Course: Course = {
             },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Doser l’affirmation', 'Calibrating assertion', '拿捏断言的分寸'),
               entries: [
                 { label: t('Certitude', 'Certainty', '确定'), value: t('Il est incontestable que… / Force est de constater que…', 'Il est incontestable que… / Force est de constater que…', 'Il est incontestable que… / Force est de constater que…') },
@@ -241,6 +295,7 @@ export const dalfC1Course: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '✅',
               title: t('L’exercice quotidien recommandé', 'The recommended daily exercise', '建议的日常练习'),
               text: t(
                 'Prenez chaque jour une phrase d’un journal français et réécrivez-la dans les trois registres. Dix minutes par jour pendant un mois valent mieux que trois heures de listes de vocabulaire : c’est la manipulation, non la mémorisation, qui installe le [[registre|registre]].',

@@ -51,6 +51,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '📍',
               caption: t('Aller quelque part, venir de quelque part', 'Going somewhere, coming from somewhere', '去某地、从某地来'),
               headers: [t('Lieu', 'Place', '地点'), t('Aller à', 'Going to', '去'), t('Venir de', 'Coming from', '来自')],
               rows: [
@@ -62,8 +63,44 @@ export const a2ReperesCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🗺️',
+              title: t('Le sélecteur de préposition', 'The preposition picker', '介词选择器'),
+              hint: t(
+                'Croisez le type de lieu et le sens du déplacement, {prenom}.',
+                'Cross the type of place with the direction of travel, {prenom}.',
+                '{prenom}，将地点类型与位移方向交叉选择。',
+              ),
+              widget: {
+                kind: 'matrix',
+                rowsLabel: t('Type de lieu', 'Type of place', '地点类型'),
+                columnsLabel: t('Sens du déplacement', 'Direction of travel', '位移方向'),
+                rows: [
+                  { id: 'city', label: t('Ville', 'City', '城市') },
+                  { id: 'fem', label: t('Pays féminin', 'Feminine country', '阴性国家') },
+                  { id: 'masc', label: t('Pays masculin', 'Masculine country', '阳性国家') },
+                  { id: 'plur', label: t('Pays pluriel', 'Plural country', '复数国名') },
+                ],
+                columns: [
+                  { id: 'to', label: t('J’y vais', 'I am going there', '我去那里') },
+                  { id: 'from', label: t('J’en viens', 'I come from there', '我从那里来') },
+                ],
+                cells: [
+                  { row: 'city', column: 'to', answer: 'à', example: 'Je vais à Lyon.', gloss: t('Toutes les villes prennent « à », sans exception de genre.', 'Every city takes “à”, with no gender exception.', '所有城市名前一律用 “à”，不分性别。') },
+                  { row: 'city', column: 'from', answer: 'de', example: 'Je viens de Shanghai.', gloss: t('« De » simple, sans article, devant un nom de ville.', 'A plain “de”, with no article, before a city name.', '城市名前用简单的 “de”，不加冠词。') },
+                  { row: 'fem', column: 'to', answer: 'en', example: 'Je vais en France, en Chine.', gloss: t('Les pays en -e sont presque tous féminins, et prennent « en ».', 'Countries ending in -e are nearly all feminine, and take “en”.', '以 -e 结尾的国家几乎都是阴性，用 “en”。') },
+                  { row: 'fem', column: 'from', answer: 'de', example: 'Je viens de Chine.', gloss: t('Toujours « de » nu, jamais « de la » pour un pays féminin.', 'Always a bare “de”, never “de la” for a feminine country.', '一律用光杆 “de”，阴性国名绝不用 “de la”。') },
+                  { row: 'masc', column: 'to', answer: 'au', example: 'Je vais au Japon, au Canada.', gloss: t('« Au » est la contraction de « à + le ». Attention : le Mexique est masculin malgré son -e.', '“Au” is the contraction of “à + le”. Note: le Mexique is masculine despite its -e.', '“Au” 是 “à + le” 的缩合。注意：le Mexique 虽以 -e 结尾却是阳性。') },
+                  { row: 'masc', column: 'from', answer: 'du', example: 'Je viens du Japon.', gloss: t('« Du » est la contraction de « de + le ».', '“Du” is the contraction of “de + le”.', '“Du” 是 “de + le” 的缩合。') },
+                  { row: 'plur', column: 'to', answer: 'aux', example: 'Je vais aux États-Unis.', gloss: t('« Aux » vaut pour « à + les », avec liaison en [z].', '“Aux” stands for “à + les”, with a [z] liaison.', '“Aux” 相当于 “à + les”，联诵为 [z]。') },
+                  { row: 'plur', column: 'from', answer: 'des', example: 'Je viens des Pays-Bas.', gloss: t('« Des » vaut pour « de + les ».', '“Des” stands for “de + les”.', '“Des” 相当于 “de + les”。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'info',
+              emoji: '🔀',
               title: t('L’exception mémorable : le Mexique', 'The memorable exception: le Mexique', '值得记住的例外：le Mexique'),
               text: t(
                 'La règle « pays en -e = féminin » a quelques exceptions, dont le Mexique, le Cambodge et le Mozambique : on dit « au Mexique ». Elles sont assez rares pour être apprises une par une.',
@@ -71,9 +108,10 @@ export const a2ReperesCourse: Course = {
                 '“以 -e 结尾的国家为阴性”这条规则有少数例外，包括 le Mexique、le Cambodge 和 le Mozambique：要说 “au Mexique”。数量少，可逐个记忆。',
               ),
             },
-            { type: 'heading', text: t('Décrire une position', 'Describing a position', '描述位置') },
+            { type: 'heading', emoji: '✍️', text: t('Décrire une position', 'Describing a position', '描述位置') },
             {
               type: 'keyvalues',
+              emoji: '📍',
               title: t('Les prépositions de position', 'Prepositions of position', '方位介词'),
               entries: [
                 { label: t('sur / sous', 'sur / sous', 'sur / sous'), value: t('Le livre est sur la table, le chat est sous la chaise.', 'Le livre est sur la table, le chat est sous la chaise.', 'Le livre est sur la table, le chat est sous la chaise.') },
@@ -85,6 +123,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '👉',
               title: t('Le pronom « y » remplace le lieu', 'The pronoun “y” replaces the place', '代词 “y” 取代地点'),
               items: [
                 { fr: 'Tu vas à Lyon ? — Oui, j’y vais demain.', gloss: t('« y » remplace « à Lyon » et se place avant le verbe.', '“y” replaces “à Lyon” and goes before the verb.', '“y” 取代 “à Lyon”，置于动词之前。') },
@@ -117,6 +156,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🕰️',
               caption: t('Quatre expressions de durée', 'Four duration expressions', '四种时段表达'),
               headers: [t('Mot', 'Word', '词'), t('Sens', 'Meaning', '含义'), t('Temps du verbe', 'Verb tense', '动词时态'), t('Exemple', 'Example', '例句')],
               rows: [
@@ -127,8 +167,52 @@ export const a2ReperesCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '📆',
+              title: t('Quatre mots sur une frise', 'Four words on a timeline', '时间轴上的四个词'),
+              hint: t(
+                'Chaque repère montre le mot attendu, {prenom}, et le temps qui va avec.',
+                'Each marker shows the word expected, {prenom}, and the tense that goes with it.',
+                '{prenom}，每个标记显示对应的词及其搭配的时态。',
+              ),
+              widget: {
+                kind: 'timeline',
+                points: [
+                  {
+                    id: 'ilya',
+                    label: t('Point du passé', 'A point in the past', '过去的某一点'),
+                    headline: t('il y a + durée → passé composé', 'il y a + duration → passé composé', 'il y a + 时长 → 复合过去时'),
+                    example: 'Je suis arrivé il y a deux heures.',
+                    gloss: t('Un moment daté, pas une durée : on compte à rebours depuis maintenant.', 'A dated moment, not a duration: you count backwards from now.', '一个有明确时点的时刻，而非时段：从现在往回数。'),
+                  },
+                  {
+                    id: 'pendant',
+                    label: t('Période close', 'A closed period', '已结束的时段'),
+                    headline: t('pendant + durée → passé composé', 'pendant + duration → passé composé', 'pendant + 时长 → 复合过去时'),
+                    example: 'J’ai vécu à Lille pendant trois ans.',
+                    gloss: t('La période a un début et une fin, tous deux dans le passé.', 'The period has a beginning and an end, both in the past.', '这段时间有始有终，两端都在过去。'),
+                  },
+                  {
+                    id: 'depuis',
+                    label: t('Jusqu’à maintenant', 'Up to now', '延续至今'),
+                    headline: t('depuis + durée → présent', 'depuis + duration → present', 'depuis + 时长 → 现在时'),
+                    example: 'J’habite ici depuis trois ans.',
+                    gloss: t('C’est le piège principal : la continuation impose le présent, jamais le passé composé.', 'This is the main trap: continuation requires the present, never the passé composé.', '这是主要陷阱：持续意味着必须用现在时，绝不用复合过去时。'),
+                  },
+                  {
+                    id: 'dans',
+                    label: t('Point à venir', 'A point to come', '将来的某一点'),
+                    headline: t('dans + durée → futur', 'dans + duration → future', 'dans + 时长 → 将来时'),
+                    example: 'Le train part dans dix minutes.',
+                    gloss: t('« Dans » regarde vers l’avant ; « en » indiquerait le temps mis pour faire quelque chose.', '“Dans” looks forward; “en” would indicate the time taken to do something.', '“Dans” 指向未来；“en” 则表示完成某事所需的时间。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '🔄',
               title: t('Depuis se construit avec le présent, pas le passé', 'Depuis takes the present, not the past', 'Depuis 搭配现在时，而非过去时'),
               text: t(
                 'L’anglais dit « I have lived here for three years », le chinois marque la continuation autrement. Le français, lui, emploie le **présent** : « j’habite ici depuis trois ans ». Dire « j’ai habité ici depuis trois ans » signifierait que c’est fini.',
@@ -138,6 +222,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Les distinguer en contexte', 'Telling them apart in context', '在语境中区分'),
               items: [
                 { fr: 'J’apprends le français depuis six mois.', gloss: t('J’apprends encore aujourd’hui : présent + depuis.', 'I am still learning today: present + depuis.', '今天仍在学：现在时 + depuis。') },
@@ -170,6 +255,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'table',
+              emoji: '🔢',
               caption: t('Compter ou prélever', 'Counting or taking a portion', '计数还是取量'),
               headers: [t('Situation', 'Situation', '情形'), t('Article', 'Article', '冠词'), t('Exemple', 'Example', '例子')],
               rows: [
@@ -182,6 +268,7 @@ export const a2ReperesCourse: Course = {
             {
               type: 'callout',
               tone: 'warning',
+              emoji: '🪤',
               title: t('« Beaucoup de », jamais « beaucoup des »', '“Beaucoup de”, never “beaucoup des”', '只说 “beaucoup de”，不说 “beaucoup des”'),
               text: t(
                 'Toutes les expressions de quantité — beaucoup, peu, assez, trop, un peu, un kilo, une bouteille — sont suivies de **de** seul. « Beaucoup de gens », jamais « beaucoup des gens ».',
@@ -189,7 +276,7 @@ export const a2ReperesCourse: Course = {
                 '所有数量表达——beaucoup、peu、assez、trop、un peu、un kilo、une bouteille——后面只接 **de**。要说 “beaucoup de gens”，绝不说 “beaucoup des gens”。',
               ),
             },
-            { type: 'heading', text: t('Le pronom « en »', 'The pronoun “en”', '代词 “en”') },
+            { type: 'heading', emoji: '👉', text: t('Le pronom « en »', 'The pronoun “en”', '代词 “en”') },
             {
               type: 'paragraph',
               text: t(
@@ -200,6 +287,7 @@ export const a2ReperesCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('« En » à l’œuvre', '“En” in action', '“En” 的用法'),
               items: [
                 { fr: 'Tu veux du café ? — Oui, j’en veux bien.', gloss: t('« en » remplace « du café ».', '“en” replaces “du café”.', '“en” 取代 “du café”。') },

@@ -6,8 +6,9 @@ catalogue couvre les six niveaux du CECRL, de A1 à C2, à raison de trois cours
 
 **➜ Démonstration en ligne : https://coachccai-blip.github.io/confidential-lms/**
 
-Connexion libre : renseignez n'importe quel email et téléphone valides — ils deviennent votre
-filigrane. Une adresse commençant par `admin@` ouvre en plus l'espace d'administration.
+Connexion libre : renseignez un prénom, une adresse et un mot de passe d'au moins huit
+caractères. Le prénom apparaîtra dans le corps des leçons. Une adresse commençant par `admin@`
+ouvre en plus l'espace d'administration.
 
 ---
 
@@ -29,7 +30,9 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 | 18 cours de français rangés par niveau (A1 → C2), 78 étapes, 18 quiz notés | ✅ Contenu réel et complet |
 | Comptes apprenants, invitations et suivi de progression | ✅ Fonctionnel, **sans serveur** (§7) |
 | Toutes les protections réalisables dans un navigateur | ✅ Fonctionnel |
-| Filigrane visible mobile + filigrane invisible par apprenant | ✅ Fonctionnel |
+| Contenu nominatif (prénom dans les leçons) + empreinte invisible par apprenant | ✅ Fonctionnel |
+| Comptes apprenants avec mot de passe, créés par l'enseignant | ✅ Fonctionnel, **vérifié côté client** (§7) |
+| Schémas manipulables, animations, points, séries et badges | ✅ Fonctionnel |
 | Session unique, limite de 3 appareils, journal de sécurité | ✅ Fonctionnel, **simulé côté client** |
 | Espace admin : suivi apprenants, vérificateur d'empreinte, matrice de protection | ✅ Fonctionnel, données de démonstration |
 | Backend Fastify + PostgreSQL + Prisma, auth argon2, JWT/refresh | ❌ Phase 1 restante — voir [§8](#8-feuille-de-route) |
@@ -131,23 +134,87 @@ des examens (synthèse, reformulation, problématique, litote, périphrase, bar�
 
 ---
 
-## 5. Protections implémentées — et leurs limites réelles
+## 5. Ce qui rend les leçons vivantes
+
+### 5.1 Schémas manipulables
+
+Un tableau se lit, un schéma se manipule. Cinq familles couvrent ce que l'enseignement d'une
+langue demande le plus souvent ; **les dix-huit cours en comptent au moins un**, vingt au total.
+
+| Famille | Ce qu'elle sert | Exemple dans le catalogue |
+|---|---|---|
+| **Roue** | parcourir une conjugaison personne par personne | la roue d'`être` au présent (A1), celle du passé simple (C2) |
+| **Matrice** | croiser deux critères | le sélecteur d'article, genre × détermination (A1) |
+| **Frise** | situer un fait dans le temps | `depuis` / `pendant` / `il y a` / `dans` (A2) |
+| **Sélecteur** | faire varier un même énoncé | les quatre registres de langue (C1), les trois systèmes hypothétiques (B2) |
+| **Phrase** | décomposer un énoncé segment par segment | l'anatomie d'une négation (A1), le mouvement de concession (B2) |
+
+Trois règles tenues partout : **tout est bouton** — rien ne dépend du survol, l'exploration est
+identique au clavier et au doigt ; **une seule zone de réponse**, à hauteur plancher, pour que la
+page ne saute pas sous le lecteur ; **une sélection par défaut**, sans quoi un schéma vide ne
+montre pas ce qu'il sait faire.
+
+### 5.2 Emojis et repères visuels
+
+**250 blocs** portent un emoji, choisi d'après le sujet du titre — 🪤 pour un piège, 🔄 pour une
+conjugaison, 🗣️ pour un point d'oral, ⚖️ pour une comparaison. La règle est **un emoji au plus par
+bloc**, jamais deux, et jamais dans le corps du texte : il sert de repère de balayage, pas de
+décoration.
+
+### 5.3 Apparition à la lecture
+
+Les blocs montent de quelques pixels en se révélant, une fois, quand ils entrent dans la fenêtre.
+Le contenu est présent dans le DOM dès le départ — l'animation ne porte que sur l'opacité et la
+translation — de sorte que la recherche dans la page, la lecture d'écran et l'impression voient
+tout. `prefers-reduced-motion: reduce` désactive l'ensemble.
+
+### 5.4 Points, séries et badges
+
+| Ce qui rapporte | Points |
+|---|---|
+| Une leçon terminée | +10 |
+| Un quiz réussi | +25 |
+| Un sans-faute | +15 |
+| Un cours achevé | +50 |
+
+Dix paliers, une **série de jours consécutifs**, et **dix badges** — du premier pas au palier
+CECRL franchi, en passant par « polyglotte » (avoir consulté le site dans les trois langues) et
+« oiseau de nuit ». Les badges non obtenus restent visibles en gris : un objectif caché ne motive
+personne.
+
+Tout est **dérivé de la progression déjà enregistrée** — aucun compteur n'est stocké en double,
+sans quoi il finirait par diverger de la réalité. Un quiz repassé ne rapporte pas deux fois :
+c'est sa meilleure tentative qui compte.
+
+---
+
+## 6. Protections implémentées — et leurs limites réelles
 
 Le principe directeur du brief est conservé : la protection absolue n'existe pas, l'objectif est
 la **dissuasion maximale et la traçabilité**. Chaque mesure ci-dessous est accompagnée de ce
 qu'elle ne fait pas.
 
-### 5.1 Filigrane visible
+### 6.1 Marquage nominatif du contenu
 
-Un calque affiche en mosaïque `email · téléphone · horodatage UTC`, en diagonale, par-dessus le
-contenu et par-dessus les schémas. La position et l'angle changent **toutes les 30 secondes**
-(`watermarkPositionAt`), ce qui empêche de définir un recadrage fixe qui l'éliminerait.
+Une première version barrait chaque écran d'une mosaïque `email · téléphone · horodatage`. Elle a
+été **retirée** : elle gênait la lecture et exposait des données personnelles en permanence, pour
+un gain de traçabilité que l'empreinte invisible assure déjà.
 
-> **Limite.** Le filigrane reste visible sur une photo prise avec un téléphone — c'est
-> précisément son rôle. Un attaquant peut en revanche masquer la zone concernée par retouche
-> s'il ne copie qu'un court extrait entre deux motifs.
+Le marquage visible passe désormais par le **prénom de l'apprenant, inscrit dans le corps des
+leçons**. Le contenu des cours est rédigé avec le jeton `{prenom}`, résolu au rendu dans la langue
+affichée — la place du prénom n'est pas la même en français, en anglais et en chinois. À cela
+s'ajoutent des phrases d'accompagnement nominatives à l'ouverture, au milieu et à la fin de chaque
+leçon, ainsi que dans les quiz.
 
-### 5.2 Filigrane invisible dans le texte
+Le prénom sert donc deux fins à la fois : il **engage** — une leçon qui interpelle son lecteur se
+suit mieux qu'un texte anonyme — et il rend une **fuite attribuable**, sans afficher d'adresse ni
+de numéro par-dessus le texte.
+
+> **Limite.** Un prénom se remplace en quelques secondes dans un traitement de texte. Il dissuade
+> le partage spontané d'une capture, pas un effacement délibéré — c'est l'empreinte invisible du
+> paragraphe suivant qui couvre ce cas.
+
+### 6.2 Empreinte invisible dans le texte
 
 Chaque chaîne de texte servie est marquée par des **caractères de largeur nulle** encodant
 l'identifiant de l'apprenant, celui de l'appareil et l'heure de consultation. L'encodage utilise
@@ -165,7 +232,7 @@ avec puis sans filigrane, pour comparer les deux verdicts.
 > opportuniste — capture de texte, transfert par email, dépôt sur un drive — pas l'adversaire
 > expert.
 
-### 5.3 Blocage des gestes de copie
+### 6.3 Blocage des gestes de copie
 
 Sur les écrans de contenu : menu contextuel, sélection de texte, glisser-déposer, `Ctrl/Cmd+C`,
 `Ctrl/Cmd+X`, `Ctrl/Cmd+S`, `Ctrl/Cmd+U`, `Ctrl/Cmd+P`, `F12` et `Ctrl+Shift+I/J/C` sont
@@ -178,7 +245,7 @@ l'export PDF. Si une copie parvient tout de même à s'exécuter, le presse-papi
 > réseau contourne l'ensemble. C'est un frein, pas une barrière. Le blocage véritable suppose
 > l'application desktop (phase 2).
 
-### 5.4 Masquage automatique
+### 6.4 Masquage automatique
 
 Le contenu est remplacé par un écran de garde flouté dès que la fenêtre perd le focus plus de
 700 ms ou que l'onglet passe en arrière-plan (`visibilitychange`), ainsi que pendant une tentative
@@ -191,7 +258,7 @@ développement ancrés et déclenche un événement critique.
 > d'avertir l'utilisateur. La détection d'outils de développement est heuristique et se contourne
 > trivialement (fenêtre détachée).
 
-### 5.5 Ce qui est structurellement impossible sur le web
+### 6.5 Ce qui est structurellement impossible sur le web
 
 | Mesure du brief | Web | Desktop Electron | Mobile React Native |
 |---|---|---|---|
@@ -207,7 +274,7 @@ recommandé.**
 
 ---
 
-## 6. Sessions et anti-partage
+## 7. Sessions et anti-partage
 
 - **Session unique** : toute nouvelle connexion révoque les sessions actives précédentes
   (`revokeOtherSessions`). La révocation est propagée aux autres onglets en temps réel via
@@ -226,7 +293,7 @@ recommandé.**
 
 ---
 
-## 7. Espace enseignant : comptes et suivi
+## 8. Espace enseignant : comptes et suivi
 
 L'espace `/admin` est protégé par un **mot de passe** choisi à la première ouverture, puis
 redemandé à chaque rechargement de la page. Il donne accès à la création de comptes apprenants
@@ -241,15 +308,29 @@ et au suivi de leur progression.
 > Fastify décrit dans le brief : Argon2id côté serveur, jetons signés, contrôle d'accès sur
 > chaque requête. L'interface le dit à l'utilisateur au lieu de le laisser croire l'inverse.
 
-### Créer un compte, sans serveur
+### Créer un compte
+
+Un compte se crée avec **un prénom, un nom facultatif, une adresse électronique et un mot de
+passe**. Le mot de passe est pré-rempli par une proposition dictable (`nuage-cedre-26`), que
+l'enseignant garde ou remplace.
+
+Le **prénom est obligatoire** : c'est lui qui apparaît dans le corps des leçons (§5.1). Il n'est
+donc pas un simple libellé d'affichage.
+
+> **Le mot de passe apprenant est vérifié dans le navigateur.** Son condensé SHA-256 salé voyage
+> dans l'invitation, faute de serveur pour l'héberger. Il empêche un camarade d'ouvrir le compte
+> de quelqu'un d'autre avec sa seule adresse ; il ne protège pas le contenu contre le titulaire
+> du compte, et il reste attaquable hors ligne.
+
+### Faire voyager le compte, sans serveur
 
 Comme il n'y a pas de base de données partagée, un compte créé par l'enseignant doit **voyager
 jusqu'à l'apprenant**, et sa progression doit **revenir**. Deux objets encodés assurent ce trajet.
 
 | Objet | Sens | Contenu | Où l'utiliser |
 |---|---|---|---|
-| **Invitation** | enseignant → apprenant | code d'inscription, nom, adresse, niveau visé | collée sur l'écran de connexion |
-| **Remontée de progression** | apprenant → enseignant | code, étapes terminées, meilleurs scores de quiz, nombre d'appareils, score de risque | collée dans l'espace de pilotage |
+| **Invitation** | enseignant → apprenant | code d'inscription, prénom, nom, adresse, niveau visé, condensé du mot de passe | collée sur l'écran de connexion |
+| **Remontée de progression** | apprenant → enseignant | code, prénom, étapes terminées, meilleurs scores de quiz, nombre d'appareils, score de risque | collée dans l'espace de pilotage |
 
 Le **code d'inscription** (`LUM-4K7P-2XQF`) est la clé de rapprochement. Son alphabet exclut
 `O`, `0`, `I` et `1` pour qu'il puisse se dicter au téléphone sans ambiguïté. Il identifie, il ne
@@ -257,11 +338,15 @@ protège pas : ce n'est pas un secret.
 
 Le parcours complet, vérifié de bout en bout par un test de navigation :
 
-1. l'enseignant crée le compte et copie l'invitation ;
-2. l'apprenant la colle à la connexion — nom, adresse et code sont renseignés, modifiables ;
-3. l'apprenant travaille ; sa progression reste sur son appareil ;
-4. depuis **« Appareils & sessions »**, il établit son relevé et le transmet ;
-5. l'enseignant l'importe : la ligne de suivi se met à jour.
+1. l'enseignant crée le compte, note le mot de passe et copie l'invitation ;
+2. l'apprenant la colle à la connexion — prénom, adresse et code sont renseignés ;
+3. il saisit le mot de passe reçu ; une saisie erronée est refusée et journalisée ;
+4. l'apprenant travaille ; sa progression reste sur son appareil ;
+5. depuis **« Appareils & sessions »**, il établit son relevé et le transmet ;
+6. l'enseignant l'importe : la ligne de suivi se met à jour.
+
+Sans compte créé par un enseignant, la démonstration publique reste ouverte : n'importe quelle
+adresse et n'importe quel mot de passe d'au moins huit caractères y donnent accès.
 
 Un import plus ancien que celui déjà connu est ignoré, de sorte qu'un doublon ne fasse jamais
 reculer le suivi. Les comptes s'archivent sans se supprimer, et un compte archivé libère son
@@ -275,7 +360,7 @@ jusqu'à l'apprenant, l'appareil et l'heure de consultation.
 
 ---
 
-## 8. Architecture et design
+## 9. Architecture et design
 
 Monorepo pnpm, TypeScript strict partout (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
 `verbatimModuleSyntax`).
@@ -288,7 +373,9 @@ confidential-lms/
 │       ├── types.ts        # Modèle de données complet, entièrement localisé
 │       ├── quiz.ts         # Correction, crédit partiel, tentatives, meilleur score
 │       ├── progress.ts     # Progression par module/cours, reprise, voisinage de leçon
-│       ├── watermark.ts    # Filigranes visible (positions) et invisible (encodage base 4)
+│       ├── watermark.ts    # Empreinte invisible par apprenant (encodage base 4)
+│       ├── personalise.ts  # Jeton {prenom}, choix stable de variante
+│       ├── gamification.ts # Points, niveaux, séries, badges
 │       ├── device.ts       # Empreinte d'appareil, limite de 3, session unique
 │       ├── security.ts     # Catalogue d'événements, gravités, score de risque
 │       └── roster.ts       # Comptes apprenants, invitations, remontées, verrou admin
@@ -299,6 +386,7 @@ confidential-lms/
         ├── protection/     # Watermark, ProtectedText, Shield, useProtectedScreen
         ├── state/          # Contexte applicatif, persistance, session inter-onglets
         ├── components/     # Coque, glossaire, sélecteur de langue, rendu des blocs
+        ├── components/     # Coquille, catalogue, contenu de leçon, schémas manipulables, gamification
         ├── pages/          # Connexion, tableau de bord, catalogue, cours, leçon, quiz, compte, sécurité, admin
         └── styles/         # Design system « bleu océan », thèmes clair et sombre
 ```
@@ -319,7 +407,7 @@ le chinois s'affiche correctement sans requête réseau.
 
 ---
 
-## 9. Feuille de route
+## 10. Feuille de route
 
 **Phase 1 restante — backend.** API Fastify + PostgreSQL/Prisma reprenant `packages/core`,
 argon2id, JWT 15 min + refresh tokens révocables, filigranage du texte **côté serveur**, rate
@@ -336,29 +424,32 @@ manuelle sur les quatre systèmes.
 
 ---
 
-## 10. Couverture du brief
+## 11. Couverture du brief
 
 | Exigence | État |
 |---|---|
 | §4.1 Protections desktop | Portées au web dans la limite du possible ; Electron en phase 2 |
 | §4.2 Protections mobile | Phase 3 |
-| §4.3 Filigrane visible mobile + invisible par apprenant | ✅ |
+| §4.3 Marquage nominatif du contenu + empreinte invisible par apprenant | ✅ (filigrane en mosaïque retiré, voir §5.1) |
 | §4.4 Session unique, 3 appareils, journal de sécurité | ✅ (arbitré client dans la démo) |
 | §4.5 URLs signées, HLS chiffré, rate limiting | Phase 1/2 — aucun média n'est servi ici |
 | §5 Quiz notés, seuils, tentatives, corrections | ✅ 18 quiz, 114 questions |
 | §5 Progression par cours/module, reprise | ✅ |
-| §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §7) |
+| §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §8) |
 | §5 Tableau de bord admin et journal | ✅ (alimenté par les remontées importées) |
-| §5 Mot de passe administrateur | ⚠️ verrou d'affichage, pas une authentification — voir §7 |
+| §5 Mot de passe administrateur | ⚠️ verrou d'affichage, pas une authentification — voir §8 |
+| §5 Mot de passe apprenant défini par l'enseignant | ⚠️ vérifié côté client — voir §8 |
+| §5 Gamification : points, niveaux, séries, badges | ✅ dérivée de la progression réelle (§5.4) |
+| §5 Contenu interactif (schémas manipulables) | ✅ 20 schémas, au moins un par cours (§5.1) |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
-| §8 TypeScript strict, tests sur sessions et protections | ✅ 80 tests (71 métier + 9 cohérence i18n) |
+| §8 TypeScript strict, tests sur sessions et protections | ✅ 118 tests (109 métier + 9 cohérence i18n) |
 | §8 README documentant honnêtement les limites | ✅ ce document |
 | §8 Budget services tiers = 0 € | ✅ aucune dépendance payante, aucun appel réseau externe |
 
 ---
 
-## 11. Démarrage
+## 12. Démarrage
 
 ```bash
 pnpm install
@@ -381,21 +472,25 @@ branche `gh-pages`, dossier `/ (root)`**.
 
 ### Vérification manuelle des protections
 
-1. Ouvrir une leçon → le filigrane affiche vos email et téléphone, et se déplace après 30 s.
-2. Cliquer sur un mot souligné → la définition apparaît en français, anglais et chinois.
-3. Basculer FR / EN / ZH → interface **et** contenu changent, les exemples restent en français.
-4. Clic droit → menu bloqué ; `Ctrl+C` → notification et entrée au journal.
-5. `Ctrl+P` → impression neutralisée, événement critique enregistré.
-6. Changer d'onglet → le contenu est masqué par l'écran de garde.
-7. Espace admin → « Insérer un extrait filigrané » → l'empreinte identifie l'apprenant.
-8. Ouvrir un second onglet et s'y reconnecter → le premier onglet est déconnecté.
+1. Ouvrir une leçon → votre prénom apparaît dans le texte, à l'ouverture, au milieu et à la fin.
+2. Manipuler un schéma (roue, matrice, frise) → au clavier aussi : `Tab` puis `Entrée`.
+3. Cliquer sur un mot souligné → la définition apparaît en français, anglais et chinois.
+4. Basculer FR / EN / ZH → interface **et** contenu changent, les exemples restent en français.
+5. Clic droit → menu bloqué ; `Ctrl+C` → notification et entrée au journal.
+6. `Ctrl+P` → impression neutralisée, événement critique enregistré.
+7. Changer d'onglet → le contenu est masqué par l'écran de garde.
+8. Terminer une leçon → points crédités, badge « premier pas » annoncé.
+9. Espace admin → « Insérer un extrait filigrané » → l'empreinte identifie l'apprenant.
+10. Ouvrir un second onglet et s'y reconnecter → le premier onglet est déconnecté.
 
 ---
 
-## 12. Confidentialité de la démonstration
+## 13. Confidentialité de la démonstration
 
 Cette application ne communique avec aucun serveur. Les informations saisies à la connexion
-(nom, email, téléphone) restent dans le `localStorage` de votre navigateur, servent uniquement à
-générer les filigranes, et disparaissent avec le bouton **« Tout effacer »** de l'espace compte.
+(prénom, adresse) restent dans le `localStorage` de votre navigateur, servent à personnaliser les
+leçons et à composer l'empreinte invisible, et disparaissent avec le bouton **« Tout effacer »**
+de l'espace compte. Le numéro de téléphone n'est plus demandé : il ne servait qu'au filigrane en
+mosaïque, retiré.
 Les comptes apprenants créés dans l'espace enseignant y résident également : « Tout effacer » les
 supprime aussi, et le prévient explicitement avant de le faire.

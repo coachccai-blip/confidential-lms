@@ -51,6 +51,7 @@ export const a1PresentCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Être et avoir au présent', 'Être and avoir in the present', 'Être 与 avoir 的现在时'),
               note: t(
                 'Remarquez que « ils sont » et « ils ont » se distinguent uniquement par la liaison : [ilsɔ̃] contre [ilzɔ̃]. C’est la première opposition de sons à travailler.',
@@ -68,8 +69,31 @@ export const a1PresentCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '🎡',
+              title: t('La roue d’être', 'The wheel of être', 'Être 的转轮'),
+              hint: t(
+                'Cliquez une personne, {prenom}, pour voir sa forme et ce qu’il faut en retenir.',
+                'Click a person, {prenom}, to see its form and what to remember about it.',
+                '{prenom}，点击任一人称，查看其变位形式及要点。',
+              ),
+              widget: {
+                kind: 'wheel',
+                verb: 'être',
+                persons: [
+                  { pronoun: 'je', form: 'suis', phonetic: '[ʒə sɥi]', note: t('La seule forme en -is du présent d’être.', 'The only -is form in the present of être.', 'être 现在时中唯一以 -is 结尾的形式。') },
+                  { pronoun: 'tu', form: 'es', phonetic: '[ty ɛ]', note: t('Deux lettres, un seul son. À l’oral, « t’es » domine largement.', 'Two letters, one sound. In speech, “t’es” is overwhelmingly common.', '两个字母，一个音。口语中 “t’es” 占绝对多数。') },
+                  { pronoun: 'il / elle', form: 'est', phonetic: '[il ɛ]', note: t('Le t final est muet. « Il est » se prononce comme « il ait ».', 'The final t is silent. “Il est” sounds like “il ait”.', '词尾 t 不发音。“Il est” 与 “il ait” 同音。') },
+                  { pronoun: 'nous', form: 'sommes', phonetic: '[nu sɔm]', note: t('À l’oral, on lui préfère « on est » neuf fois sur dix.', 'In speech, “on est” is preferred nine times out of ten.', '口语中十有八九用 “on est” 代替。') },
+                  { pronoun: 'vous', form: 'êtes', phonetic: '[vu zɛt]', note: t('Liaison obligatoire en [z]. L’une des trois formes en -tes du français.', 'Compulsory [z] liaison. One of the three -tes forms in French.', '必须联诵为 [z]。法语中三个 -tes 形式之一。') },
+                  { pronoun: 'ils / elles', form: 'sont', phonetic: '[il sɔ̃]', note: t('À distinguer de « ils ont » [il zɔ̃] : seule la liaison les sépare.', 'Not to be confused with “ils ont” [il zɔ̃]: only the liaison separates them.', '注意与 “ils ont” [il zɔ̃] 区分：二者仅靠联诵区别。') },
+                ],
+              },
+            },
+            {
               type: 'callout',
               tone: 'warning',
+              emoji: '⚠️',
               title: t('Avoir là où l’anglais et le chinois utilisent « être »', 'Avoir where English and Chinese use “be”', '英语和中文用“是”，法语却用 avoir'),
               text: t(
                 'L’âge, la faim, la soif, le froid, la peur : tout cela se dit avec **avoir**. « J’ai vingt ans », jamais « je suis vingt ans ». C’est l’une des erreurs les plus tenaces des débutants.',
@@ -79,6 +103,7 @@ export const a1PresentCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Les expressions avec avoir', 'Expressions with avoir', '含 avoir 的表达'),
               items: [
                 { fr: 'J’ai trente-deux ans.', gloss: t('L’âge : toujours avoir + nombre + « ans ». Le mot « ans » ne s’omet jamais.', 'Age: always avoir + number + “ans”. The word “ans” is never dropped.', '年龄：一律用 avoir + 数字 + “ans”。“ans” 一词不可省略。') },
@@ -90,6 +115,7 @@ export const a1PresentCourse: Course = {
             {
               type: 'callout',
               tone: 'info',
+              emoji: '🗣️',
               title: t('« On » vaut « nous » à l’oral', '“On” means “nous” in speech', '口语中 “on” 相当于 “nous”'),
               text: t(
                 'À l’oral, « on » remplace « nous » neuf fois sur dix : « on est prêts », « on a fini ». Le verbe reste à la troisième personne du singulier, comme avec « il ».',
@@ -121,6 +147,7 @@ export const a1PresentCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Parler et habiter au présent', 'Parler and habiter in the present', 'Parler 与 habiter 的现在时'),
               note: t(
                 'Les terminaisons sont **-e, -es, -e, -ons, -ez, -ent**. Devant une voyelle, « je » devient « j’ » : j’habite.',
@@ -140,6 +167,7 @@ export const a1PresentCourse: Course = {
             {
               type: 'callout',
               tone: 'success',
+              emoji: '🗣️',
               title: t('Quatre formes, une seule prononciation', 'Four forms, one pronunciation', '四种形式，一个读音'),
               text: t(
                 'je parle, tu parles, il parle, ils parlent se prononcent tous **[paʁl]**. Les terminaisons -e, -es, -ent sont muettes. À l’oral, seuls « nous parlons » et « vous parlez » se distinguent : le présent est donc bien plus simple à parler qu’à écrire.',
@@ -147,9 +175,10 @@ export const a1PresentCourse: Course = {
                 'je parle、tu parles、il parle、ils parlent 都读作 **[paʁl]**。词尾 -e、-es、-ent 不发音。口语中只有 “nous parlons” 和 “vous parlez” 有区别：因此现在时说起来比写起来容易得多。',
               ),
             },
-            { type: 'heading', text: t('Trois ajustements d’orthographe', 'Three spelling adjustments', '三处拼写调整') },
+            { type: 'heading', emoji: '✍️', text: t('Trois ajustements d’orthographe', 'Three spelling adjustments', '三处拼写调整') },
             {
               type: 'table',
+              emoji: '🔄',
               caption: t('Verbes en -er légèrement modifiés', 'Slightly modified -er verbs', '略有变化的 -er 动词'),
               headers: [t('Type', 'Type', '类型'), t('Exemple', 'Example', '例子'), t('Pourquoi', 'Why', '原因')],
               rows: [
@@ -160,6 +189,7 @@ export const a1PresentCourse: Course = {
             },
             {
               type: 'examples',
+              emoji: '💬',
               title: t('Le présent en situation', 'The present in context', '现在时的实际运用'),
               items: [
                 { fr: 'Je travaille dans une école.', gloss: t('Une situation habituelle, sans limite de temps.', 'A habitual situation, with no time limit.', '一种习惯性状态，没有时间限制。') },
@@ -192,6 +222,7 @@ export const a1PresentCourse: Course = {
             },
             {
               type: 'conjugation',
+              emoji: '🔄',
               title: t('Aller, faire, venir au présent', 'Aller, faire, venir in the present', 'Aller、faire、venir 的现在时'),
               note: t(
                 '« Vous faites » et « vous dites » sont les deux seules formes en **-tes** de tout le présent français, avec « vous êtes ».',
@@ -208,9 +239,10 @@ export const a1PresentCourse: Course = {
                 { pronoun: 'ils / elles', forms: ['vont', 'font', 'viennent'] },
               ],
             },
-            { type: 'heading', text: t('Deux constructions offertes', 'Two free constructions', '附赠的两种结构') },
+            { type: 'heading', emoji: '🧭', text: t('Deux constructions offertes', 'Two free constructions', '附赠的两种结构') },
             {
               type: 'keyvalues',
+              emoji: '🗂️',
               title: t('Le futur proche et le passé récent', 'Near future and recent past', '近将来时与最近过去时'),
               entries: [
                 { label: t('aller + infinitif', 'aller + infinitive', 'aller + 不定式'), value: t('Le futur proche : « je vais partir » = je pars dans un instant. À l’oral, il remplace le futur simple la plupart du temps.', 'The near future: “je vais partir” = I am about to leave. In speech it replaces the simple future most of the time.', '近将来时：“je vais partir” 表示马上就要走。口语中多数情况下取代简单将来时。') },
@@ -220,7 +252,44 @@ export const a1PresentCourse: Course = {
               ],
             },
             {
+              type: 'interactive',
+              emoji: '⏱️',
+              title: t('Où se place l’action ?', 'Where does the action sit?', '动作落在哪里？'),
+              hint: t(
+                'Déplacez-vous sur la frise : chaque repère donne la construction attendue.',
+                'Move along the timeline: each marker gives the construction expected.',
+                '沿时间轴移动：每个标记给出对应的结构。',
+              ),
+              widget: {
+                kind: 'timeline',
+                points: [
+                  {
+                    id: 'recent',
+                    label: t('Il y a un instant', 'A moment ago', '刚刚'),
+                    headline: t('venir de + infinitif', 'venir de + infinitive', 'venir de + 不定式'),
+                    example: 'Je viens de manger.',
+                    gloss: t('Le passé récent : l’action s’est achevée il y a quelques minutes.', 'The recent past: the action finished a few minutes ago.', '最近过去时：动作在几分钟前结束。'),
+                  },
+                  {
+                    id: 'now',
+                    label: t('Maintenant', 'Right now', '此刻'),
+                    headline: t('présent simple', 'simple present', '简单现在时'),
+                    example: 'Je mange.',
+                    gloss: t('Le français n’a pas de forme progressive : le présent couvre aussi l’action en cours.', 'French has no progressive form: the present also covers an action in progress.', '法语没有进行时：现在时同样表示正在进行的动作。'),
+                  },
+                  {
+                    id: 'soon',
+                    label: t('Dans un instant', 'In a moment', '马上'),
+                    headline: t('aller + infinitif', 'aller + infinitive', 'aller + 不定式'),
+                    example: 'Je vais manger.',
+                    gloss: t('Le futur proche. À l’oral, il remplace le futur simple la plupart du temps.', 'The near future. In speech it replaces the simple future most of the time.', '近将来时。口语中多数情况下取代简单将来时。'),
+                  },
+                ],
+              },
+            },
+            {
               type: 'examples',
+              emoji: '📍',
               title: t('Aller, venir et les prépositions', 'Aller, venir and prepositions', 'Aller、venir 与介词'),
               items: [
                 { fr: 'Je vais à Paris, en France.', gloss: t('« à » devant une ville, « en » devant un pays féminin.', '“à” before a city, “en” before a feminine country.', '城市前用 “à”，阴性国名前用 “en”。') },

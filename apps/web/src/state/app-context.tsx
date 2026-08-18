@@ -10,15 +10,26 @@ import {
 } from 'react';
 import {
   MAX_DEVICES,
+  archiveLearner as archiveLearnerIn,
   buildFingerprint,
   computeFingerprint,
+  createAdminLock,
   createId,
+  createLearner as createLearnerIn,
   createSecurityEvent,
+  decodeReport,
+  mergeReport,
   registerDevice,
+  restoreLearner as restoreLearnerIn,
+  verifyAdminPassword,
   removeDevice as removeDeviceFrom,
   revokeOtherSessions,
+  summarizeEvents,
   trimEvents,
+  type CreateLearnerInput,
+  type CreateLearnerOutcome,
   type Device,
+  type LearnerReport,
   type QuizAttempt,
   type SecurityEvent,
   type SecurityEventType,
@@ -46,7 +57,14 @@ export interface SignInInput {
   readonly email: string;
   readonly phone: string;
   readonly displayName: string;
+  /** Code d'inscription reçu de l'enseignant, s'il y en a un. */
+  readonly enrolmentCode?: string | null;
 }
+
+/** Issue d'un import de remontée de progression. */
+export type ImportOutcome =
+  | { readonly ok: true; readonly report: LearnerReport; readonly known: boolean }
+  | { readonly ok: false; readonly reason: 'unreadable' };
 
 export type SignInOutcome =
   | { readonly ok: true }
@@ -75,6 +93,23 @@ export interface AppContextValue {
   readonly pushToast: (toast: Omit<Toast, 'id'>) => void;
   readonly dismissToast: (id: string) => void;
   readonly resetDemo: () => void;
+
+  /* --- Pilotage de cohorte. Voir l'avertissement en tête de `roster.ts`. --- */
+
+  /** Vrai tant que l'espace de pilotage est déverrouillé, remis à faux au rechargement. */
+  readonly adminUnlocked: boolean;
+  /** Vrai si aucun mot de passe n'a encore été posé : la page en propose un. */
+  readonly adminNeedsSetup: boolean;
+  readonly setAdminPassword: (password: string) => Promise<void>;
+  readonly unlockAdmin: (password: string) => Promise<boolean>;
+  readonly lockAdmin: () => void;
+  readonly changeAdminPassword: (current: string, next: string) => Promise<boolean>;
+  readonly createLearner: (input: CreateLearnerInput) => CreateLearnerOutcome;
+  readonly archiveLearner: (learnerId: string) => void;
+  readonly restoreLearner: (learnerId: string) => void;
+  readonly importReport: (raw: string) => ImportOutcome;
+  /** Instantané de la progression de cet appareil, à transmettre à l'enseignant. */
+  readonly buildMyReport: () => LearnerReport;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -217,6 +252,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         };
       }
 
+      const enrolmentCode = input.enrolmentCode?.trim() ? input.enrolmentCode.trim() : current.enrolmentCode;
+
       const session: SessionToken = {
         id: createId('ses'),
         userId: user.id,
@@ -232,6 +269,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         let next: PersistedState = {
           ...current,
           user,
+          enrolmentCode,
           devices: registration.devices,
           currentDeviceId: registration.device.id,
           currentSessionId: session.id,
@@ -409,6 +447,102 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     return () => window.removeEventListener('storage', onStorage);
   }, [pushToast]);
 
+  /* ------------------------------------------------------------------
+     Pilotage de cohorte.
+
+     Rappel : le verrou ci-dessous est un verrou d'affichage, pas une
+     authentification — il n'y a pas de serveur pour vérifier quoi que ce
+     soit. Le détail et ses limites sont documentés en tête de `roster.ts`.
+     ------------------------------------------------------------------ */
+
+  // Volontairement hors du stockage : chaque rechargement redemande le mot de passe.
+  const [adminUnlocked, setAdminUnlocked] = useState(false);
+
+  const setAdminPassword = useCallback(async (password: string) => {
+    const lock = await createAdminLock(password, new Date().toISOString());
+    setState((previous) => ({ ...previous, adminLock: lock }));
+    setAdminUnlocked(true);
+  }, []);
+
+  const unlockAdmin = useCallback(
+    async (password: string): Promise<boolean> => {
+      const lock = loadState().adminLock;
+      if (!lock) return false;
+      const ok = await verifyAdminPassword(lock, password);
+      setAdminUnlocked(ok);
+      setState((previous) => ({
+        ...previous,
+        events: appendEvent(previous, ok ? 'admin-unlocked' : 'admin-unlock-failed'),
+      }));
+      return ok;
+    },
+    [appendEvent],
+  );
+
+  const lockAdmin = useCallback(() => setAdminUnlocked(false), []);
+
+  const changeAdminPassword = useCallback(
+    async (current: string, next: string): Promise<boolean> => {
+      const lock = loadState().adminLock;
+      if (lock && !(await verifyAdminPassword(lock, current))) return false;
+      const replacement = await createAdminLock(next, new Date().toISOString());
+      setState((previous) => ({ ...previous, adminLock: replacement }));
+      return true;
+    },
+    [],
+  );
+
+  const createLearner = useCallback((input: CreateLearnerInput): CreateLearnerOutcome => {
+    const outcome = createLearnerIn(loadState().learners, input, new Date().toISOString());
+    if (outcome.ok) {
+      const created = outcome.learner;
+      setState((previous) => ({ ...previous, learners: [created, ...previous.learners] }));
+    }
+    return outcome;
+  }, []);
+
+  const archiveLearner = useCallback((learnerId: string) => {
+    const nowIso = new Date().toISOString();
+    setState((previous) => ({ ...previous, learners: archiveLearnerIn(previous.learners, learnerId, nowIso) }));
+  }, []);
+
+  const restoreLearner = useCallback((learnerId: string) => {
+    setState((previous) => ({ ...previous, learners: restoreLearnerIn(previous.learners, learnerId) }));
+  }, []);
+
+  const importReport = useCallback((raw: string): ImportOutcome => {
+    const report = decodeReport(raw);
+    if (!report) return { ok: false, reason: 'unreadable' };
+    const known = loadState().learners.some((learner) => learner.code === report.code);
+    setState((previous) => ({ ...previous, reports: mergeReport(previous.reports, report) }));
+    return { ok: true, report, known };
+  }, []);
+
+  const buildMyReport = useCallback((): LearnerReport => {
+    const current = loadState();
+    const completedLessons: Record<string, string> = {};
+    for (const [lessonId, entry] of Object.entries(current.progress)) {
+      if (entry?.completed) completedLessons[lessonId] = entry.lastViewedAt;
+    }
+    // Un seul score par quiz : le meilleur obtenu.
+    const quizScores: Record<string, number> = {};
+    for (const attempt of current.attempts) {
+      const best = quizScores[attempt.quizId];
+      if (best === undefined || attempt.percentage > best) quizScores[attempt.quizId] = attempt.percentage;
+    }
+    return {
+      kind: 'lumiere.report.v1',
+      code: current.enrolmentCode ?? '',
+      displayName: current.user?.displayName ?? '',
+      email: current.user?.email ?? '',
+      exportedAt: new Date().toISOString(),
+      completedLessons,
+      quizScores,
+      deviceCount: current.devices.length,
+      riskScore: summarizeEvents(current.events).riskScore,
+    };
+  }, []);
+
   const fingerprint = useMemo(
     () =>
       buildFingerprint({
@@ -447,6 +581,17 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       pushToast,
       dismissToast,
       resetDemo,
+      adminUnlocked,
+      adminNeedsSetup: state.adminLock === null,
+      setAdminPassword,
+      unlockAdmin,
+      lockAdmin,
+      changeAdminPassword,
+      createLearner,
+      archiveLearner,
+      restoreLearner,
+      importReport,
+      buildMyReport,
     }),
     [
       state,
@@ -467,6 +612,16 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       pushToast,
       dismissToast,
       resetDemo,
+      adminUnlocked,
+      setAdminPassword,
+      unlockAdmin,
+      lockAdmin,
+      changeAdminPassword,
+      createLearner,
+      archiveLearner,
+      restoreLearner,
+      importReport,
+      buildMyReport,
     ],
   );
 

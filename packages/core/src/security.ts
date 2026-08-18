@@ -24,6 +24,8 @@ const CATALOG: Readonly<Record<SecurityEventType, EventDescriptor>> = {
   'quiz-passed': { label: 'Quiz reussi', severity: 'info' },
   'quiz-failed': { label: 'Quiz echoue', severity: 'info' },
   'lesson-completed': { label: 'Lecon terminee', severity: 'info' },
+  'admin-unlocked': { label: "Ouverture de l'espace d'administration", severity: 'info' },
+  'admin-unlock-failed': { label: "Mot de passe administrateur refuse", severity: 'warning' },
 };
 
 export function describeEvent(type: SecurityEventType): EventDescriptor {

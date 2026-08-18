@@ -6,3 +6,4 @@ export * from './watermark';
 export * from './security';
 export * from './device';
 export * from './ids';
+export * from './roster';

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { decodeInvite } from '@lms/core';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
@@ -23,6 +24,9 @@ export function LoginPage() {
   const [phone, setPhone] = useState('+33 6 12 34 56 78');
   const [name, setName] = useState('Marie Dubois');
   const [password, setPassword] = useState('demo-lumiere');
+  const [invite, setInvite] = useState('');
+  const [enrolmentCode, setEnrolmentCode] = useState<string | null>(null);
+  const [inviteNotice, setInviteNotice] = useState<{ ok: boolean; text: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (user) return <Navigate to="/app" replace />;
@@ -44,13 +48,34 @@ export function LoginPage() {
       return;
     }
 
-    const outcome = signIn({ email: email.trim(), phone: phone.trim(), displayName: name.trim() || 'Apprenant' });
+    const outcome = signIn({
+      email: email.trim(),
+      phone: phone.trim(),
+      displayName: name.trim() || 'Apprenant',
+      enrolmentCode,
+    });
     if (!outcome.ok) {
       setError(outcome.message);
       return;
     }
     pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
     navigate('/app');
+  }
+
+  /**
+   * L'invitation remplit le formulaire au lieu de le remplacer : l'apprenant
+   * voit ce qui a été renseigné et reste libre de le corriger.
+   */
+  function applyInvite() {
+    const decoded = decodeInvite(invite);
+    if (!decoded) {
+      setInviteNotice({ ok: false, text: l(D.login.inviteFailed) });
+      return;
+    }
+    setName(decoded.displayName);
+    setEmail(decoded.email);
+    setEnrolmentCode(decoded.code);
+    setInviteNotice({ ok: true, text: l(D.login.inviteOk(decoded.displayName)) });
   }
 
   return (
@@ -102,6 +127,35 @@ export function LoginPage() {
                 {theme === 'dark' ? <IconSun size={17} /> : <IconMoon size={17} />}
               </button>
             </div>
+          </div>
+
+          <div className="field">
+            <label className="field__label" htmlFor="invite">
+              {l(D.login.inviteLabel)}
+            </label>
+            <div className="row" style={{ alignItems: 'stretch' }}>
+              <input
+                id="invite"
+                className="input"
+                value={invite}
+                onChange={(event) => setInvite(event.target.value)}
+                placeholder={l(D.login.invitePlaceholder)}
+                style={{ flex: 1, minWidth: 0 }}
+              />
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={applyInvite}
+                disabled={invite.trim().length === 0}
+              >
+                {l(D.login.inviteApply)}
+              </button>
+            </div>
+            {inviteNotice ? (
+              <span className="field__hint" style={{ color: inviteNotice.ok ? 'var(--success)' : 'var(--danger)' }}>
+                {inviteNotice.text}
+              </span>
+            ) : null}
           </div>
 
           <div className="field">

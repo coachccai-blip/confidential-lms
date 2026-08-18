@@ -250,3 +250,34 @@ export const IconList = (p: IconProps) => (
     <path d="M8.5 6.5h11M8.5 12h11M8.5 17.5h11M4.5 6.5h.2M4.5 12h.2M4.5 17.5h.2" />
   </Base>
 );
+
+export const IconUserPlus = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M15 20v-1.6A3.4 3.4 0 0 0 11.6 15H6.4A3.4 3.4 0 0 0 3 18.4V20" />
+    <circle cx="9" cy="8" r="3.4" />
+    <path d="M18 8v6" />
+    <path d="M15 11h6" />
+  </Base>
+);
+
+export const IconCopy = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5" />
+  </Base>
+);
+
+export const IconInbox = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M3 13h5l1.4 2.4h5.2L16 13h5" />
+    <path d="M4.6 5.4 3 13v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5l-1.6-7.6A2 2 0 0 0 17.4 4H6.6a2 2 0 0 0-2 1.4Z" />
+  </Base>
+);
+
+export const IconArchive = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="3" y="4" width="18" height="4" rx="1" />
+    <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" />
+    <path d="M10 12h4" />
+  </Base>
+);

@@ -89,6 +89,24 @@ export const D = {
   },
 
   login: {
+    inviteLabel: t('Invitation de votre enseignant', 'Invitation from your teacher', '教师发送的邀请'),
+    invitePlaceholder: t(
+      'Collez ici l’invitation reçue (facultatif)',
+      'Paste the invitation you received (optional)',
+      '在此粘贴收到的邀请（可选）',
+    ),
+    inviteApply: t('Utiliser cette invitation', 'Use this invitation', '使用此邀请'),
+    inviteOk: (name: string) =>
+      t(
+        `Invitation reconnue : bienvenue, ${name}.`,
+        `Invitation recognised: welcome, ${name}.`,
+        `邀请已识别：欢迎您，${name}。`,
+      ),
+    inviteFailed: t(
+      'Cette invitation est illisible ou incomplète.',
+      'This invitation is unreadable or incomplete.',
+      '该邀请无法识别或不完整。',
+    ),
     headline: t(
       'Le français, enseigné clairement. Vos cours, protégés.',
       'French, taught clearly. Your courses, protected.',
@@ -323,6 +341,21 @@ export const D = {
     role: { admin: t('Administrateur', 'Administrator', '管理员'), learner: t('Apprenant', 'Learner', '学员') },
     memberSince: (date: string) => t(`inscrit le ${date}`, `member since ${date}`, `注册于 ${date}`),
     identity: t('Identité de filigrane', 'Watermark identity', '水印身份'),
+    reportTitle: t('Transmettre ma progression', 'Send my progress', '发送我的学习进度'),
+    reportIntro: t(
+      'Cette plateforme fonctionne sans serveur : votre progression reste sur cet appareil. Pour que votre enseignant la voie, copiez le relevé ci-dessous et envoyez-le-lui.',
+      'This platform runs without a server: your progress stays on this device. So that your teacher can see it, copy the record below and send it to them.',
+      '本平台无服务器运行：您的进度保存在本设备上。若希望教师看到，请复制下方记录并发送给他。',
+    ),
+    reportGenerate: t('Établir mon relevé', 'Generate my record', '生成我的记录'),
+    reportCopy: t('Copier le relevé', 'Copy the record', '复制记录'),
+    reportCopied: t('Relevé copié.', 'Record copied.', '记录已复制。'),
+    reportNoCode: t(
+      'Aucun code d’inscription n’est associé à cette session : votre enseignant devra vous rapprocher à la main. Reconnectez-vous avec l’invitation qu’il vous a envoyée pour éviter cela.',
+      'No enrolment code is attached to this session: your teacher will have to match you by hand. Sign in again with the invitation they sent you to avoid this.',
+      '本次会话未关联报名代码：教师需要手动匹配。请使用教师发送的邀请重新登录以避免此情况。',
+    ),
+    reportCode: (code: string) => t(`Code d’inscription : ${code}`, `Enrolment code: ${code}`, `报名代码：${code}`),
     fieldEmail: t('Email', 'Email', '邮箱'),
     fieldPhone: t('Téléphone', 'Phone', '电话'),
     fieldLearnerId: t('Identifiant apprenant', 'Learner ID', '学员编号'),
@@ -409,6 +442,17 @@ export const D = {
       '清除本浏览器中保存的学习进度、测验记录、设备与安全日志。这些数据从未离开您的设备。',
     ),
     resetButton: t('Tout effacer', 'Erase everything', '全部清除'),
+    resetCohort: (n: number) =>
+      t(
+        `Attention : cela supprimera aussi les ${n} comptes apprenants créés depuis cet appareil, leurs remontées de progression et le mot de passe de l’espace de pilotage. Exportez-les d’abord si vous souhaitez les conserver.`,
+        `Warning: this will also delete the ${n} learner accounts created on this device, their progress reports and the management workspace password. Export them first if you want to keep them.`,
+        `注意：这还会删除在本设备上创建的 ${n} 个学员账户、他们的进度回传以及管理空间密码。如需保留，请先导出。`,
+      ),
+    resetConfirm: t(
+      'Effacer définitivement les comptes apprenants et toute la progression enregistrée sur cet appareil ?',
+      'Permanently erase the learner accounts and all progress stored on this device?',
+      '确定要永久删除本设备上的学员账户和全部已保存进度吗？',
+    ),
   },
 
   security: {
@@ -452,17 +496,22 @@ export const D = {
     eyebrow: t('Administration', 'Administration', '管理'),
     title: t('Espace administrateur', 'Administrator area', '管理后台'),
     intro: t(
-      'Suivi des apprenants, journal de sécurité consolidé et vérification d’empreinte. Les lignes autres que la vôtre sont des données de démonstration.',
-      'Learner tracking, consolidated security log and fingerprint verification. Rows other than yours are demo data.',
-      '学员跟踪、安全日志汇总与指纹校验。除您本人外，其余行均为演示数据。',
+      'Créez les comptes de vos apprenants, suivez leur progression et vérifiez l’origine d’un extrait fuité.',
+      'Create your learners’ accounts, follow their progress and trace the origin of a leaked excerpt.',
+      '创建学员账户、跟踪学习进度，并追查泄露片段的来源。',
     ),
     learners: t('Apprenants', 'Learners', '学员数'),
-    learnersHint: t('sur une licence de 100 places', 'on a 100-seat licence', '许可席位共 100 个'),
+    learnersHint: t('comptes actifs dans la cohorte', 'active accounts in the cohort', '班级中的有效账户'),
     avgProgress: t('Progression moyenne', 'Average progress', '平均进度'),
     atRisk: t('Comptes à surveiller', 'Accounts to watch', '需关注账户'),
     atRiskHint: t('score de risque ≥ 25', 'risk score ≥ 25', '风险评分 ≥ 25'),
     criticalEvents: t('Événements critiques', 'Critical events', '严重事件'),
     criticalHint: t('sur votre session en cours', 'in your current session', '本次会话中'),
+    avgProgressHint: t(
+      'sur les remontées reçues',
+      'across the reports received',
+      '基于已收到的进度回传',
+    ),
     tracking: t('Suivi des apprenants', 'Learner tracking', '学员跟踪'),
     thLearner: t('Apprenant', 'Learner', '学员'),
     thProgress: t('Progression', 'Progress', '进度'),
@@ -509,6 +558,145 @@ export const D = {
     thMobile: t('Mobile React Native', 'React Native mobile', 'React Native 移动端'),
     yes: t('Oui', 'Yes', '支持'),
     bestEffort: t('Best-effort', 'Best-effort', '尽力而为'),
+
+    /* --- Verrou d'accès --- */
+    lockTitle: t('Espace réservé à l’enseignant', 'Teacher-only area', '仅限教师的空间'),
+    lockIntro: t(
+      'Saisissez le mot de passe pour ouvrir le pilotage de la cohorte.',
+      'Enter the password to open cohort management.',
+      '请输入密码以打开班级管理。',
+    ),
+    lockPassword: t('Mot de passe', 'Password', '密码'),
+    lockSubmit: t('Ouvrir l’espace', 'Open the workspace', '打开空间'),
+    lockWrong: t('Mot de passe incorrect.', 'Incorrect password.', '密码不正确。'),
+    lockAgain: t('Verrouiller', 'Lock', '锁定'),
+    setupTitle: t('Choisissez un mot de passe', 'Choose a password', '设置密码'),
+    setupIntro: t(
+      'Aucun mot de passe n’est encore défini sur cet appareil. Choisissez-en un : il sera demandé à chaque ouverture de l’espace de pilotage.',
+      'No password has been set on this device yet. Choose one: it will be requested each time the management workspace is opened.',
+      '此设备尚未设置密码。请设置一个：每次打开管理空间时都会要求输入。',
+    ),
+    setupSubmit: t('Enregistrer le mot de passe', 'Save the password', '保存密码'),
+    setupTooShort: (n: number) =>
+      t(
+        `Le mot de passe doit compter au moins ${n} caractères.`,
+        `The password must be at least ${n} characters long.`,
+        `密码至少需要 ${n} 个字符。`,
+      ),
+    setupMismatch: t('Les deux saisies diffèrent.', 'The two entries differ.', '两次输入不一致。'),
+    setupConfirm: t('Confirmez le mot de passe', 'Confirm the password', '确认密码'),
+    changePassword: t('Changer le mot de passe', 'Change the password', '修改密码'),
+    currentPassword: t('Mot de passe actuel', 'Current password', '当前密码'),
+    newPassword: t('Nouveau mot de passe', 'New password', '新密码'),
+    passwordChanged: t('Mot de passe mis à jour.', 'Password updated.', '密码已更新。'),
+    strength: {
+      'too-short': t('Trop court', 'Too short', '过短'),
+      weak: t('Faible', 'Weak', '较弱'),
+      fair: t('Correct', 'Fair', '一般'),
+      strong: t('Robuste', 'Strong', '强'),
+    },
+    lockWarningTitle: t(
+      'Ce mot de passe protège un affichage, pas des données',
+      'This password protects a view, not data',
+      '此密码保护的是界面，而非数据',
+    ),
+    lockWarningText: t(
+      'Le site est publié en pages statiques : aucun serveur ne vérifie ce mot de passe. Il évite qu’un regard de passage ouvre la page, mais quiconque sait lire le stockage du navigateur contournera le verrou. Une authentification réelle suppose le back-end décrit dans le brief.',
+      'The site is published as static pages: no server verifies this password. It stops a passer-by from opening the page, but anyone able to read browser storage will bypass it. Real authentication requires the back-end described in the brief.',
+      '本站以静态页面发布：没有服务器校验此密码。它能阻止路人随手打开页面，但任何会读取浏览器存储的人都能绕过。真正的身份验证需要方案中所述的后端。',
+    ),
+
+    /* --- Comptes apprenants --- */
+    rosterTitle: t('Comptes apprenants', 'Learner accounts', '学员账户'),
+    rosterIntro: t(
+      'Créez un compte par apprenant, puis transmettez-lui son invitation. Le code sert ensuite à rapprocher ses remontées de progression.',
+      'Create one account per learner, then send them their invitation. The code is then used to match their progress reports.',
+      '为每位学员创建一个账户，然后把邀请发给他。之后用该代码来匹配他回传的进度。',
+    ),
+    newLearner: t('Nouvel apprenant', 'New learner', '新增学员'),
+    fieldName: t('Nom affiché', 'Display name', '显示姓名'),
+    fieldEmail: t('Adresse électronique', 'Email address', '电子邮箱'),
+    fieldLevel: t('Niveau visé', 'Target level', '目标等级'),
+    fieldNote: t('Note interne', 'Internal note', '内部备注'),
+    fieldNotePlaceholder: t(
+      'Groupe, objectif, rythme… visible de vous seul.',
+      'Group, goal, pace… visible to you only.',
+      '班级、目标、进度……仅您可见。',
+    ),
+    noLevel: t('Sans niveau imposé', 'No set level', '不指定等级'),
+    create: t('Créer le compte', 'Create the account', '创建账户'),
+    createdTitle: t('Compte créé', 'Account created', '账户已创建'),
+    createdText: (name: string) =>
+      t(
+        `Le compte de ${name} est prêt. Copiez son invitation ci-dessous.`,
+        `${name}’s account is ready. Copy their invitation below.`,
+        `${name} 的账户已就绪。请复制下方的邀请。`,
+      ),
+    errorNameRequired: t('Le nom est obligatoire.', 'The name is required.', '姓名为必填项。'),
+    errorEmailInvalid: t('Adresse électronique invalide.', 'Invalid email address.', '电子邮箱无效。'),
+    errorEmailDuplicate: t(
+      'Un compte actif utilise déjà cette adresse.',
+      'An active account already uses this address.',
+      '已有一个有效账户使用该地址。',
+    ),
+    inviteTitle: t('Invitation à transmettre', 'Invitation to send', '待转交的邀请'),
+    inviteIntro: t(
+      'L’apprenant colle cette invitation sur l’écran de connexion : son nom, son adresse et son code sont alors renseignés automatiquement.',
+      'The learner pastes this invitation on the sign-in screen: their name, address and code are then filled in automatically.',
+      '学员在登录界面粘贴此邀请：姓名、邮箱和代码会自动填入。',
+    ),
+    copy: t('Copier', 'Copy', '复制'),
+    copied: t('Copié', 'Copied', '已复制'),
+    code: t('Code', 'Code', '代码'),
+    archive: t('Archiver', 'Archive', '归档'),
+    restore: t('Réactiver', 'Reactivate', '恢复'),
+    archived: t('Archivé', 'Archived', '已归档'),
+    showArchived: t('Afficher les comptes archivés', 'Show archived accounts', '显示已归档账户'),
+    emptyRoster: t(
+      'Aucun compte pour l’instant. Créez le premier ci-dessus.',
+      'No accounts yet. Create the first one above.',
+      '目前还没有账户。请在上方创建第一个。',
+    ),
+
+    /* --- Remontées de progression --- */
+    reportsTitle: t('Remontées de progression', 'Progress reports', '进度回传'),
+    reportsIntro: t(
+      'Sans serveur, la progression ne circule pas toute seule. Chaque apprenant exporte la sienne depuis « Appareils & sessions » et vous la transmet ; collez-la ici pour mettre le suivi à jour.',
+      'Without a server, progress does not travel on its own. Each learner exports theirs from “Devices & sessions” and sends it to you; paste it here to update the tracking table.',
+      '没有服务器，进度不会自动传递。每位学员从“设备与会话”导出自己的进度并发给您；粘贴到此处即可更新跟踪表。',
+    ),
+    reportPlaceholder: t(
+      'Collez ici la remontée reçue de l’apprenant…',
+      'Paste the report received from the learner here…',
+      '在此粘贴收到的学员进度回传……',
+    ),
+    importReport: t('Importer la remontée', 'Import the report', '导入进度'),
+    importOk: (name: string) =>
+      t(
+        `Progression de ${name} mise à jour.`,
+        `${name}’s progress has been updated.`,
+        `${name} 的进度已更新。`,
+      ),
+    importUnknown: t(
+      'Remontée importée, mais son code ne correspond à aucun compte de la cohorte.',
+      'Report imported, but its code matches no account in the cohort.',
+      '进度已导入，但其代码与班级中的任何账户都不匹配。',
+    ),
+    importFailed: t(
+      'Contenu illisible : ce n’est pas une remontée de progression.',
+      'Unreadable content: this is not a progress report.',
+      '内容无法识别：这不是一份进度回传。',
+    ),
+    thQuizAvg: t('Moyenne quiz', 'Quiz average', '测验均分'),
+    thLastActivity: t('Dernière activité', 'Last activity', '最近活动'),
+    thLevel: t('Niveau', 'Level', '等级'),
+    noReport: t('Aucune remontée', 'No report yet', '尚无回传'),
+    exportRoster: t('Exporter la cohorte', 'Export the cohort', '导出班级'),
+    exportRosterHint: t(
+      'Sauvegarde complète des comptes et des remontées, à conserver hors du navigateur.',
+      'A full backup of accounts and reports, to keep outside the browser.',
+      '账户与进度的完整备份，请保存在浏览器之外。',
+    ),
   },
 
   shield: {
@@ -616,5 +804,11 @@ export const D = {
     'quiz-passed': t('Quiz réussi', 'Quiz passed', '测验通过'),
     'quiz-failed': t('Quiz échoué', 'Quiz failed', '测验未通过'),
     'lesson-completed': t('Leçon terminée', 'Lesson completed', '本课已完成'),
+    'admin-unlocked': t('Espace de pilotage ouvert', 'Admin workspace unlocked', '已打开管理空间'),
+    'admin-unlock-failed': t(
+      'Mot de passe administrateur refusé',
+      'Admin password rejected',
+      '管理员密码被拒绝',
+    ),
   },
 } as const;

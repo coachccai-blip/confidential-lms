@@ -1,4 +1,16 @@
-import { DEFAULT_LOCALE, type Device, type LessonProgress, type Locale, type QuizAttempt, type SecurityEvent, type SessionToken, type User } from '@lms/core';
+import {
+  DEFAULT_LOCALE,
+  type AdminLock,
+  type Device,
+  type LearnerAccount,
+  type LearnerReport,
+  type LessonProgress,
+  type Locale,
+  type QuizAttempt,
+  type SecurityEvent,
+  type SessionToken,
+  type User,
+} from '@lms/core';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -14,10 +26,19 @@ export interface PersistedState {
   readonly events: readonly SecurityEvent[];
   readonly theme: ThemeName;
   readonly locale: Locale;
+  /** Verrou de l'espace de pilotage. `null` tant qu'aucun mot de passe n'est posé. */
+  readonly adminLock: AdminLock | null;
+  /** Cohorte gérée par l'administrateur depuis ce navigateur. */
+  readonly learners: readonly LearnerAccount[];
+  /** Remontées de progression importées, une par apprenant. */
+  readonly reports: readonly LearnerReport[];
+  /** Code d'inscription porté par la session en cours, s'il y en a un. */
+  readonly enrolmentCode: string | null;
 }
 
 export const STORAGE_KEY = 'magmatica.state.v1';
-const STATE_VERSION = 1;
+/** v2 : ajout du verrou administrateur, de la cohorte et des remontées. */
+const STATE_VERSION = 2;
 
 export const EMPTY_STATE: PersistedState = {
   version: STATE_VERSION,
@@ -31,6 +52,10 @@ export const EMPTY_STATE: PersistedState = {
   events: [],
   theme: 'dark',
   locale: DEFAULT_LOCALE,
+  adminLock: null,
+  learners: [],
+  reports: [],
+  enrolmentCode: null,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -47,7 +72,11 @@ export function loadState(): PersistedState {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return EMPTY_STATE;
     const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed) || parsed['version'] !== STATE_VERSION) return EMPTY_STATE;
+    if (!isRecord(parsed)) return EMPTY_STATE;
+    const version = parsed['version'];
+    // Une v1 est complétée par les valeurs par défaut plutôt que jetée :
+    // la progression déjà enregistrée survit à la mise à jour.
+    if (version !== STATE_VERSION && version !== 1) return EMPTY_STATE;
     return { ...EMPTY_STATE, ...(parsed as Partial<PersistedState>), version: STATE_VERSION };
   } catch {
     return EMPTY_STATE;

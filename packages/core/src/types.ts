@@ -281,7 +281,9 @@ export type SecurityEventType =
   | 'visibility-hidden'
   | 'quiz-passed'
   | 'quiz-failed'
-  | 'lesson-completed';
+  | 'lesson-completed'
+  | 'admin-unlocked'
+  | 'admin-unlock-failed';
 
 export type SecuritySeverity = 'info' | 'warning' | 'critical';
 

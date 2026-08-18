@@ -27,6 +27,7 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 | Interface **et** contenu en français, anglais et chinois | ✅ Fonctionnel |
 | Glossaire : mots difficiles cliquables, définis dans les trois langues | ✅ 49 entrées |
 | 18 cours de français rangés par niveau (A1 → C2), 78 étapes, 18 quiz notés | ✅ Contenu réel et complet |
+| Comptes apprenants, invitations et suivi de progression | ✅ Fonctionnel, **sans serveur** (§7) |
 | Toutes les protections réalisables dans un navigateur | ✅ Fonctionnel |
 | Filigrane visible mobile + filigrane invisible par apprenant | ✅ Fonctionnel |
 | Session unique, limite de 3 appareils, journal de sécurité | ✅ Fonctionnel, **simulé côté client** |
@@ -225,14 +226,63 @@ recommandé.**
 
 ---
 
-## 7. Architecture et design
+## 7. Espace enseignant : comptes et suivi
+
+L'espace `/admin` est protégé par un **mot de passe** choisi à la première ouverture, puis
+redemandé à chaque rechargement de la page. Il donne accès à la création de comptes apprenants
+et au suivi de leur progression.
+
+> ### Ce que ce mot de passe protège, et ce qu'il ne protège pas
+>
+> Le site est publié en **pages statiques** : aucun serveur ne vérifie ce mot de passe. Le
+> condensé SHA-256 salé est calculé et comparé dans le navigateur, et il est lisible dans le
+> stockage local. Ce verrou empêche donc une ouverture accidentelle ou opportuniste de la page —
+> pas un examen déterminé. **Ce n'est pas une authentification.** Celle-ci suppose le back-end
+> Fastify décrit dans le brief : Argon2id côté serveur, jetons signés, contrôle d'accès sur
+> chaque requête. L'interface le dit à l'utilisateur au lieu de le laisser croire l'inverse.
+
+### Créer un compte, sans serveur
+
+Comme il n'y a pas de base de données partagée, un compte créé par l'enseignant doit **voyager
+jusqu'à l'apprenant**, et sa progression doit **revenir**. Deux objets encodés assurent ce trajet.
+
+| Objet | Sens | Contenu | Où l'utiliser |
+|---|---|---|---|
+| **Invitation** | enseignant → apprenant | code d'inscription, nom, adresse, niveau visé | collée sur l'écran de connexion |
+| **Remontée de progression** | apprenant → enseignant | code, étapes terminées, meilleurs scores de quiz, nombre d'appareils, score de risque | collée dans l'espace de pilotage |
+
+Le **code d'inscription** (`LUM-4K7P-2XQF`) est la clé de rapprochement. Son alphabet exclut
+`O`, `0`, `I` et `1` pour qu'il puisse se dicter au téléphone sans ambiguïté. Il identifie, il ne
+protège pas : ce n'est pas un secret.
+
+Le parcours complet, vérifié de bout en bout par un test de navigation :
+
+1. l'enseignant crée le compte et copie l'invitation ;
+2. l'apprenant la colle à la connexion — nom, adresse et code sont renseignés, modifiables ;
+3. l'apprenant travaille ; sa progression reste sur son appareil ;
+4. depuis **« Appareils & sessions »**, il établit son relevé et le transmet ;
+5. l'enseignant l'importe : la ligne de suivi se met à jour.
+
+Un import plus ancien que celui déjà connu est ignoré, de sorte qu'un doublon ne fasse jamais
+reculer le suivi. Les comptes s'archivent sans se supprimer, et un compte archivé libère son
+adresse électronique.
+
+### Ce que l'espace de pilotage affiche
+
+Progression par apprenant, moyenne des quiz, nombre de quiz réussis, dernière activité, score de
+risque issu du journal de sécurité, et le vérificateur d'empreinte qui remonte d'un extrait fuité
+jusqu'à l'apprenant, l'appareil et l'heure de consultation.
+
+---
+
+## 8. Architecture et design
 
 Monorepo pnpm, TypeScript strict partout (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
 `verbatimModuleSyntax`).
 
 ```
 confidential-lms/
-├── packages/core/          # Logique métier pure, sans dépendance UI — 51 tests unitaires
+├── packages/core/          # Logique métier pure, sans dépendance UI — 71 tests unitaires
 │   └── src/
 │       ├── locale.ts       # Locale, LocalizedText, résolution avec repli
 │       ├── types.ts        # Modèle de données complet, entièrement localisé
@@ -240,7 +290,8 @@ confidential-lms/
 │       ├── progress.ts     # Progression par module/cours, reprise, voisinage de leçon
 │       ├── watermark.ts    # Filigranes visible (positions) et invisible (encodage base 4)
 │       ├── device.ts       # Empreinte d'appareil, limite de 3, session unique
-│       └── security.ts     # Catalogue d'événements, gravités, score de risque
+│       ├── security.ts     # Catalogue d'événements, gravités, score de risque
+│       └── roster.ts       # Comptes apprenants, invitations, remontées, verrou admin
 └── apps/web/               # Application React 19 + Vite, déployée sur Pages
     └── src/
         ├── content/        # 18 cours (A1 → C2), 18 quiz, glossaire, 7 figures SVG
@@ -268,7 +319,7 @@ le chinois s'affiche correctement sans requête réseau.
 
 ---
 
-## 8. Feuille de route
+## 9. Feuille de route
 
 **Phase 1 restante — backend.** API Fastify + PostgreSQL/Prisma reprenant `packages/core`,
 argon2id, JWT 15 min + refresh tokens révocables, filigranage du texte **côté serveur**, rate
@@ -285,7 +336,7 @@ manuelle sur les quatre systèmes.
 
 ---
 
-## 9. Couverture du brief
+## 10. Couverture du brief
 
 | Exigence | État |
 |---|---|
@@ -294,18 +345,20 @@ manuelle sur les quatre systèmes.
 | §4.3 Filigrane visible mobile + invisible par apprenant | ✅ |
 | §4.4 Session unique, 3 appareils, journal de sécurité | ✅ (arbitré client dans la démo) |
 | §4.5 URLs signées, HLS chiffré, rate limiting | Phase 1/2 — aucun média n'est servi ici |
-| §5 Quiz notés, seuils, tentatives, corrections | ✅ 6 quiz, 48 questions |
+| §5 Quiz notés, seuils, tentatives, corrections | ✅ 18 quiz, 114 questions |
 | §5 Progression par cours/module, reprise | ✅ |
-| §5 Tableau de bord admin et journal | ✅ (données de démonstration) |
+| §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §7) |
+| §5 Tableau de bord admin et journal | ✅ (alimenté par les remontées importées) |
+| §5 Mot de passe administrateur | ⚠️ verrou d'affichage, pas une authentification — voir §7 |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
-| §8 TypeScript strict, tests sur sessions et protections | ✅ 60 tests |
+| §8 TypeScript strict, tests sur sessions et protections | ✅ 80 tests (71 métier + 9 cohérence i18n) |
 | §8 README documentant honnêtement les limites | ✅ ce document |
 | §8 Budget services tiers = 0 € | ✅ aucune dépendance payante, aucun appel réseau externe |
 
 ---
 
-## 10. Démarrage
+## 11. Démarrage
 
 ```bash
 pnpm install
@@ -339,8 +392,10 @@ branche `gh-pages`, dossier `/ (root)`**.
 
 ---
 
-## 11. Confidentialité de la démonstration
+## 12. Confidentialité de la démonstration
 
 Cette application ne communique avec aucun serveur. Les informations saisies à la connexion
 (nom, email, téléphone) restent dans le `localStorage` de votre navigateur, servent uniquement à
 générer les filigranes, et disparaissent avec le bouton **« Tout effacer »** de l'espace compte.
+Les comptes apprenants créés dans l'espace enseignant y résident également : « Tout effacer » les
+supprime aussi, et le prévient explicitement avant de le faire.

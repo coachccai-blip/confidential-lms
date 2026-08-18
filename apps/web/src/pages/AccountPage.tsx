@@ -1,9 +1,12 @@
-import { MAX_DEVICES, activeSessions } from '@lms/core';
+import { useState } from 'react';
+import { MAX_DEVICES, activeSessions, encodeReport } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
 import {
+  IconCopy,
   IconFingerprint,
+  IconInbox,
   IconLock,
   IconMonitor,
   IconShieldCheck,
@@ -13,8 +16,9 @@ import {
 } from '../components/Icons';
 
 export function AccountPage() {
-  const { user, state, device, forgetDevice, revokeSession, resetDemo } = useApp();
+  const { user, state, device, forgetDevice, revokeSession, resetDemo, buildMyReport, pushToast } = useApp();
   const { l, formatDate } = useI18n();
+  const [report, setReport] = useState<string | null>(null);
   const nowIso = new Date().toISOString();
   const sessions = activeSessions(state.sessions, nowIso);
 
@@ -214,6 +218,52 @@ export function AccountPage() {
         </div>
       </section>
 
+      <section className="card" style={{ marginBottom: 'var(--space-6)' }}>
+        <div className="row" style={{ marginBottom: 'var(--space-3)' }}>
+          <IconInbox size={17} style={{ color: 'var(--accent)' }} />
+          <strong>{l(D.account.reportTitle)}</strong>
+        </div>
+        <p className="secondary" style={{ fontSize: '0.87rem', marginBottom: 'var(--space-4)', maxWidth: '72ch' }}>
+          {l(D.account.reportIntro)}
+        </p>
+
+        {state.enrolmentCode ? (
+          <p className="mono muted" style={{ fontSize: '0.8rem', marginBottom: 'var(--space-3)' }}>
+            {l(D.account.reportCode(state.enrolmentCode))}
+          </p>
+        ) : (
+          <div className="callout callout--info" style={{ marginBottom: 'var(--space-4)' }}>
+            <span className="callout__icon">
+              <IconLock size={16} />
+            </span>
+            <span style={{ fontSize: '0.84rem' }}>{l(D.account.reportNoCode)}</span>
+          </div>
+        )}
+
+        {report === null ? (
+          <button type="button" className="btn btn--secondary" onClick={() => setReport(encodeReport(buildMyReport()))}>
+            {l(D.account.reportGenerate)}
+          </button>
+        ) : (
+          <>
+            <textarea className="textarea textarea--code" data-allow-select="true" readOnly value={report} rows={4} />
+            <button
+              type="button"
+              className="btn btn--primary btn--sm"
+              style={{ marginTop: 'var(--space-2)' }}
+              onClick={() => {
+                void navigator.clipboard
+                  .writeText(report)
+                  .then(() => pushToast({ tone: 'success', title: D.account.reportCopied }))
+                  .catch(() => undefined);
+              }}
+            >
+              <IconCopy size={14} /> {l(D.account.reportCopy)}
+            </button>
+          </>
+        )}
+      </section>
+
       <section className="card">
         <div className="row row--between" style={{ flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
@@ -224,8 +274,21 @@ export function AccountPage() {
             <p className="muted" style={{ fontSize: '0.82rem', marginTop: 4, maxWidth: '64ch' }}>
               {l(D.account.resetText)}
             </p>
+            {state.learners.length > 0 ? (
+              <p style={{ fontSize: '0.82rem', marginTop: 6, maxWidth: '64ch', color: 'var(--warning)' }}>
+                {l(D.account.resetCohort(state.learners.length))}
+              </p>
+            ) : null}
           </div>
-          <button type="button" className="btn btn--danger" onClick={resetDemo}>
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={() => {
+              // Une cohorte n'est pas reconstituable : on demande confirmation.
+              if (state.learners.length > 0 && !window.confirm(l(D.account.resetConfirm))) return;
+              resetDemo();
+            }}
+          >
             <IconTrash size={15} /> {l(D.account.resetButton)}
           </button>
         </div>

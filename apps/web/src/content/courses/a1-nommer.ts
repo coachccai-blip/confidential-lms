@@ -44,9 +44,9 @@ export const a1NommerCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'En français, un nom ne se promène presque jamais seul : il est précédé d’un article. Là où le chinois emploie le nom nu et l’anglais parfois « books », le français impose « le livre », « un livre » ou « des livres ». C’est l’adaptation la plus coûteuse pour un débutant — et la plus rentable.',
-                'In French a noun almost never travels alone: it is preceded by an article. Where Chinese uses the bare noun and English sometimes says “books”, French requires “le livre”, “un livre” or “des livres”. This is the costliest adjustment for a beginner — and the most rewarding.',
-                '法语中名词几乎从不单独出现：前面必须有冠词。中文可以直接用光杆名词，英语有时说 “books”，而法语要求说 “le livre”“un livre”或 “des livres”。这是初学者代价最高、也最值得投入的一项调整。',
+                'En français, un nom est presque toujours précédé d’un article. Le chinois se passe d’article, et l’anglais dit parfois « books » tout court. Le français, lui, demande « le livre », « un livre » ou « des livres ». C’est l’habitude la plus difficile à prendre — et la plus utile.',
+                'In French a noun almost always comes with an article in front of it. Chinese does without one, and English sometimes just says “books”. French wants “le livre”, “un livre” or “des livres”. It is the hardest habit to pick up — and the most useful.',
+                '法语名词前面几乎总要加冠词。中文不用冠词，英语有时也只说 “books”。法语则要求说 “le livre”“un livre” 或 “des livres”。这是最难养成、也最有用的一个习惯。',
               ),
             },
             {

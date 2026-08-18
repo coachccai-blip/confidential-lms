@@ -11,6 +11,7 @@ import {
   type QuizAttempt,
   type QuizResult,
 } from '@lms/core';
+import { Emphasis } from '../components/Emphasis';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar } from '../components/Progress';
 import { getCourseBySlug, getQuiz } from '../content';
@@ -318,7 +319,7 @@ export function QuizPage() {
                       </span>
                       <span>
                         <strong>{l(D.quiz.correction)} </strong>
-                        {l(question.explanation)}
+                        <Emphasis text={l(question.explanation)} />
                       </span>
                     </div>
                   ) : null}

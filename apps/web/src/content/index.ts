@@ -2,42 +2,66 @@ import { CEFR_LEVELS, type CefrLevel, type Course, type CourseModule, type Lesso
 import { a1PremiersMotsCourse } from './courses/a1-premiers-mots';
 import { a1PresentCourse } from './courses/a1-present';
 import { a1NommerCourse } from './courses/a1-nommer';
+import { a1QuotidienCourse } from './courses/a1-quotidien';
+import { a1SonsCourse } from './courses/a1-sons';
 import { a2RaconterCourse } from './courses/a2-raconter';
 import { a2ReperesCourse } from './courses/a2-reperes';
 import { a2DecrireCourse } from './courses/a2-decrire';
+import { a2PratiqueCourse } from './courses/a2-vie-pratique';
+import { a2EcrireCourse } from './courses/a2-ecrire';
 import { grammaireCourse } from './courses/grammaire';
 import { conjugaisonCourse } from './courses/conjugaison';
+import { b1PronomsCourse } from './courses/b1-pronoms';
+import { b1DiscoursCourse } from './courses/b1-discours';
 import { delfB1Course } from './courses/delf-b1';
 import { delfB2Course } from './courses/delf-b2';
 import { b2NuanceCourse } from './courses/b2-nuance';
 import { b2ProfessionnelCourse } from './courses/b2-professionnel';
+import { b2PresseCourse } from './courses/b2-presse';
+import { b2ReliefCourse } from './courses/b2-relief';
 import { dalfC1Course } from './courses/dalf-c1';
 import { c1AcademiqueCourse } from './courses/c1-academique';
 import { c1OralCourse } from './courses/c1-oral-rapide';
+import { c1LexiqueCourse } from './courses/c1-lexique';
+import { c1DebatCourse } from './courses/c1-debat';
 import { dalfC2Course } from './courses/dalf-c2';
 import { c2LitteratureCourse } from './courses/c2-litterature';
 import { c2InstitutionsCourse } from './courses/c2-institutions';
+import { c2StylistiqueCourse } from './courses/c2-stylistique';
+import { c2TraductionCourse } from './courses/c2-traduction';
 
 /** Le catalogue, rangé par palier du CECRL : du débutant complet à la maîtrise. */
 export const courses: readonly Course[] = [
   a1PremiersMotsCourse,
   a1PresentCourse,
   a1NommerCourse,
+  a1QuotidienCourse,
+  a1SonsCourse,
   a2RaconterCourse,
   a2ReperesCourse,
   a2DecrireCourse,
+  a2PratiqueCourse,
+  a2EcrireCourse,
   grammaireCourse,
   conjugaisonCourse,
+  b1PronomsCourse,
+  b1DiscoursCourse,
   delfB1Course,
   delfB2Course,
   b2NuanceCourse,
   b2ProfessionnelCourse,
+  b2PresseCourse,
+  b2ReliefCourse,
   dalfC1Course,
   c1AcademiqueCourse,
   c1OralCourse,
+  c1LexiqueCourse,
+  c1DebatCourse,
   dalfC2Course,
   c2LitteratureCourse,
   c2InstitutionsCourse,
+  c2StylistiqueCourse,
+  c2TraductionCourse,
 ];
 
 /** Ordre d'affichage des niveaux dans le catalogue. */

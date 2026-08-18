@@ -1098,6 +1098,24 @@ export const D = {
     },
   },
 
+  /** Libellés des schémas manipulables. */
+  ix: {
+    documentLabel: t('Page de document', 'Document page', '文档页面'),
+    playOrder: t('Voir dans l’ordre', 'Watch the order', '按顺序演示'),
+    wellDone: t('C’est dans l’ordre', 'That’s the right order', '顺序正确'),
+    allMatched: t('Tout est relié', 'Everything is matched', '全部配对完成'),
+    pickExpression: t(
+      'Choisissez une expression à gauche.',
+      'Pick an expression on the left.',
+      '请在左侧选择一个表达。',
+    ),
+    nowPickMeaning: t(
+      'Choisissez maintenant ce qu’elle veut dire.',
+      'Now pick what it means.',
+      '现在选择它的意思。',
+    ),
+  },
+
   securityEvents: {
     login: t('Connexion réussie', 'Successful sign-in', '登录成功'),
     logout: t('Déconnexion', 'Sign-out', '退出登录'),

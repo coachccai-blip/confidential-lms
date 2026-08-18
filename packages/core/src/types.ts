@@ -219,7 +219,78 @@ export interface WidgetSentence {
   }[];
 }
 
-export type LessonWidget = WidgetWheel | WidgetMatrix | WidgetTimeline | WidgetSwitcher | WidgetSentence;
+
+/* ---------------- Documents et activités manipulables ---------------- */
+
+/**
+ * Zone d'un document : position et taille en pourcentage de la page, coin
+ * supérieur gauche. Travailler en pourcentage laisse la page se
+ * redimensionner sans que la mise en page se disloque.
+ */
+export interface LayoutZone {
+  readonly id: string;
+  readonly label: LocalizedText;
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
+  readonly align?: 'left' | 'center' | 'right';
+  /** Contenu d'exemple, en français : c'est ce qu'on écrit vraiment là. */
+  readonly sample: string;
+  readonly detail: LocalizedText;
+}
+
+/**
+ * Page de document — lettre, courriel, copie d'examen — dont chaque zone
+ * s'explique. Un bouton parcourt les zones dans l'ordre où on les rédige :
+ * savoir *où* écrire ne suffit pas, il faut savoir *dans quel ordre*.
+ */
+export interface WidgetLayout {
+  readonly kind: 'layout';
+  /** Rapport largeur/hauteur. 0.707 pour une A4 en portrait. */
+  readonly ratio?: number;
+  readonly zones: readonly LayoutZone[];
+}
+
+/** Remise en ordre : les éléments sont donnés dans le bon ordre, l'affichage les mélange. */
+export interface WidgetOrder {
+  readonly kind: 'order';
+  readonly prompt: LocalizedText;
+  readonly items: readonly { readonly id: string; readonly text: LocalizedText }[];
+  readonly successNote: LocalizedText;
+}
+
+/** Appariement : on relie une expression française à ce qu'elle signifie. */
+export interface WidgetPairs {
+  readonly kind: 'pairs';
+  readonly prompt: LocalizedText;
+  readonly pairs: readonly { readonly id: string; readonly left: string; readonly right: LocalizedText }[];
+}
+
+/** Texte à trous : on choisit la forme juste, l'explication suit. */
+export interface WidgetFill {
+  readonly kind: 'fill';
+  readonly prompt: LocalizedText;
+  readonly items: readonly {
+    readonly id: string;
+    readonly before: string;
+    readonly after: string;
+    readonly options: readonly string[];
+    readonly answer: string;
+    readonly why: LocalizedText;
+  }[];
+}
+
+export type LessonWidget =
+  | WidgetWheel
+  | WidgetMatrix
+  | WidgetTimeline
+  | WidgetSwitcher
+  | WidgetSentence
+  | WidgetLayout
+  | WidgetOrder
+  | WidgetPairs
+  | WidgetFill;
 
 export interface LessonBlockInteractive {
   readonly type: 'interactive';

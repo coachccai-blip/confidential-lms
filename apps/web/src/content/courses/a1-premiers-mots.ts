@@ -81,9 +81,9 @@ export const a1PremiersMotsCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'Le français distingue deux façons de dire « vous » : **tu** pour une seule personne proche, **vous** pour une personne qu’on ne connaît pas — et aussi pour plusieurs personnes. Se tromper de forme n’empêche pas d’être compris, mais peut sembler brusque.',
-                'French has two ways of saying “you”: **tu** for one person you are close to, **vous** for someone you do not know — and also for several people. Getting it wrong will not stop you being understood, but it can sound abrupt.',
-                '法语有两种表达“你/您”的方式：**tu** 用于关系亲近的单个人，**vous** 用于不熟悉的人，同时也用于多个人。用错不会让人听不懂，但可能显得唐突。',
+                'Le français a deux façons de dire « vous ». On dit **tu** à une personne proche, et **vous** à quelqu’un qu’on ne connaît pas. **Vous** sert aussi à parler à plusieurs personnes. Se tromper n’empêche pas d’être compris, mais peut sembler brusque.',
+                'French has two ways of saying “you”. You say **tu** to someone you are close to, and **vous** to someone you do not know. **Vous** is also how you speak to more than one person. Getting it wrong will not stop people understanding you, but it can sound abrupt.',
+                '法语有两种说“你”的方式。对关系亲近的人说 **tu**，对不认识的人说 **vous**。跟多个人说话时也用 **vous**。说错了别人还是听得懂，但可能显得唐突。',
               ),
             },
             {
@@ -252,9 +252,9 @@ export const a1PremiersMotsCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'Les nombres français sont réguliers jusqu’à 69. Ensuite, la langue compte par vingtaines, héritage médiéval : 70 se dit « soixante-dix » (60 + 10), 80 « quatre-vingts » (4 × 20), 90 « quatre-vingt-dix » (4 × 20 + 10). C’est la seule difficulté réelle.',
-                'French numbers are regular up to 69. After that, the language counts in twenties, a medieval legacy: 70 is “soixante-dix” (60 + 10), 80 is “quatre-vingts” (4 × 20), 90 is “quatre-vingt-dix” (4 × 20 + 10). That is the only real difficulty.',
-                '法语数字到 69 都很规则。之后则以二十进位，这是中世纪的遗留：70 说成 “soixante-dix”（60 + 10），80 是 “quatre-vingts”（4 × 20），90 是 “quatre-vingt-dix”（4 × 20 + 10）。这是唯一真正的难点。',
+                'Les nombres français sont réguliers jusqu’à 69. Après, on compte par vingtaines : c’est un reste du Moyen Âge. On dit « soixante-dix » pour 70 (60 + 10), « quatre-vingts » pour 80 (4 × 20) et « quatre-vingt-dix » pour 90 (4 × 20 + 10). C’est la seule vraie difficulté.',
+                'French numbers are regular up to 69. After that you count in twenties, a leftover from the Middle Ages. You say “soixante-dix” for 70 (60 + 10), “quatre-vingts” for 80 (4 × 20) and “quatre-vingt-dix” for 90 (4 × 20 + 10). That is the only real difficulty.',
+                '法语数字到 69 为止都很规则。之后就按二十来数，这是中世纪留下来的习惯。70 说成 “soixante-dix”（60 + 10），80 是 “quatre-vingts”（4 × 20），90 是 “quatre-vingt-dix”（4 × 20 + 10）。这是唯一真正的难点。',
               ),
             },
             {

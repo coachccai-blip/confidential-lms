@@ -49,7 +49,7 @@ export function LoginPage() {
       setError(outcome.message);
       return;
     }
-    pushToast({ tone: 'success', title: l(D.toast.signedInTitle), text: l(D.toast.signedInText) });
+    pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
     navigate('/app');
   }
 

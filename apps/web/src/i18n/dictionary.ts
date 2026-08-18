@@ -21,13 +21,9 @@ export const D = {
     minutesRead: (n: number) => t(`${n} min de lecture`, `${n} min read`, `阅读 ${n} 分钟`),
     remaining: (value: string) => t(`${value} restantes`, `${value} left`, `剩余 ${value}`),
     stepOf: (a: number, b: number) => t(`Étape ${a} / ${b}`, `Step ${a} / ${b}`, `第 ${a} / ${b} 步`),
-    of: (a: number, b: number) => t(`${a} sur ${b}`, `${a} of ${b}`, `${a} / ${b}`),
     close: t('Fermer', 'Close', '关闭'),
-    cancel: t('Annuler', 'Cancel', '取消'),
-    soon: t('Bientôt', 'Soon', '即将推出'),
     level: t('Niveau', 'Level', '级别'),
     quiz: t('Quiz', 'Quiz', '测验'),
-    lesson: t('Leçon', 'Lesson', '课程'),
     protected: t('Protégé', 'Protected', '已保护'),
     darkMode: t('Mode sombre', 'Dark mode', '深色模式'),
     lightMode: t('Mode clair', 'Light mode', '浅色模式'),
@@ -44,8 +40,7 @@ export const D = {
     catalogue: t('Catalogue de cours', 'Course catalogue', '课程目录'),
     devices: t('Appareils & sessions', 'Devices & sessions', '设备与会话'),
     security: t('Journal de sécurité', 'Security log', '安全日志'),
-    admin: t('Pilotage & traçabilité', 'Analytics & tracing', '管理与溯源'),
-    protectionsOn: t('Protections actives', 'Protections active', '保护已启用'),
+    admin: t('Pilotage & traçabilité', 'Analytics & tracing', '数据与溯源'),
     signOut: t('Se déconnecter', 'Sign out', '退出登录'),
     inProgress: t('Parcours en cours', 'Course in progress', '进行中的课程'),
     stepsDone: (a: number, b: number, p: number) =>
@@ -103,7 +98,7 @@ export const D = {
     intro: t(
       'Grammaire, conjugaison et préparation au DELF/DALF, en français, anglais et chinois. Chaque leçon est marquée au nom de l’apprenant qui la consulte.',
       'Grammar, conjugation and DELF/DALF preparation, in French, English and Chinese. Every lesson is watermarked with the name of the learner reading it.',
-      '语法、动词变位与 DELF/DALF 备考，提供法语、英语和中文三种界面。每节课都带有阅读者的姓名水印。',
+      '语法、动词变位与 DELF/DALF 备考，课程内容与界面均提供法语、英语和中文。每节课都带有阅读者的姓名水印。',
     ),
     features: [
       {
@@ -115,7 +110,7 @@ export const D = {
         ),
       },
       {
-        title: t('Mots difficiles cliquables', 'Tap any hard word', '生词可点击'),
+        title: t('Mots difficiles cliquables', 'Clickable difficult words', '生词可点击'),
         text: t(
           'Un mot vous échappe ? Cliquez : sa définition apparaît en français, anglais et chinois.',
           'Stuck on a word? Click it: the definition appears in French, English and Chinese.',
@@ -150,7 +145,7 @@ export const D = {
     emailHint: t(
       'Affichée dans le filigrane de chaque écran de contenu.',
       'Shown in the watermark on every content screen.',
-      '将显示在每个课程页面的水印中。',
+      '将显示在每个内容页面的水印中。',
     ),
     phone: t('Téléphone', 'Phone number', '电话号码'),
     phoneHint: t(
@@ -189,12 +184,12 @@ export const D = {
     ),
     introNew: t(
       'Six parcours vous attendent : grammaire, conjugaison et préparation aux quatre diplômes DELF et DALF.',
-      'Six paths are waiting: grammar, conjugation and preparation for the four DELF and DALF diplomas.',
-      '六条学习路径已就绪：语法、动词变位，以及四项 DELF 与 DALF 文凭备考。',
+      'Six courses are waiting: grammar, conjugation and preparation for the four DELF and DALF diplomas.',
+      '六门课程已就绪：语法、动词变位，以及四项 DELF 与 DALF 文凭备考。',
     ),
     statProgress: t('Progression globale', 'Overall progress', '总体进度'),
     statSteps: t('Étapes terminées', 'Steps completed', '已完成步骤'),
-    statStepsHint: (n: number) => t(`sur ${n} parcours`, `across ${n} paths`, `覆盖 ${n} 条路径`),
+    statStepsHint: (n: number) => t(`sur ${n} parcours`, `across ${n} courses`, `覆盖 ${n} 门课程`),
     statQuizzes: t('Quiz réussis', 'Quizzes passed', '已通过测验'),
     statQuizzesHint: t('quiz notés du catalogue', 'graded quizzes in the catalogue', '课程目录中的评分测验'),
     statTime: t('Temps restant estimé', 'Estimated time left', '预计剩余时间'),
@@ -203,7 +198,7 @@ export const D = {
     start: t('Commencer', 'Start', '开始学习'),
     syllabus: t('Voir le sommaire', 'View syllabus', '查看目录'),
     nextStep: (title: string) => t(`Prochaine étape : ${title}`, `Next step: ${title}`, `下一步：${title}`),
-    allDone: t('Parcours terminé — félicitations.', 'Path completed — congratulations.', '课程已完成——恭喜！'),
+    allDone: t('Parcours terminé — félicitations.', 'Course completed — congratulations.', '课程已完成——恭喜！'),
     protectedNotice: (email: string) =>
       t(
         `Contenu filigrané au nom de ${email} · copie, impression et export désactivés · chaque accès est journalisé.`,
@@ -211,16 +206,15 @@ export const D = {
         `内容已加上 ${email} 的水印 · 已禁用复制、打印与导出 · 每次访问都会记录。`,
       ),
     catalogue: t('Catalogue', 'Catalogue', '课程目录'),
-    certifying: t('Certifiant', 'Certifying', '认证课程'),
   },
 
   course: {
     steps: (n: number) => t(`${n} étapes`, `${n} steps`, `${n} 个步骤`),
     startFirst: t('Commencer le module 1', 'Start module 1', '开始第 1 单元'),
-    resume: t('Reprendre le parcours', 'Resume the path', '继续本课程'),
+    resume: t('Reprendre le parcours', 'Resume the course', '继续本课程'),
     completedSteps: (a: number, b: number) =>
       t(`${a} étape(s) terminée(s) sur ${b}`, `${a} of ${b} steps completed`, `已完成 ${a} / ${b} 步`),
-    finished: t('Parcours terminé', 'Path completed', '课程已完成'),
+    finished: t('Parcours terminé', 'Course completed', '课程已完成'),
     protectedBanner: t(
       'Contenu protégé : filigrane nominatif, copie et impression désactivées, journalisation des accès.',
       'Protected content: named watermark, copy and print disabled, access logging.',
@@ -233,8 +227,8 @@ export const D = {
     completed: t('Terminée', 'Completed', '已完成'),
     markDone: t('Marquer terminée', 'Mark as done', '标记为已完成'),
     onThisPage: t('Sur cette page', 'On this page', '本页目录'),
-    previous: t('Précédent', 'Previous', '上一课'),
-    next: t('Suivant', 'Next', '下一课'),
+    previous: t('Précédent', 'Previous', '上一步'),
+    next: t('Suivant', 'Next', '下一步'),
     backToSyllabus: t('Retour au sommaire', 'Back to syllabus', '返回目录'),
     fingerprintTitle: t(
       'Cet exemplaire vous est personnellement attribué',
@@ -274,7 +268,7 @@ export const D = {
     kindMultiple: t('Plusieurs bonnes réponses', 'Several correct answers', '多选题'),
     kindBoolean: t('Vrai ou faux', 'True or false', '判断题'),
     points: (n: number) => t(`${n} point(s)`, `${n} point(s)`, `${n} 分`),
-    passed: t('Quiz validé', 'Quiz passed', '测验通过'),
+    passed: t('Quiz réussi', 'Quiz passed', '测验通过'),
     failed: t('Seuil non atteint', 'Pass mark not reached', '未达及格线'),
     passedText: (correct: number, total: number) =>
       t(
@@ -316,7 +310,6 @@ export const D = {
   glossary: {
     eyebrow: t('Mot expliqué', 'Word explained', '词语释义'),
     example: t('Exemple', 'Example', '例句'),
-    notFound: t('Définition indisponible.', 'Definition unavailable.', '暂无释义。'),
   },
 
   account: {
@@ -404,6 +397,12 @@ export const D = {
     stateRevoked: t('Révoquée', 'Revoked', '已注销'),
     stateExpired: t('Expirée', 'Expired', '已过期'),
     revoke: t('Révoquer', 'Revoke', '注销'),
+    revokedReason: {
+      'new-session': t('nouvelle connexion', 'new sign-in', '新的登录'),
+      manual: t('action manuelle', 'manual action', '手动操作'),
+      'device-removed': t('appareil retiré', 'device removed', '设备已移除'),
+      expired: t('expiration', 'expiry', '已过期'),
+    },
     resetTitle: t('Réinitialiser la démonstration', 'Reset the demo', '重置演示数据'),
     resetText: t(
       'Efface la progression, les tentatives de quiz, les appareils et le journal de sécurité stockés dans ce navigateur. Aucune donnée n’a jamais quitté votre poste.',
@@ -483,7 +482,7 @@ export const D = {
       '粘贴在第三方渠道发现的文本片段。若其来自本平台，隐形指纹将揭示学员、设备与阅读时间。',
     ),
     insertMarked: t('Insérer un extrait filigrané', 'Insert a watermarked excerpt', '插入带水印的片段'),
-    insertClean: t('Insérer le même texte sans filigrane', 'Insert the same text unmarked', '插入无水印的同一文本'),
+    insertClean: t('Insérer le même texte sans filigrane', 'Insert the same text without a watermark', '插入无水印的同一文本'),
     clear: t('Effacer', 'Clear', '清空'),
     sampleLabel: t('Extrait suspect', 'Suspect excerpt', '可疑片段'),
     samplePlaceholder: t('Collez ici le texte à analyser…', 'Paste the text to analyse here…', '在此粘贴待分析的文本……'),
@@ -509,6 +508,8 @@ export const D = {
     thWeb: t('Web (cette démo)', 'Web (this demo)', '网页（本演示）'),
     thDesktop: t('Desktop Electron', 'Electron desktop', 'Electron 桌面端'),
     thMobile: t('Mobile React Native', 'React Native mobile', 'React Native 移动端'),
+    yes: t('Oui', 'Yes', '支持'),
+    bestEffort: t('Best-effort', 'Best-effort', '尽力而为'),
   },
 
   shield: {
@@ -516,7 +517,7 @@ export const D = {
     blurText: t(
       'La fenêtre a perdu le focus. Revenez sur l’application pour réafficher la leçon.',
       'The window lost focus. Come back to the app to show the lesson again.',
-      '窗口已失去焦点。返回应用即可重新显示课程内容。',
+      '窗口已失去焦点。返回应用即可重新显示本课内容。',
     ),
     hiddenTitle: t('Onglet en arrière-plan', 'Tab in background', '标签页处于后台'),
     hiddenText: t(
@@ -615,6 +616,6 @@ export const D = {
     'visibility-hidden': t('Onglet masqué, contenu protégé', 'Tab hidden, content protected', '标签页隐藏，内容受保护'),
     'quiz-passed': t('Quiz réussi', 'Quiz passed', '测验通过'),
     'quiz-failed': t('Quiz échoué', 'Quiz failed', '测验未通过'),
-    'lesson-completed': t('Leçon terminée', 'Lesson completed', '课程已完成'),
+    'lesson-completed': t('Leçon terminée', 'Lesson completed', '本课已完成'),
   },
 } as const;

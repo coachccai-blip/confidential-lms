@@ -158,10 +158,10 @@ export const conjugaisonCourse: Course = {
               caption: t('Le décalage à appliquer', 'The shift to apply', '需要应用的时态推移'),
               headers: [t('Discours direct', 'Direct speech', '直接引语'), t('Discours rapporté au passé', 'Reported in the past', '过去时转述')],
               rows: [
-                [t('présent : « Je pars. »', 'present: “Je pars.”', '现在时：« Je pars. »'), t('imparfait : il a dit qu’il partait.', 'imperfect: il a dit qu’il partait.', '未完成过去时：il a dit qu’il partait.')],
-                [t('passé composé : « J’ai fini. »', 'passé composé: “J’ai fini.”', '复合过去时：« J’ai fini. »'), t('plus-que-parfait : il a dit qu’il avait fini.', 'pluperfect: il a dit qu’il avait fini.', '愈过去时：il a dit qu’il avait fini.')],
-                [t('futur : « Je viendrai. »', 'future: “Je viendrai.”', '简单将来时：« Je viendrai. »'), t('conditionnel : il a dit qu’il viendrait.', 'conditional: il a dit qu’il viendrait.', '条件式：il a dit qu’il viendrait.')],
-                [t('impératif : « Viens ! »', 'imperative: “Viens !”', '命令式：« Viens ! »'), t('de + infinitif : il m’a dit de venir.', 'de + infinitive: il m’a dit de venir.', 'de + 不定式：il m’a dit de venir.')],
+                [t('présent : « Je pars. »', 'present: “Je pars.”', '现在时：“Je pars.”'), t('imparfait : il a dit qu’il partait.', 'imperfect: il a dit qu’il partait.', '未完成过去时：il a dit qu’il partait.')],
+                [t('passé composé : « J’ai fini. »', 'passé composé: “J’ai fini.”', '复合过去时：“J’ai fini.”'), t('plus-que-parfait : il a dit qu’il avait fini.', 'pluperfect: il a dit qu’il avait fini.', '愈过去时：il a dit qu’il avait fini.')],
+                [t('futur : « Je viendrai. »', 'future: “Je viendrai.”', '简单将来时：“Je viendrai.”'), t('conditionnel : il a dit qu’il viendrait.', 'conditional: il a dit qu’il viendrait.', '条件式：il a dit qu’il viendrait.')],
+                [t('impératif : « Viens ! »', 'imperative: “Viens !”', '命令式：“Viens !”'), t('de + infinitif : il m’a dit de venir.', 'de + infinitive: il m’a dit de venir.', 'de + 不定式：il m’a dit de venir.')],
               ],
             },
             {
@@ -226,10 +226,10 @@ export const conjugaisonCourse: Course = {
               type: 'keyvalues',
               title: t('Qui fait quoi', 'Who does what', '各司其职'),
               entries: [
-                { label: t('Futur proche', 'Near future', '最近将来时'), value: t('aller + infinitif. Événement imminent ou certain : « Il va pleuvoir. » Domine à l’oral.', 'aller + infinitive. Imminent or certain event: “Il va pleuvoir.” Dominant in speech.', 'aller + 不定式。即将或必然发生：« Il va pleuvoir. »，口语中最常用。') },
-                { label: t('Futur simple', 'Simple future', '简单将来时'), value: t('Prévision, promesse, programme. Préféré à l’écrit : « Le rapport sera publié en mai. »', 'Prediction, promise, schedule. Preferred in writing: “Le rapport sera publié en mai.”', '预测、承诺、安排。书面语首选：« Le rapport sera publié en mai. »') },
-                { label: t('Conditionnel présent', 'Present conditional', '现在条件式'), value: t('Politesse, hypothèse, souhait, information non confirmée : « Il y aurait vingt blessés. »', 'Politeness, hypothesis, wish, unconfirmed information: “Il y aurait vingt blessés.”', '礼貌、假设、愿望、未证实信息：« Il y aurait vingt blessés. »') },
-                { label: t('Conditionnel passé', 'Past conditional', '过去条件式'), value: t('Regret ou reproche : « J’aurais dû partir plus tôt. »', 'Regret or reproach: “J’aurais dû partir plus tôt.”', '遗憾或责备：« J’aurais dû partir plus tôt. »') },
+                { label: t('Futur proche', 'Near future', '最近将来时'), value: t('aller + infinitif. Événement imminent ou certain : « Il va pleuvoir. » Domine à l’oral.', 'aller + infinitive. Imminent or certain event: “Il va pleuvoir.” Dominant in speech.', 'aller + 不定式。即将或必然发生：“Il va pleuvoir.”，口语中最常用。') },
+                { label: t('Futur simple', 'Simple future', '简单将来时'), value: t('Prévision, promesse, programme. Préféré à l’écrit : « Le rapport sera publié en mai. »', 'Prediction, promise, schedule. Preferred in writing: “Le rapport sera publié en mai.”', '预测、承诺、安排。书面语首选：“Le rapport sera publié en mai.”') },
+                { label: t('Conditionnel présent', 'Present conditional', '现在条件式'), value: t('Politesse, hypothèse, souhait, information non confirmée : « Il y aurait vingt blessés. »', 'Politeness, hypothesis, wish, unconfirmed information: “Il y aurait vingt blessés.”', '礼貌、假设、愿望、未证实信息：“Il y aurait vingt blessés.”') },
+                { label: t('Conditionnel passé', 'Past conditional', '过去条件式'), value: t('Regret ou reproche : « J’aurais dû partir plus tôt. »', 'Regret or reproach: “J’aurais dû partir plus tôt.”', '遗憾或责备：“J’aurais dû partir plus tôt.”') },
               ],
             },
             {

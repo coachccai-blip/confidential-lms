@@ -68,6 +68,7 @@ export function GlossaryProvider({ children }: { readonly children: ReactNode })
 
             {entry.example ? (
               <div className="modal__example">
+                <span className="modal__example-label">{l(D.glossary.example)}</span>
                 <q>{entry.example.fr}</q>
                 <span>{l(entry.example.gloss)}</span>
               </div>

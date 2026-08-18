@@ -3,27 +3,16 @@ import type { SecurityEventType } from '@lms/core';
 
 export type ShieldReason = 'blur' | 'hidden' | 'print' | null;
 
-export interface ProtectionMessage {
-  readonly title: string;
-  readonly text: string;
-}
-
-/** Libellés fournis par l'appelant : la couche protection reste sans langue. */
-export interface ProtectionMessages {
-  readonly clipboardNotice: string;
-  readonly copy: ProtectionMessage;
-  readonly save: ProtectionMessage;
-  readonly print: ProtectionMessage;
-  readonly screenshot: ProtectionMessage;
-  readonly devtools: ProtectionMessage;
-}
+/** Nature de l'avertissement à présenter : l'appelant choisit les mots. */
+export type ProtectionNotice = 'copy' | 'save' | 'print' | 'screenshot' | 'devtools';
 
 export interface ProtectionOptions {
   readonly enabled: boolean;
   readonly fingerprint: string;
-  readonly messages: ProtectionMessages;
+  /** Avertissement déposé dans le presse-papiers, déjà dans la langue voulue. */
+  readonly clipboardNotice: string;
   readonly onEvent: (type: SecurityEventType, metadata?: Record<string, string | number | boolean>) => void;
-  readonly onNotice: (notice: { readonly tone: 'warning' | 'danger' | 'info'; readonly title: string; readonly text: string }) => void;
+  readonly onNotice: (notice: ProtectionNotice) => void;
 }
 
 /** Delai avant masquage sur perte de focus (evite le clignotement). */
@@ -41,7 +30,7 @@ const DEVTOOLS_DELTA_PX = 170;
  * (`setContentProtection`) ou Android (`FLAG_SECURE`).
  */
 export function useContentProtection(options: ProtectionOptions): { readonly shieldReason: ShieldReason } {
-  const { enabled, fingerprint, messages, onEvent, onNotice } = options;
+  const { enabled, fingerprint, clipboardNotice, onEvent, onNotice } = options;
   const [shieldReason, setShieldReason] = useState<ShieldReason>(null);
   const blurTimer = useRef<number | null>(null);
   const devtoolsFlagged = useRef(false);
@@ -54,14 +43,14 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
     }
 
     /** Evite d'empiler deux avertissements pour un meme geste. */
-    function notify(payload: { tone: 'warning' | 'danger' | 'info'; title: string; text: string }) {
+    function notify(payload: ProtectionNotice) {
       const now = Date.now();
       if (now - lastNoticeAt.current < 1500) return;
       lastNoticeAt.current = now;
       onNotice(payload);
     }
 
-    const notice = `${messages.clipboardNotice}\n${fingerprint}`;
+    const notice = `${clipboardNotice}\n${fingerprint}`;
 
     function onContextMenu(event: MouseEvent) {
       event.preventDefault();
@@ -73,7 +62,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       // Le presse-papiers recoit l'avertissement filigrane, pas le contenu.
       event.clipboardData?.setData('text/plain', notice);
       onEvent('copy-blocked');
-      notify({ tone: 'warning', ...messages.copy });
+      notify('copy');
     }
 
     function onCut(event: ClipboardEvent) {
@@ -96,7 +85,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
     function onBeforePrint() {
       setShieldReason('print');
       onEvent('print-blocked');
-      notify({ tone: 'danger', ...messages.print });
+      notify('print');
       window.setTimeout(() => setShieldReason((current) => (current === 'print' ? null : current)), 2500);
     }
 
@@ -109,7 +98,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
         if (target?.closest('input, textarea')) return;
         event.preventDefault();
         onEvent('copy-blocked', { raccourci: `${event.ctrlKey ? 'Ctrl' : 'Cmd'}+${key.toUpperCase()}` });
-        notify({ tone: 'warning', ...messages.copy });
+        notify('copy');
       }
 
       if (meta && key === 'p') {
@@ -120,7 +109,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       if (meta && ['s', 'u'].includes(key)) {
         event.preventDefault();
         onEvent('save-blocked', { raccourci: key.toUpperCase() });
-        notify({ tone: 'warning', ...messages.save });
+        notify('save');
       }
 
       if (key === 'f12' || (meta && event.shiftKey && ['i', 'j', 'c'].includes(key))) {
@@ -130,7 +119,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
 
       if (key === 'printscreen') {
         onEvent('screenshot-shortcut');
-        notify({ tone: 'danger', ...messages.screenshot });
+        notify('screenshot');
         // Tentative best-effort de neutralisation du presse-papiers.
         void navigator.clipboard?.writeText(notice).catch(() => undefined);
       }
@@ -165,7 +154,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       if (suspicious && !devtoolsFlagged.current) {
         devtoolsFlagged.current = true;
         onEvent('devtools-suspected', { ecartX: widthGap, ecartY: heightGap });
-        notify({ tone: 'danger', ...messages.devtools });
+        notify('devtools');
       }
       if (!suspicious) devtoolsFlagged.current = false;
     }
@@ -203,7 +192,7 @@ export function useContentProtection(options: ProtectionOptions): { readonly shi
       window.removeEventListener('focus', onFocus);
       window.removeEventListener('resize', onResize);
     };
-  }, [enabled, fingerprint, messages, onEvent, onNotice]);
+  }, [enabled, fingerprint, clipboardNotice, onEvent, onNotice]);
 
   return { shieldReason };
 }

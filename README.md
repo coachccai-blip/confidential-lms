@@ -91,6 +91,13 @@ traductions côte à côte (`apps/web/src/i18n/dictionary.ts`). Il n'existe pas 
 susceptible de diverger d'un `fr.json` — **une clé manquante est une erreur de compilation**, pas
 un texte non traduit en production.
 
+Le typage garantit qu'aucune langue ne manque ; neuf tests (`apps/web/src/i18n/i18n.test.ts`)
+garantissent en plus que les trois versions **disent la même chose**. Ils parcourent les 1 392
+chaînes du produit — interface, cours, quiz, glossaire — et échouent si une traduction est vide,
+si les nombres annoncés divergent d'une langue à l'autre, si un texte chinois cite le français
+avec des chevrons `« »` au lieu de guillemets `“ ”`, ou si un terme clé change de rendu d'un
+écran à l'autre (« parcours » doit toujours donner *course* et 课程, jamais *path* ni 路径).
+
 Le choix de langue est mémorisé avec le reste de l'état, met à jour l'attribut `lang` du document
 et pilote le formatage des dates et des nombres via `Intl`.
 
@@ -279,7 +286,7 @@ manuelle sur les quatre systèmes.
 | §5 Tableau de bord admin et journal | ✅ (données de démonstration) |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
-| §8 TypeScript strict, tests sur sessions et protections | ✅ 51 tests |
+| §8 TypeScript strict, tests sur sessions et protections | ✅ 60 tests |
 | §8 README documentant honnêtement les limites | ✅ ce document |
 | §8 Budget services tiers = 0 € | ✅ aucune dépendance payante, aucun appel réseau externe |
 
@@ -290,7 +297,7 @@ manuelle sur les quatre systèmes.
 ```bash
 pnpm install
 pnpm dev          # serveur de développement Vite
-pnpm test         # 51 tests unitaires sur la logique métier et les protections
+pnpm test         # 60 tests : logique métier, protections et cohérence trilingue
 pnpm typecheck    # TypeScript strict sur les deux paquets
 pnpm build        # build de production dans apps/web/dist
 ```

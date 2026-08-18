@@ -2,4 +2,4 @@ export { Watermark } from './Watermark';
 export { Shield } from './Shield';
 export { ProtectedText } from './ProtectedText';
 export { useProtectedScreen } from './useProtectedScreen';
-export { useContentProtection, type ProtectionMessages, type ShieldReason } from './useContentProtection';
+export { useContentProtection, type ProtectionNotice, type ShieldReason } from './useContentProtection';

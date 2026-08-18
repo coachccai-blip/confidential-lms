@@ -381,7 +381,7 @@ const entries: readonly GlossaryEntry[] = [
     definition: t(
       'Niveau de langue adapté à la situation : familier, courant ou soutenu.',
       'The level of language suited to the situation: informal, standard or formal.',
-      '适合具体场合的语言层次：口语、通用语或书面语。',
+      '适合具体场合的语言层次：口语体、通用语体或正式语体。',
     ),
     example: {
       fr: 'bagnole (familier) / voiture (courant) / automobile (soutenu)',
@@ -719,7 +719,7 @@ const entries: readonly GlossaryEntry[] = [
     definition: t(
       'Mouvement argumentatif qui admet un point adverse avant de le dépasser : « certes…, mais… ».',
       'An argumentative move that concedes an opposing point before overriding it: “certes…, mais…”.',
-      '先承认对方观点、再加以反驳的论证方式：“certes…, mais…”。',
+      '先承认对方观点、再加以超越的论证方式：“certes…, mais…”。',
     ),
     example: {
       fr: 'Certes, le coût est élevé ; il reste cependant inférieur aux bénéfices attendus.',

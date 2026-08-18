@@ -1,33 +1,39 @@
 import { useCallback, useMemo } from 'react';
 import { D, useI18n } from '../i18n';
 import { useApp } from '../state/app-context';
-import { useContentProtection, type ProtectionMessages, type ShieldReason } from './useContentProtection';
+import { useContentProtection, type ProtectionNotice, type ShieldReason } from './useContentProtection';
+
+const NOTICES = {
+  copy: { tone: 'warning', title: D.toast.copyTitle, text: D.toast.copyText },
+  save: { tone: 'warning', title: D.toast.saveTitle, text: D.toast.saveText },
+  print: { tone: 'danger', title: D.toast.printTitle, text: D.toast.printText },
+  screenshot: { tone: 'danger', title: D.toast.screenshotTitle, text: D.toast.screenshotText },
+  devtools: { tone: 'danger', title: D.toast.devtoolsTitle, text: D.toast.devtoolsText },
+} as const;
 
 /**
- * Active la couche de protection sur un écran de contenu, avec des libellés
- * dans la langue de l'apprenant.
+ * Active la couche de protection sur un écran de contenu.
+ *
+ * La couche elle-même ne connaît aucune langue : elle signale une intention
+ * (« copie bloquée »), et c'est ici qu'on choisit les mots. Les notifications
+ * suivent donc la langue courante, même si elle change après coup.
  */
 export function useProtectedScreen(): { readonly shieldReason: ShieldReason } {
   const { fingerprint, logEvent, pushToast } = useApp();
   const { l } = useI18n();
 
-  const messages = useMemo<ProtectionMessages>(
-    () => ({
-      clipboardNotice: `${l(D.brand.name)} — ${l(D.course.protectedBanner)}`,
-      copy: { title: l(D.toast.copyTitle), text: l(D.toast.copyText) },
-      save: { title: l(D.toast.saveTitle), text: l(D.toast.saveText) },
-      print: { title: l(D.toast.printTitle), text: l(D.toast.printText) },
-      screenshot: { title: l(D.toast.screenshotTitle), text: l(D.toast.screenshotText) },
-      devtools: { title: l(D.toast.devtoolsTitle), text: l(D.toast.devtoolsText) },
-    }),
+  const clipboardNotice = useMemo(
+    () => `${l(D.brand.name)} — ${l(D.course.protectedBanner)}`,
     [l],
   );
 
   const onNotice = useCallback(
-    (notice: { tone: 'warning' | 'danger' | 'info'; title: string; text: string }) =>
-      pushToast({ tone: notice.tone, title: notice.title, text: notice.text }),
+    (notice: ProtectionNotice) => {
+      const message = NOTICES[notice];
+      pushToast({ tone: message.tone, title: message.title, text: message.text });
+    },
     [pushToast],
   );
 
-  return useContentProtection({ enabled: true, fingerprint, messages, onEvent: logEvent, onNotice });
+  return useContentProtection({ enabled: true, fingerprint, clipboardNotice, onEvent: logEvent, onNotice });
 }

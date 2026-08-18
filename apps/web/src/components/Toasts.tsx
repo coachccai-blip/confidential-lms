@@ -1,4 +1,5 @@
 import { useApp } from '../state/app-context';
+import { useI18n } from '../i18n';
 import { IconAlert, IconCheck, IconInfo, IconShield } from './Icons';
 
 const ICONS = {
@@ -10,6 +11,7 @@ const ICONS = {
 
 export function Toasts() {
   const { toasts } = useApp();
+  const { l } = useI18n();
   if (toasts.length === 0) return null;
 
   return (
@@ -22,8 +24,8 @@ export function Toasts() {
               <Icon size={16} />
             </span>
             <div>
-              <div className="toast__title">{toast.title}</div>
-              {toast.text ? <div className="toast__text">{toast.text}</div> : null}
+              <div className="toast__title">{l(toast.title)}</div>
+              {toast.text ? <div className="toast__text">{l(toast.text)}</div> : null}
             </div>
           </div>
         );

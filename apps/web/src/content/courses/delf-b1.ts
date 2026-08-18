@@ -52,7 +52,7 @@ export const delfB1Course: Course = {
               caption: t('Déroulé de la journée', 'How the day runs', '考试当天流程'),
               headers: [t('Épreuve', 'Paper', '科目'), t('Durée', 'Duration', '时长'), t('Points', 'Marks', '分值'), t('Ce qui est évalué', 'What is assessed', '考查内容')],
               rows: [
-                [t('Compréhension de l’oral', 'Listening', '听力理解'), t('≈ 25 min', '≈ 25 min', '约 25 分钟'), t('25', '25', '25'), t('3 documents, 2 écoutes pour deux d’entre eux', '3 recordings, two of them played twice', '3 段录音，其中两段播放两遍')],
+                [t('Compréhension de l’oral', 'Listening', '听力理解'), t('≈ 25 min', '≈ 25 min', '约 25 分钟'), t('25', '25', '25'), t('3 documents, dont deux sont écoutés deux fois', '3 recordings, two of them played twice', '3 段录音，其中两段播放两遍')],
                 [t('Compréhension des écrits', 'Reading', '阅读理解'), t('35 min', '35 min', '35 分钟'), t('25', '25', '25'), t('2 textes : repérage d’informations et analyse', '2 texts: locating information and analysis', '2 篇文章：信息定位与分析')],
                 [t('Production écrite', 'Writing', '书面表达'), t('45 min', '45 min', '45 分钟'), t('25', '25', '25'), t('160 mots minimum : essai, courrier ou article', 'minimum 160 words: essay, letter or article', '不少于 160 词：短文、书信或文章')],
                 [t('Production orale', 'Speaking', '口语表达'), t('15 min + 10 min de préparation', '15 min + 10 min preparation', '15 分钟 + 10 分钟准备'), t('25', '25', '25'), t('3 parties : entretien, exercice en interaction, monologue', '3 parts: interview, role play, monologue', '3 部分：面谈、互动练习、独白')],

@@ -356,3 +356,24 @@
   color: var(--text-muted);
   background: var(--panel-2);
 }
+
+.modal__example-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 620;
+  color: var(--text-muted);
+}
+
+/* Guillemets de citation selon la langue du document : le français exige
+   des espaces insécables à l'intérieur des chevrons, l'anglais et le chinois
+   utilisent des guillemets courbes sans espace. */
+.modal__example q {
+  quotes: '“' '”' '‘' '’';
+}
+
+:lang(fr) .modal__example q {
+  quotes: '«\00a0' '\00a0»' '“' '”';
+}

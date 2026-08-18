@@ -192,7 +192,8 @@ export function AccountPage() {
                           <span className="badge badge--success">{l(D.account.stateActive)}</span>
                         ) : session.revokedAt ? (
                           <span className="badge badge--danger">
-                            {l(D.account.stateRevoked)} · {session.revokedReason}
+                            {l(D.account.stateRevoked)}
+                            {session.revokedReason ? ` · ${l(D.account.revokedReason[session.revokedReason])}` : ''}
                           </span>
                         ) : (
                           <span className="badge">{l(D.account.stateExpired)}</span>

@@ -39,7 +39,7 @@ const grammaire: Quiz = {
       prompt: t(
         'Complétez : « Les lettres que j’ai … hier sont parties. »',
         'Complete: “Les lettres que j’ai … hier sont parties.”',
-        '填空：« Les lettres que j’ai … hier sont parties. »',
+        '填空：“Les lettres que j’ai … hier sont parties.”',
       ),
       explanation: t(
         'Le COD « que » (= les lettres) est placé avant le verbe : le participe s’accorde au féminin pluriel → écrites.',
@@ -81,7 +81,7 @@ const grammaire: Quiz = {
       prompt: t(
         'Complétez : « Voici le dossier … je vous ai parlé. »',
         'Complete: “Voici le dossier … je vous ai parlé.”',
-        '填空：« Voici le dossier … je vous ai parlé. »',
+        '填空：“Voici le dossier … je vous ai parlé.”',
       ),
       explanation: t(
         'On dit « parler de quelque chose » : la construction avec « de » impose le pronom relatif « dont ».',
@@ -199,7 +199,7 @@ const conjugaison: Quiz = {
       prompt: t(
         'Complétez : « Tous les étés, nous … à la mer. »',
         'Complete: “Tous les étés, nous … à la mer.”',
-        '填空：« Tous les étés, nous … à la mer. »',
+        '填空：“Tous les étés, nous … à la mer.”',
       ),
       explanation: t(
         '« Tous les étés » indique une habitude passée : l’imparfait s’impose → nous allions.',
@@ -225,7 +225,7 @@ const conjugaison: Quiz = {
       explanation: t(
         'Le plus-que-parfait : « Quand je suis arrivé, il était déjà parti. »',
         'The pluperfect: “Quand je suis arrivé, il était déjà parti.”',
-        '愈过去时：« Quand je suis arrivé, il était déjà parti. »',
+        '愈过去时：“Quand je suis arrivé, il était déjà parti.”',
       ),
       answers: [
         { id: 'a', text: t('le plus-que-parfait', 'the pluperfect', '愈过去时'), correct: true },
@@ -246,7 +246,7 @@ const conjugaison: Quiz = {
       explanation: t(
         'Faux. Après « si » d’hypothèse : présent, imparfait ou plus-que-parfait, jamais le conditionnel. « Si j’avais le temps, je viendrais. »',
         'False. After hypothetical “si”: present, imperfect or pluperfect, never the conditional. “Si j’avais le temps, je viendrais.”',
-        '错误。表假设的“si”之后用现在时、未完成过去时或愈过去时，绝不用条件式。« Si j’avais le temps, je viendrais. »',
+        '错误。表假设的“si”之后用现在时、未完成过去时或愈过去时，绝不用条件式。“Si j’avais le temps, je viendrais.”',
       ),
       answers: [
         { id: 'v', text: t('Vrai', 'True', '正确'), correct: false },
@@ -302,7 +302,7 @@ const conjugaison: Quiz = {
       prompt: t(
         'Discours rapporté : « Il a dit : “Je viendrai.” » devient…',
         'Reported speech: “Il a dit : ‘Je viendrai.’” becomes…',
-        '转述引语：« Il a dit : “Je viendrai.” » 变为……',
+        '转述引语：“Il a dit : ‘Je viendrai.’”变为……',
       ),
       explanation: t(
         'Après un verbe introducteur au passé, le futur devient conditionnel : il a dit qu’il viendrait.',
@@ -344,7 +344,7 @@ const conjugaison: Quiz = {
       prompt: t(
         'Que signifie « J’aurais dû partir plus tôt » ?',
         'What does “J’aurais dû partir plus tôt” mean?',
-        '« J’aurais dû partir plus tôt » 表达什么？',
+        '“J’aurais dû partir plus tôt” 表达什么？',
       ),
       explanation: t(
         'Le conditionnel passé exprime ici le regret ou le reproche : je ne suis pas parti assez tôt, et je le regrette.',
@@ -601,7 +601,7 @@ const delfB2: Quiz = {
       id: 'b2q4',
       kind: 'single',
       points: 1,
-      prompt: t('Que veut dire « Ce n’est pas un franc succès » ?', 'What does “Ce n’est pas un franc succès” mean?', '« Ce n’est pas un franc succès » 是什么意思？'),
+      prompt: t('Que veut dire « Ce n’est pas un franc succès » ?', 'What does “Ce n’est pas un franc succès” mean?', '“Ce n’est pas un franc succès” 是什么意思？'),
       explanation: t(
         'C’est une litote : en niant le contraire, l’auteur signifie qu’il s’agit d’un échec.',
         'It is litotes: by negating the opposite, the author means it is a failure.',

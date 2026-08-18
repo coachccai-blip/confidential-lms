@@ -84,8 +84,8 @@ export function QuizPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     pushToast({
       tone: graded.passed ? 'success' : 'warning',
-      title: graded.passed ? l(D.quiz.toastPassed) : l(D.quiz.toastFailed),
-      text: l(D.quiz.toastScore(graded.percentage, quiz.passingScore)),
+      title: graded.passed ? D.quiz.toastPassed : D.quiz.toastFailed,
+      text: D.quiz.toastScore(graded.percentage, quiz.passingScore),
     });
   }
 

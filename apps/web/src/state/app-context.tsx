@@ -23,11 +23,13 @@ import {
   type SecurityEvent,
   type SecurityEventType,
   type Locale,
+  type LocalizedText,
   type SessionToken,
   type User,
 } from '@lms/core';
 import { EMPTY_STATE, STORAGE_KEY, clearState, loadState, saveState, type PersistedState, type ThemeName } from './storage';
 import { LOCALE_TAGS } from '@lms/core';
+import { D } from '../i18n/dictionary';
 
 /** Duree d'un jeton d'acces : 15 minutes (brief section 3). */
 const ACCESS_TOKEN_TTL_MS = 15 * 60 * 1000;
@@ -35,8 +37,9 @@ const ACCESS_TOKEN_TTL_MS = 15 * 60 * 1000;
 export interface Toast {
   readonly id: string;
   readonly tone: 'info' | 'success' | 'warning' | 'danger';
-  readonly title: string;
-  readonly text?: string;
+  /** Localisé, jamais résolu : la notification suit la langue en cours. */
+  readonly title: LocalizedText;
+  readonly text?: LocalizedText;
 }
 
 export interface SignInInput {
@@ -247,8 +250,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       if (revokedCount > 0) {
         pushToast({
           tone: 'warning',
-          title: 'Session unique appliquée',
-          text: `${revokedCount} session(s) active(s) ont été révoquées par cette connexion.`,
+          title: D.toast.singleSessionTitle,
+          text: D.toast.singleSessionText(revokedCount),
         });
       }
 
@@ -291,7 +294,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
           currentSessionId: isCurrent ? null : previous.currentSessionId,
         };
       });
-      pushToast({ tone: 'info', title: 'Appareil retiré', text: 'Ses sessions actives ont été révoquées.' });
+      pushToast({ tone: 'info', title: D.toast.deviceRemovedTitle, text: D.toast.deviceRemovedText });
     },
     [appendEvent, pushToast],
   );
@@ -379,7 +382,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
   const resetDemo = useCallback(() => {
     clearState();
     setState({ ...EMPTY_STATE, theme: state.theme });
-    pushToast({ tone: 'info', title: 'Démonstration réinitialisée', text: 'Progression, appareils et journal effacés.' });
+    pushToast({ tone: 'info', title: D.toast.resetTitle, text: D.toast.resetText });
   }, [pushToast, state.theme]);
 
   /**
@@ -395,8 +398,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         setState({ ...next, currentSessionId: null });
         pushToast({
           tone: 'danger',
-          title: 'Session révoquée',
-          text: 'Une nouvelle connexion a été détectée sur ce compte. Une seule session est autorisée.',
+          title: D.toast.sessionRevokedTitle,
+          text: D.toast.sessionRevokedText,
         });
       } else {
         setState(next);

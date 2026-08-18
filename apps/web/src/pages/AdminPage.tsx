@@ -60,14 +60,20 @@ export function AdminPage() {
   const averageProgress = Math.round(rows.reduce((sum, row) => sum + row.progress, 0) / rows.length);
   const atRisk = rows.filter((row) => row.risk >= 25).length;
 
+  const YES = l(D.admin.yes);
+  const NO = l(D.common.none);
   const matrix = [
-    { measure: l(D.account.protections[7]), values: ['—', 'setContentProtection', 'FLAG_SECURE / iOS'] },
-    { measure: l(D.account.protections[2]), values: ['Oui', 'Oui', 'Oui'] },
-    { measure: l(D.account.protections[3]), values: ['Oui', 'Oui', '—'] },
-    { measure: l(D.account.protections[0]), values: ['Oui', 'Oui', 'Oui'] },
-    { measure: l(D.account.protections[1]), values: ['Oui', 'Oui', 'Oui'] },
-    { measure: l(D.account.protections[5]), values: ['Best-effort', 'Best-effort', 'iOS : capturedDidChange'] },
+    { measure: l(D.account.protections[7]), values: [NO, 'setContentProtection', 'FLAG_SECURE / iOS'] },
+    { measure: l(D.account.protections[2]), values: [YES, YES, YES] },
+    { measure: l(D.account.protections[3]), values: [YES, YES, NO] },
+    { measure: l(D.account.protections[0]), values: [YES, YES, YES] },
+    { measure: l(D.account.protections[1]), values: [YES, YES, YES] },
+    {
+      measure: l(D.account.protections[5]),
+      values: [l(D.admin.bestEffort), l(D.admin.bestEffort), 'iOS : capturedDidChange'],
+    },
   ];
+
 
   return (
     <AppShell title={l(D.nav.admin)} crumb={l(D.nav.administration)} wide>

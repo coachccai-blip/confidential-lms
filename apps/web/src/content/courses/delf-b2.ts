@@ -6,7 +6,6 @@ const ID = 'crs_delf_b2';
 export const delfB2Course: Course = {
   id: ID,
   slug: 'delf-b2',
-  category: 'delf-b2',
   level: 'B2',
   accentFrom: '#38bdf8',
   accentTo: '#4338ca',

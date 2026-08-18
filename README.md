@@ -1,8 +1,8 @@
 # Lumière — LMS de français à contenu protégé
 
 Plateforme de cours de français dont le contenu est **trilingue** (français, anglais, chinois),
-**filigrané par apprenant** et dont les gestes de copie sont **bloqués et journalisés**. Six
-parcours couvrent la grammaire, la conjugaison et la préparation aux quatre diplômes DELF et DALF.
+**filigrané par apprenant** et dont les gestes de copie sont **bloqués et journalisés**. Le
+catalogue couvre les six niveaux du CECRL, de A1 à C2, à raison de trois cours complets par palier.
 
 **➜ Démonstration en ligne : https://coachccai-blip.github.io/confidential-lms/**
 
@@ -26,7 +26,7 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 | Application apprenant complète (catalogue, lecteur, quiz, progression, compte) | ✅ Fonctionnel |
 | Interface **et** contenu en français, anglais et chinois | ✅ Fonctionnel |
 | Glossaire : mots difficiles cliquables, définis dans les trois langues | ✅ 49 entrées |
-| Six parcours de français, 24 leçons, 6 quiz notés (48 questions) | ✅ Contenu réel et complet |
+| 18 cours de français rangés par niveau (A1 → C2), 78 étapes, 18 quiz notés | ✅ Contenu réel et complet |
 | Toutes les protections réalisables dans un navigateur | ✅ Fonctionnel |
 | Filigrane visible mobile + filigrane invisible par apprenant | ✅ Fonctionnel |
 | Session unique, limite de 3 appareils, journal de sécurité | ✅ Fonctionnel, **simulé côté client** |
@@ -46,18 +46,31 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 
 ## 2. Le catalogue
 
-Six parcours, du seuil d'autonomie à la maîtrise, couvrant les niveaux B1 à C2 du CECRL.
+Le **niveau du CECRL est la catégorie** : dix-huit cours, trois par palier, du débutant complet
+à la maîtrise.
 
-| Catégorie | Parcours | Niveau | Contenu |
-|---|---|---|---|
-| Grammaire | Grammaire française essentielle | B1 | Genre des noms · accord du participe passé · pronoms relatifs · connecteurs logiques |
-| Conjugaison | Les temps qui comptent | B1 | Imparfait vs passé composé · plus-que-parfait et concordance · futur et conditionnel · subjonctif |
-| DELF B1 | Préparation au DELF B1 | B1 | Format et barème · méthode des compréhensions · production écrite · production orale |
-| DELF B2 | Préparation au DELF B2 | B2 | Essai argumenté · lettre formelle · repérage de l'implicite · monologue et débat |
-| DALF C1 | Préparation au DALF C1 | C1 | Lecture croisée des documents · rédaction de la synthèse · exposé sur dossier · registre soutenu |
-| DALF C2 | Préparation au DALF C2 | C2 | Compte rendu oral · reformulation avancée · article structuré · style, ironie, implicite |
+| Niveau | Cours | Contenu |
+|---|---|---|
+| **A1 · Découverte** | Premiers mots, premières phrases | Saluer et prendre congé · se présenter et épeler · compter, l'heure et la date |
+| | Le présent des verbes du quotidien | Être et avoir · les verbes en -er · aller, faire, venir et le futur proche |
+| | Nommer les choses : articles, genre et nombre | Le système des articles · le pluriel · question et négation |
+| **A2 · Survie** | Raconter au passé : composé et imparfait | Choix de l'auxiliaire et accord · l'imparfait · décor contre événement |
+| | Se repérer : lieu, temps et quantité | Prépositions de lieu et pronom « y » · depuis / pendant / il y a / dans · quantités et pronom « en » |
+| | Décrire, comparer, donner son avis | Place et accord de l'adjectif · comparatif et superlatif · annoncer, justifier, nuancer |
+| **B1 · Seuil** | Grammaire française essentielle | Genre des noms · accord du participe passé · pronoms relatifs · connecteurs logiques |
+| | Conjugaison : les temps qui comptent | Imparfait vs passé composé · plus-que-parfait · futur et conditionnel · subjonctif |
+| | Préparation au DELF B1 | Format et barème · méthode des compréhensions · production écrite · production orale |
+| **B2 · Avancé** | Préparation au DELF B2 | Essai argumenté · lettre formelle · repérage de l'implicite · monologue et débat |
+| | Nuancer sa pensée | Subjonctif · système hypothétique à trois niveaux · concession et restriction |
+| | Le français professionnel | Courriel · prise de parole en réunion · CV, lettre de motivation, entretien |
+| **C1 · Autonome** | Préparation au DALF C1 | Lecture croisée · rédaction de la synthèse · exposé sur dossier · registre soutenu |
+| | Écrire à l'université | Méthode de la dissertation · synthèse de documents · style académique et modalisation |
+| | Comprendre le français parlé vite | Réductions de l'oral · quatre registres · litote, ironie, sous-entendus |
+| **C2 · Maîtrise** | Préparation au DALF C2 | Compte rendu oral · reformulation avancée · article structuré · style et implicite |
+| | Lire la littérature française | Temps du récit littéraire · figures de style · commentaire composé |
+| | France et francophonie | Institutions de la Ve République · références culturelles · variantes du français |
 
-Chaque parcours comprend **4 leçons** et **1 quiz noté** (8 questions, seuil 70 %, trois
+Chaque cours comprend **3 ou 4 leçons** et **1 quiz noté** (6 à 8 questions, seuil 70 %, trois
 tentatives, crédit partiel, correction commentée question par question).
 
 Les leçons utilisent des blocs typés adaptés à l'enseignement d'une langue : paragraphes,
@@ -230,7 +243,7 @@ confidential-lms/
 │       └── security.ts     # Catalogue d'événements, gravités, score de risque
 └── apps/web/               # Application React 19 + Vite, déployée sur Pages
     └── src/
-        ├── content/        # 6 parcours, 6 quiz, glossaire, 7 figures SVG
+        ├── content/        # 18 cours (A1 → C2), 18 quiz, glossaire, 7 figures SVG
         ├── i18n/           # Dictionnaire trilingue unique + hook useI18n
         ├── protection/     # Watermark, ProtectedText, Shield, useProtectedScreen
         ├── state/          # Contexte applicatif, persistance, session inter-onglets

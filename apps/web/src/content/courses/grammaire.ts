@@ -6,7 +6,6 @@ const ID = 'crs_grammaire';
 export const grammaireCourse: Course = {
   id: ID,
   slug: 'grammaire',
-  category: 'grammaire',
   level: 'B1',
   accentFrom: '#67e8f9',
   accentTo: '#2563eb',

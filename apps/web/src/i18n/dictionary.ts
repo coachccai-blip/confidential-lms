@@ -19,7 +19,6 @@ export const D = {
   common: {
     minutes: (n: number) => t(`${n} min`, `${n} min`, `${n} 分钟`),
     minutesRead: (n: number) => t(`${n} min de lecture`, `${n} min read`, `阅读 ${n} 分钟`),
-    remaining: (value: string) => t(`${value} restantes`, `${value} left`, `剩余 ${value}`),
     stepOf: (a: number, b: number) => t(`Étape ${a} / ${b}`, `Step ${a} / ${b}`, `第 ${a} / ${b} 步`),
     close: t('Fermer', 'Close', '关闭'),
     level: t('Niveau', 'Level', '级别'),
@@ -47,45 +46,45 @@ export const D = {
       t(`${a} / ${b} étapes · ${p} %`, `${a} / ${b} steps · ${p}%`, `${a} / ${b} 步 · ${p}%`),
   },
 
-  categories: {
-    grammaire: t('Grammaire', 'Grammar', '语法'),
-    conjugaison: t('Conjugaison', 'Conjugation', '动词变位'),
-    'delf-b1': t('Préparation DELF B1', 'DELF B1 preparation', 'DELF B1 备考'),
-    'delf-b2': t('Préparation DELF B2', 'DELF B2 preparation', 'DELF B2 备考'),
-    'dalf-c1': t('Préparation DALF C1', 'DALF C1 preparation', 'DALF C1 备考'),
-    'dalf-c2': t('Préparation DALF C2', 'DALF C2 preparation', 'DALF C2 备考'),
+  levels: {
+    A1: t('A1 · Découverte', 'A1 · Breakthrough', 'A1 · 入门'),
+    A2: t('A2 · Survie', 'A2 · Waystage', 'A2 · 基础'),
+    B1: t('B1 · Seuil', 'B1 · Threshold', 'B1 · 门槛'),
+    B2: t('B2 · Avancé', 'B2 · Vantage', 'B2 · 进阶'),
+    C1: t('C1 · Autonome', 'C1 · Effective proficiency', 'C1 · 熟练'),
+    C2: t('C2 · Maîtrise', 'C2 · Mastery', 'C2 · 精通'),
   },
 
-  categoryHints: {
-    grammaire: t(
-      'Les structures de la phrase française, expliquées puis mises en pratique.',
-      'The structures of the French sentence, explained then practised.',
-      '法语句子结构的讲解与实践。',
+  levelHints: {
+    A1: t(
+      'Se présenter, poser des questions simples, comprendre des phrases du quotidien.',
+      'Introduce yourself, ask simple questions, understand everyday phrases.',
+      '自我介绍、提出简单问题、听懂日常用语。',
     ),
-    conjugaison: t(
-      'Les temps et les modes qui comptent vraiment, du présent au subjonctif.',
-      'The tenses and moods that actually matter, from present to subjunctive.',
-      '从现在时到虚拟式，真正重要的时态与语式。',
+    A2: t(
+      'Raconter au passé, décrire, se repérer dans le temps et l’espace.',
+      'Talk about the past, describe things, find your way in time and space.',
+      '讲述过去、进行描述、把握时间与空间的表达。',
     ),
-    'delf-b1': t(
-      'Les quatre épreuves du DELF B1, méthode et entraînement.',
-      'The four DELF B1 papers: method and practice.',
-      'DELF B1 四项考试的方法与训练。',
+    B1: t(
+      'Se débrouiller seul, exprimer une opinion et la justifier, viser le DELF B1.',
+      'Manage on your own, state and justify an opinion, aim for the DELF B1.',
+      '独立应对日常、表达并论证观点、备考 DELF B1。',
     ),
-    'delf-b2': t(
-      'Argumenter, synthétiser, débattre : le niveau attendu au B2.',
-      'Argue, synthesise, debate: what B2 expects of you.',
-      '论证、综合、辩论：B2 级别的要求。',
+    B2: t(
+      'Argumenter, nuancer, tenir un échange professionnel, viser le DELF B2.',
+      'Argue, qualify, hold a professional exchange, aim for the DELF B2.',
+      '进行论证与细致表达、应对职场交流、备考 DELF B2。',
     ),
-    'dalf-c1': t(
-      'Synthèse de documents et exposé : les épreuves reines du C1.',
-      'Document synthesis and oral presentation: the core C1 papers.',
-      '文献综述与口头陈述：C1 的核心考试。',
+    C1: t(
+      'Synthétiser des sources, écrire et comprendre à un niveau académique.',
+      'Synthesise sources, write and understand at academic level.',
+      '综合多方材料，在学术层面读写与理解。',
     ),
-    'dalf-c2': t(
-      'Restituer, reformuler, convaincre : la maîtrise attendue au C2.',
-      'Report, reformulate, convince: the mastery C2 demands.',
-      '复述、改写、说服：C2 所要求的精通程度。',
+    C2: t(
+      'Restituer, styliser, convaincre : le français sans plafond.',
+      'Report, shape a style, convince: French with no ceiling.',
+      '复述、驾驭文体、以理服人：法语再无上限。',
     ),
   },
 
@@ -183,17 +182,17 @@ export const D = {
       '从上次中断处继续。每完成一步都会保存进度。',
     ),
     introNew: t(
-      'Six parcours vous attendent : grammaire, conjugaison et préparation aux quatre diplômes DELF et DALF.',
-      'Six courses are waiting: grammar, conjugation and preparation for the four DELF and DALF diplomas.',
-      '六门课程已就绪：语法、动词变位，以及四项 DELF 与 DALF 文凭备考。',
+      'Six niveaux vous attendent, du A1 au C2, avec trois cours complets par palier.',
+      'Six levels are waiting, from A1 to C2, with three complete courses at each step.',
+      '六个等级已就绪，从 A1 到 C2，每个等级各有三门完整课程。',
     ),
     statProgress: t('Progression globale', 'Overall progress', '总体进度'),
     statSteps: t('Étapes terminées', 'Steps completed', '已完成步骤'),
     statStepsHint: (n: number) => t(`sur ${n} parcours`, `across ${n} courses`, `覆盖 ${n} 门课程`),
     statQuizzes: t('Quiz réussis', 'Quizzes passed', '已通过测验'),
     statQuizzesHint: t('quiz notés du catalogue', 'graded quizzes in the catalogue', '课程目录中的评分测验'),
-    statTime: t('Temps restant estimé', 'Estimated time left', '预计剩余时间'),
-    statTimeHint: (n: number) => t(`${n} minutes de contenu`, `${n} minutes of content`, `${n} 分钟的内容`),
+    statCourses: t('Cours terminés', 'Courses completed', '已完成课程'),
+    statCoursesHint: (n: number) => t(`sur ${n} au catalogue`, `out of ${n} in the catalogue`, `目录共 ${n} 门`),
     resume: t('Reprendre', 'Resume', '继续学习'),
     start: t('Commencer', 'Start', '开始学习'),
     syllabus: t('Voir le sommaire', 'View syllabus', '查看目录'),

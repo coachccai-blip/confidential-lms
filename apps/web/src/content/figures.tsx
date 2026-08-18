@@ -299,7 +299,7 @@ function CefrScale({ locale }: FigureProps) {
       {levels.map((level, index) => {
         const x = 40 + index * 96;
         const y = 176 - level.h;
-        const covered = index >= 2;
+        const covered = true;
         return (
           <g key={level.code}>
             <rect
@@ -322,10 +322,10 @@ function CefrScale({ locale }: FigureProps) {
       })}
       <line x1="30" y1="178" x2="620" y2="178" stroke="var(--border-strong)" />
       <text x="30" y="26" style={TITLE}>
-        {l(t('Les six parcours couvrent les niveaux B1 à C2', 'The six paths cover levels B1 to C2', '六条路径覆盖 B1 至 C2 级别'))}
+        {l(t('Le catalogue couvre les six niveaux, du débutant à la maîtrise', 'The catalogue covers all six levels, from beginner to mastery', '课程目录覆盖全部六个级别，从零基础到精通'))}
       </text>
       <text x="30" y="212" style={SMALL}>
-        {l(t('Zones bleues : niveaux couverts par le catalogue.', 'Blue blocks: levels covered by the catalogue.', '蓝色区块：课程目录所覆盖的级别。'))}
+        {l(t('Trois cours par niveau, du premier mot à la maîtrise stylistique.', 'Three courses per level, from the first word to stylistic mastery.', '每个级别三门课程，从第一个单词到文体驾驭。'))}
       </text>
     </svg>
   );

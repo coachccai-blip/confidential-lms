@@ -49,6 +49,9 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
       return progress.started && !progress.finished;
     }) ?? courses[0];
 
+  // Le compteur du bandeau porte sur CE cours, pas sur le catalogue entier.
+  const currentProgress = currentCourse ? computeCourseProgress(currentCourse, state.progress) : null;
+
   const initials = (user?.displayName ?? 'AP')
     .split(' ')
     .map((part) => part.charAt(0))
@@ -112,9 +115,15 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
           <div className="side-course">
             <span className="side-course__label">{l(D.nav.inProgress)}</span>
             <span className="side-course__title">{currentCourse ? l(currentCourse.title) : ''}</span>
-            <ProgressBar value={percentage} thin />
+            <ProgressBar value={currentProgress?.percentage ?? 0} thin />
             <span style={{ fontSize: '0.72rem', color: 'var(--on-deep-muted)' }}>
-              {l(D.nav.stepsDone(completed, lessons.length, percentage))}
+              {l(
+                D.nav.stepsDone(
+                  currentProgress?.completed ?? 0,
+                  currentProgress?.total ?? 0,
+                  currentProgress?.percentage ?? 0,
+                ),
+              )}
             </span>
           </div>
         </nav>

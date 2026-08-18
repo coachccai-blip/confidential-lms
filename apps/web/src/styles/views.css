@@ -393,13 +393,22 @@
   flex-wrap: wrap;
 }
 
+/* Les titres de leçon sont longs : le bouton se limite à la moitié de la
+   largeur et laisse le texte passer à la ligne au lieu de déborder. */
+.lesson-nav .btn {
+  white-space: normal;
+  text-align: left;
+  max-width: 48%;
+}
+
 .lesson-nav__side {
   display: flex;
   flex-direction: column;
   gap: 2px;
   font-size: 0.78rem;
   color: var(--text-muted);
-  max-width: 46%;
+  min-width: 0;
+  line-height: 1.35;
 }
 
 @media (max-width: 1180px) {
@@ -523,6 +532,8 @@
   font-size: 1.02rem;
   color: var(--text);
   font-style: italic;
+  /* Certains modèles (courriel, dialogue) contiennent des sauts de ligne. */
+  white-space: pre-line;
 }
 
 .prose blockquote footer {

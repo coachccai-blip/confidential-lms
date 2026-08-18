@@ -23,7 +23,6 @@ const lesson = (id: string, moduleId: string, durationMin = 10) =>
 const course: Course = {
   id: 'crs_1',
   slug: 'test',
-  category: 'grammaire',
   title: L('Cours de test'),
   subtitle: L(''),
   description: L(''),

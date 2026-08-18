@@ -42,7 +42,9 @@
   --ocean-3: #2563eb; /* large */
   --ocean-4: #0b1f3a; /* profondeur */
   --ocean-5: #061323; /* abysse */
-  --accent-gradient: linear-gradient(135deg, var(--ocean-1), var(--ocean-3));
+  /* Les deux extrémités restent claires : le texte foncé des boutons primaires
+     garde un contraste suffisant sur toute la largeur du dégradé. */
+  --accent-gradient: linear-gradient(135deg, var(--ocean-1), var(--ocean-2));
 
   /* Surface profonde, commune aux deux thèmes : titres blancs garantis. */
   --deep: #071527;

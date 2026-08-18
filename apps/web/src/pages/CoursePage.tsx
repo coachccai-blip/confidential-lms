@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { bestScore, computeCourseProgress, estimatedRemainingMinutes, isQuizPassed } from '@lms/core';
+import { bestScore, computeCourseProgress, isQuizPassed } from '@lms/core';
 import { AppShell } from '../components/AppShell';
 import { ProgressBar, ProgressRing } from '../components/Progress';
 import { getCourseBySlug } from '../content';
 import { useApp } from '../state/app-context';
-import { D, formatDuration, useI18n } from '../i18n';
+import { D, useI18n } from '../i18n';
 import {
   IconAward,
   IconCheck,
@@ -20,14 +20,13 @@ import {
 export function CoursePage() {
   const { slug } = useParams();
   const { state } = useApp();
-  const { l, locale } = useI18n();
+  const { l } = useI18n();
   const course = getCourseBySlug(slug);
   const [collapsed, setCollapsed] = useState<readonly string[]>([]);
 
   if (!course || course.status !== 'published') return <Navigate to="/app" replace />;
 
   const progress = computeCourseProgress(course, state.progress);
-  const remaining = estimatedRemainingMinutes(course, state.progress);
   const resumeHref = progress.resumeLesson
     ? progress.resumeLesson.kind === 'quiz'
       ? `/app/cours/${course.slug}/quiz/${progress.resumeLesson.quizId}`
@@ -41,7 +40,7 @@ export function CoursePage() {
   }
 
   return (
-    <AppShell title={l(course.title)} crumb={l(D.categories[course.category])} wide>
+    <AppShell title={l(course.title)} crumb={l(D.levels[course.level])} wide>
       <section className="hero">
         <div
           className="hero__glow"
@@ -65,9 +64,6 @@ export function CoursePage() {
               <Link className="btn btn--primary btn--lg" to={resumeHref}>
                 <IconPlay size={15} /> {progress.started ? l(D.course.resume) : l(D.course.startFirst)}
               </Link>
-              <span className="badge">
-                <IconClock size={12} /> {l(D.common.remaining(formatDuration(remaining, locale)))}
-              </span>
               <span className="badge">
                 <IconList size={12} /> {l(D.course.steps(progress.total))}
               </span>

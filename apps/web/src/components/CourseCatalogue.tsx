@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { computeCourseProgress, type Course } from '@lms/core';
-import { CATEGORY_ORDER, courses } from '../content';
+import { LEVEL_ORDER, coursesByLevel } from '../content';
 import { useApp } from '../state/app-context';
 import { D, formatDuration, useI18n } from '../i18n';
 import { ProgressBar } from './Progress';
@@ -17,21 +17,21 @@ export function CourseCatalogue() {
 
   return (
     <div className="stack stack--loose">
-      {CATEGORY_ORDER.map((category) => {
-        const inCategory = courses.filter((course) => course.category === category);
-        if (inCategory.length === 0) return null;
+      {LEVEL_ORDER.map((level) => {
+        const inLevel = coursesByLevel(level);
+        if (inLevel.length === 0) return null;
 
         return (
-          <section key={category}>
+          <section key={level}>
             <div style={{ marginBottom: 'var(--space-4)' }}>
-              <h3>{l(D.categories[category])}</h3>
+              <h3>{l(D.levels[level])}</h3>
               <p className="muted" style={{ fontSize: '0.83rem', marginTop: 2 }}>
-                {l(D.categoryHints[category])}
+                {l(D.levelHints[level])}
               </p>
             </div>
 
             <div className="grid grid--3">
-              {inCategory.map((course) => {
+              {inLevel.map((course) => {
                 const progress = computeCourseProgress(course, state.progress);
                 return (
                   <Link className="course-card" to={`/app/cours/${course.slug}`} key={course.id}>

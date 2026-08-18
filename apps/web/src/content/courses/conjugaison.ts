@@ -6,7 +6,6 @@ const ID = 'crs_conjugaison';
 export const conjugaisonCourse: Course = {
   id: ID,
   slug: 'conjugaison',
-  category: 'conjugaison',
   level: 'B1',
   accentFrom: '#38bdf8',
   accentTo: '#1d4ed8',

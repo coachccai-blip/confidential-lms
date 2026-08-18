@@ -4,7 +4,7 @@ import { AppShell } from '../components/AppShell';
 import { ProgressBar, ProgressRing } from '../components/Progress';
 import { Figure, allLessons, courses, quizzes } from '../content';
 import { useApp } from '../state/app-context';
-import { D, formatDuration, useI18n } from '../i18n';
+import { D, useI18n } from '../i18n';
 import { IconBook, IconChevronRight, IconPlay, IconShieldCheck, IconSparkle } from '../components/Icons';
 import { CourseCatalogue } from '../components/CourseCatalogue';
 
@@ -15,9 +15,7 @@ export function DashboardPage() {
   const lessons = allLessons();
   const completed = lessons.filter((lesson) => state.progress[lesson.id]?.completed).length;
   const percentage = lessons.length === 0 ? 0 : Math.round((completed / lessons.length) * 100);
-  const remaining = lessons
-    .filter((lesson) => !state.progress[lesson.id]?.completed)
-    .reduce((sum, lesson) => sum + lesson.durationMin, 0);
+  const coursesDone = courses.filter((course) => computeCourseProgress(course, state.progress).finished).length;
   const quizIds = Object.keys(quizzes);
   const quizzesPassed = quizIds.filter((id) => isQuizPassed(id, state.attempts)).length;
 
@@ -78,9 +76,15 @@ export function DashboardPage() {
           <span className="stat__hint">{l(D.dashboard.statQuizzesHint)}</span>
         </div>
         <div className="stat">
-          <span className="stat__label">{l(D.dashboard.statTime)}</span>
-          <span className="stat__value">{formatDuration(remaining, locale)}</span>
-          <span className="stat__hint">{l(D.dashboard.statTimeHint(remaining))}</span>
+          <span className="stat__label">{l(D.dashboard.statCourses)}</span>
+          <span className="stat__value">
+            {coursesDone}
+            <span className="muted" style={{ fontSize: '1rem', fontWeight: 500 }}>
+              {' '}
+              / {courses.length}
+            </span>
+          </span>
+          <span className="stat__hint">{l(D.dashboard.statCoursesHint(courses.length))}</span>
         </div>
       </div>
 
@@ -90,7 +94,7 @@ export function DashboardPage() {
             <ProgressRing value={currentProgress.percentage} size={112} />
             <div style={{ flex: '1 1 320px', minWidth: 0 }}>
               <span className="badge badge--accent">
-                <IconSparkle size={12} /> {l(D.categories[current.category])}
+                <IconSparkle size={12} /> {l(D.levels[current.level])}
               </span>
               <h2 style={{ margin: 'var(--space-3) 0 var(--space-2)' }}>{l(current.title)}</h2>
               <p className="secondary" style={{ maxWidth: '58ch' }}>

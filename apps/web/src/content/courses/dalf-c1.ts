@@ -6,7 +6,6 @@ const ID = 'crs_dalf_c1';
 export const dalfC1Course: Course = {
   id: ID,
   slug: 'dalf-c1',
-  category: 'dalf-c1',
   level: 'C1',
   accentFrom: '#a5b4fc',
   accentTo: '#1e40af',

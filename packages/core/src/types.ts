@@ -161,16 +161,20 @@ export interface CourseModule {
 
 export type CourseStatus = 'draft' | 'published';
 
-/** Catégories du catalogue de français. */
-export type CourseCategory = 'grammaire' | 'conjugaison' | 'delf-b1' | 'delf-b2' | 'dalf-c1' | 'dalf-c2';
-
-/** Niveaux du Cadre européen commun de référence. */
+/**
+ * Niveaux du Cadre européen commun de référence.
+ *
+ * Le niveau est aussi la catégorie du catalogue : les cours sont rangés par
+ * palier, du débutant complet à la maîtrise.
+ */
 export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+
+/** Les six niveaux, dans l'ordre de progression. */
+export const CEFR_LEVELS: readonly CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 export interface Course {
   readonly id: string;
   readonly slug: string;
-  readonly category: CourseCategory;
   readonly level: CefrLevel;
   readonly title: LocalizedText;
   readonly subtitle: LocalizedText;

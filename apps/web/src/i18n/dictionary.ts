@@ -113,11 +113,11 @@ export const D = {
     statLanguages: t('langues d’interface', 'interface languages', '种界面语言'),
     statSchemas: t('schémas manipulables', 'hands-on diagrams', '个可操作图示'),
 
-    levelsTitle: t('Six niveaux, trois cours chacun', 'Six levels, three courses each', '六个等级，每级三门课'),
+    levelsTitle: t('Six niveaux, cinq cours chacun', 'Six levels, five courses each', '六个等级，每级五门课'),
     levelsText: t(
-      'Le niveau du Cadre européen est la catégorie : on entre au palier qui correspond, on en sort quand les trois cours sont terminés.',
-      'The Common European Framework level is the category: you start at the step that fits and leave it when all three courses are done.',
-      '欧洲共同框架的等级即为分类：从合适的层级进入，三门课程全部完成后即可离开。',
+      'Le niveau du Cadre européen est la catégorie : on entre au palier qui correspond, on en sort quand les cinq cours sont terminés.',
+      'The Common European Framework level is the category: you start at the step that fits and leave it when all five courses are done.',
+      '欧洲共同框架的等级即为分类：从合适的层级进入，五门课程全部完成后即可离开。',
     ),
 
     featuresTitle: t('Ce qui distingue ces cours', 'What sets these courses apart', '这些课程的独到之处'),
@@ -316,9 +316,9 @@ export const D = {
       '从上次中断处继续。每完成一步都会保存进度。',
     ),
     introNew: t(
-      'Six niveaux vous attendent, du A1 au C2, avec trois cours complets par palier.',
-      'Six levels are waiting, from A1 to C2, with three complete courses at each step.',
-      '六个等级已就绪，从 A1 到 C2，每个等级各有三门完整课程。',
+      'Six niveaux vous attendent, du A1 au C2, avec cinq cours complets par palier.',
+      'Six levels are waiting, from A1 to C2, with five complete courses at each step.',
+      '六个等级已就绪，从 A1 到 C2，每个等级各有五门完整课程。',
     ),
     statProgress: t('Progression globale', 'Overall progress', '总体进度'),
     statSteps: t('Étapes terminées', 'Steps completed', '已完成步骤'),
@@ -1093,7 +1093,7 @@ export const D = {
       },
       'level-done': {
         name: t('Palier franchi', 'Level cleared', '通关一级'),
-        hint: t('Terminer les trois cours d’un niveau du CECRL.', 'Finish all three courses of one CEFR level.', '完成某一 CEFR 等级的三门课程。'),
+        hint: t('Terminer les cinq cours d’un niveau du CECRL.', 'Finish all five courses of one CEFR level.', '完成某一 CEFR 等级的五门课程。'),
       },
     },
   },

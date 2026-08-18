@@ -24,6 +24,8 @@ export const D = {
     level: t('Niveau', 'Level', '级别'),
     quiz: t('Quiz', 'Quiz', '测验'),
     protected: t('Protégé', 'Protected', '已保护'),
+    soundOn: t('Activer les sons', 'Turn sounds on', '开启音效'),
+    soundOff: t('Couper les sons', 'Turn sounds off', '关闭音效'),
     darkMode: t('Mode sombre', 'Dark mode', '深色模式'),
     lightMode: t('Mode clair', 'Light mode', '浅色模式'),
     openMenu: t('Ouvrir le menu', 'Open menu', '打开菜单'),
@@ -85,6 +87,123 @@ export const D = {
       'Restituer, styliser, convaincre : le français sans plafond.',
       'Report, shape a style, convince: French with no ceiling.',
       '复述、驾驭文体、以理服人：法语再无上限。',
+    ),
+  },
+
+  /* ------------------------------------------------------------------
+     Page d'accueil publique : la seule page visible sans compte.
+     ------------------------------------------------------------------ */
+  home: {
+    signIn: t('Se connecter', 'Sign in', '登录'),
+    heroEyebrow: t('Français · A1 → C2', 'French · A1 → C2', '法语 · A1 → C2'),
+    heroTitle: t(
+      'Le français, enseigné clairement.\nVos cours, protégés.',
+      'French, taught clearly.\nYour courses, protected.',
+      '清晰的法语教学。\n受保护的课程内容。',
+    ),
+    heroText: t(
+      'Dix-huit cours complets, du premier bonjour à la lecture de Proust. Chaque leçon est trilingue, manipulable, et porte le nom de l’apprenant qui la consulte.',
+      'Eighteen complete courses, from your first bonjour to reading Proust. Every lesson is trilingual, hands-on, and carries the name of the learner reading it.',
+      '十八门完整课程，从第一句 bonjour 到阅读普鲁斯特。每节课都是三语的、可动手操作的，并带有阅读者的姓名。',
+    ),
+    heroCta: t('Accéder à mes cours', 'Open my courses', '进入我的课程'),
+    heroSecondary: t('Voir le programme', 'See the syllabus', '查看课程安排'),
+    statCourses: t('cours complets', 'complete courses', '门完整课程'),
+    statSteps: t('étapes de travail', 'learning steps', '个学习步骤'),
+    statLanguages: t('langues d’interface', 'interface languages', '种界面语言'),
+    statSchemas: t('schémas manipulables', 'hands-on diagrams', '个可操作图示'),
+
+    levelsTitle: t('Six niveaux, trois cours chacun', 'Six levels, three courses each', '六个等级，每级三门课'),
+    levelsText: t(
+      'Le niveau du Cadre européen est la catégorie : on entre au palier qui correspond, on en sort quand les trois cours sont terminés.',
+      'The Common European Framework level is the category: you start at the step that fits and leave it when all three courses are done.',
+      '欧洲共同框架的等级即为分类：从合适的层级进入，三门课程全部完成后即可离开。',
+    ),
+
+    featuresTitle: t('Ce qui distingue ces cours', 'What sets these courses apart', '这些课程的独到之处'),
+    features: [
+      {
+        emoji: '🌍',
+        title: t('Trilingue de bout en bout', 'Trilingual throughout', '全程三语'),
+        text: t(
+          'Interface et contenu en français, anglais et chinois. Les exemples, eux, restent en français : c’est la langue qu’on apprend.',
+          'Interface and content in French, English and Chinese. The examples stay in French: that is the language being learned.',
+          '界面与内容提供法语、英语和中文。例句始终保持法语——这正是所学的语言。',
+        ),
+      },
+      {
+        emoji: '🎛️',
+        title: t('Des schémas qu’on manipule', 'Diagrams you can work', '可动手操作的图示'),
+        text: t(
+          'Roues de conjugaison, matrices d’articles, frises de temps : on clique, la réponse se compose. Un tableau se lit, un schéma s’explore.',
+          'Conjugation wheels, article matrices, tense timelines: you click, the answer assembles. A table is read; a diagram is explored.',
+          '动词变位转轮、冠词矩阵、时态轴：点击即可组合出答案。表格供阅读，图示供探索。',
+        ),
+      },
+      {
+        emoji: '💬',
+        title: t('Les mots difficiles expliqués', 'Difficult words explained', '难词随手可查'),
+        text: t(
+          'Chaque terme technique est cliquable et ouvre ses trois définitions à la fois, avec sa phonétique et un exemple.',
+          'Every technical term is clickable and opens all three definitions at once, with its phonetics and an example.',
+          '每个专业术语均可点击，同时给出三语释义、音标和例句。',
+        ),
+      },
+      {
+        emoji: '🏅',
+        title: t('Une progression qui se voit', 'Progress you can see', '看得见的进步'),
+        text: t(
+          'Points, paliers, série de jours et badges — tous calculés sur le travail réellement fait, jamais sur le temps passé.',
+          'Points, levels, day streaks and badges — all computed from work actually done, never from time spent.',
+          '积分、等级、连续天数与徽章——全部依据实际完成的学习，而非停留时长。',
+        ),
+      },
+      {
+        emoji: '🔒',
+        title: t('Un contenu qui reste chez vous', 'Content that stays with you', '内容不外流'),
+        text: t(
+          'Copie, impression et export sont neutralisés, chaque tentative est journalisée, et une empreinte invisible relie tout extrait à son lecteur.',
+          'Copying, printing and exporting are disabled, every attempt is logged, and an invisible fingerprint ties any excerpt to its reader.',
+          '复制、打印与导出均被禁用，每次尝试都会记录，隐形指纹将任何片段与其读者关联。',
+        ),
+      },
+      {
+        emoji: '📊',
+        title: t('Un suivi pour l’enseignant', 'Tracking for the teacher', '面向教师的跟踪'),
+        text: t(
+          'Comptes créés à la main, progression par apprenant, moyennes de quiz et vérificateur d’empreinte en cas de fuite.',
+          'Hand-created accounts, per-learner progress, quiz averages, and a fingerprint checker in case of a leak.',
+          '手动创建账户、逐人跟踪进度、测验均分，并在泄露时提供指纹校验器。',
+        ),
+      },
+    ],
+
+    howTitle: t('Comment ça se passe', 'How it works', '使用流程'),
+    steps: [
+      {
+        title: t('Votre enseignant crée votre compte', 'Your teacher creates your account', '教师为您创建账户'),
+        text: t('Il vous transmet un identifiant et un mot de passe.', 'They send you a username and a password.', '他会把登录标识和密码发给您。'),
+      },
+      {
+        title: t('Vous entrez au niveau qui vous correspond', 'You start at the level that fits', '从适合您的等级开始'),
+        text: t('De A1 pour un débutant complet à C2 pour la maîtrise.', 'From A1 for a complete beginner to C2 for mastery.', '从零基础的 A1 到精通级的 C2。'),
+      },
+      {
+        title: t('Vous travaillez, la progression suit', 'You work, progress follows', '您学习，进度随之累积'),
+        text: t('Chaque étape terminée rapporte des points et se retrouve dans le suivi.', 'Each completed step earns points and appears in the tracking table.', '每完成一步即可获得积分，并显示在跟踪表中。'),
+      },
+    ],
+
+    ctaTitle: t('Prêt à commencer ?', 'Ready to begin?', '准备好开始了吗？'),
+    ctaText: t(
+      'Connectez-vous avec les identifiants fournis par votre enseignant — ou avec le compte de démonstration.',
+      'Sign in with the credentials your teacher gave you — or with the demo account.',
+      '使用教师提供的账户登录——或使用演示账户。',
+    ),
+    footerNote: t(
+      'Démonstration web publique. Aucune donnée ne quitte votre navigateur.',
+      'Public web demo. No data ever leaves your browser.',
+      '公开网页演示。任何数据都不会离开您的浏览器。',
     ),
   },
 
@@ -157,36 +276,34 @@ export const D = {
       '这是公开的网页演示。系统级截屏拦截需使用 README 中描述的桌面端与移动端应用。',
     ),
     title: t('Connexion apprenant', 'Learner sign-in', '学员登录'),
-    firstName: t('Prénom', 'First name', '名字'),
-    firstNameHint: t(
-      'Les leçons vous appelleront par ce prénom.',
-      'The lessons will address you by this first name.',
-      '课程将以这个名字称呼您。',
-    ),
-    email: t('Adresse email', 'Email address', '电子邮箱'),
-    emailHint: t(
-      'Votre identifiant de connexion.',
-      'Your sign-in identifier.',
-      '您的登录标识。',
+    login: t('Identifiant', 'Username', '登录标识'),
+    loginHint: t(
+      'Celui que votre enseignant vous a communiqué.',
+      'The one your teacher gave you.',
+      '教师发给您的那一个。',
     ),
     password: t('Mot de passe', 'Password', '密码'),
+    backHome: t('Retour à l’accueil', 'Back to home', '返回首页'),
+    demoAccounts: t('Comptes de démonstration', 'Demo accounts', '演示账户'),
+    demoRoleLearner: t('Apprenant', 'Learner', '学员'),
+    demoRoleAdmin: t('Enseignant', 'Teacher', '教师'),
+    demoFill: t('Remplir', 'Fill in', '填入'),
     submit: t('Accéder à mes cours', 'Open my courses', '进入我的课程'),
-    demoTitle: t('Mode démonstration', 'Demo mode', '演示模式'),
+    demoTitle: t('Accès réservé', 'Restricted access', '访问受限'),
     demoText: t(
-      'Sans compte créé par un enseignant, l’accès est libre : n’importe quelle adresse et n’importe quel mot de passe d’au moins 8 caractères ouvrent la démonstration. Avec une invitation, le mot de passe choisi par l’enseignant est exigé. Une adresse commençant par admin@ ouvre l’espace d’administration.',
-      'Without an account created by a teacher, access is open: any address and any password of at least 8 characters open the demo. With an invitation, the password chosen by the teacher is required. An address starting with admin@ opens the admin area.',
-      '若没有教师创建的账户，则可自由访问：任意邮箱加任意不少于 8 位的密码即可打开演示。若持有邀请，则须输入教师设定的密码。使用 admin@ 开头的邮箱可进入管理后台。',
+      'La plateforme n’est pas ouverte : il faut un compte. Les deux comptes ci-dessus permettent de la visiter ; les autres sont créés par l’enseignant depuis son espace, et transmis par invitation.',
+      'The platform is not open: an account is required. The two accounts above let you visit it; the others are created by the teacher from their workspace and sent by invitation.',
+      '本平台并非开放访问：必须持有账户。上方两个账户可供参观；其余账户由教师在其工作区创建，并通过邀请发送。',
     ),
-    errorEmail: t('Adresse email invalide.', 'Invalid email address.', '邮箱地址无效。'),
-    errorWrongPassword: t(
-      'Mot de passe incorrect pour ce compte.',
-      'Incorrect password for this account.',
-      '该账户的密码不正确。',
+    errorRequired: t(
+      'Renseignez votre identifiant et votre mot de passe.',
+      'Enter your username and your password.',
+      '请填写登录标识和密码。',
     ),
-    errorPassword: t(
-      'Le mot de passe doit contenir au moins 8 caractères.',
-      'The password must contain at least 8 characters.',
-      '密码至少需要 8 个字符。',
+    errorBadCredentials: t(
+      'Identifiant ou mot de passe incorrect.',
+      'Incorrect username or password.',
+      '登录标识或密码不正确。',
     ),
   },
 
@@ -340,6 +457,22 @@ export const D = {
     role: { admin: t('Administrateur', 'Administrator', '管理员'), learner: t('Apprenant', 'Learner', '学员') },
     memberSince: (date: string) => t(`inscrit le ${date}`, `member since ${date}`, `注册于 ${date}`),
     identity: t('Identité traçable', 'Traceable identity', '可溯源身份'),
+    fieldUsername: t('Identifiant de connexion', 'Sign-in username', '登录标识'),
+    fieldUsernameHint: t(
+      'Lettres, chiffres, point, tiret ou souligné. C’est ce que l’apprenant saisira pour entrer.',
+      'Letters, digits, dot, hyphen or underscore. This is what the learner will type to sign in.',
+      '字母、数字、点、连字符或下划线。学员将用它登录。',
+    ),
+    errorUsernameInvalid: t(
+      'Identifiant invalide : 3 à 32 caractères, sans espace ni accent.',
+      'Invalid username: 3 to 32 characters, no spaces or accents.',
+      '标识无效：需 3 至 32 个字符，不含空格或重音符号。',
+    ),
+    errorUsernameDuplicate: t(
+      'Cet identifiant est déjà pris.',
+      'This username is already taken.',
+      '该标识已被占用。',
+    ),
     fieldFirstName: t('Prénom', 'First name', '名字'),
     reportTitle: t('Transmettre ma progression', 'Send my progress', '发送我的学习进度'),
     reportIntro: t(
@@ -613,6 +746,22 @@ export const D = {
       '为每位学员创建一个账户，然后把邀请发给他。之后用该代码来匹配他回传的进度。',
     ),
     newLearner: t('Nouvel apprenant', 'New learner', '新增学员'),
+    fieldUsername: t('Identifiant de connexion', 'Sign-in username', '登录标识'),
+    fieldUsernameHint: t(
+      'Lettres, chiffres, point, tiret ou souligné. C’est ce que l’apprenant saisira pour entrer.',
+      'Letters, digits, dot, hyphen or underscore. This is what the learner will type to sign in.',
+      '字母、数字、点、连字符或下划线。学员将用它登录。',
+    ),
+    errorUsernameInvalid: t(
+      'Identifiant invalide : 3 à 32 caractères, sans espace ni accent.',
+      'Invalid username: 3 to 32 characters, no spaces or accents.',
+      '标识无效：需 3 至 32 个字符，不含空格或重音符号。',
+    ),
+    errorUsernameDuplicate: t(
+      'Cet identifiant est déjà pris.',
+      'This username is already taken.',
+      '该标识已被占用。',
+    ),
     fieldFirstName: t('Prénom', 'First name', '名字'),
     fieldFirstNameHint: t(
       'Repris dans le corps des leçons pour interpeller l’apprenant.',

@@ -26,11 +26,15 @@
    ------------------------------------------------------------------ */
 
 import { createId } from './ids';
-import type { CefrLevel } from './types';
+import type { CefrLevel, UserRole } from './types';
 
 /** Compte apprenant créé par l'administrateur. */
 export interface LearnerAccount {
   readonly id: string;
+  /** Identifiant de connexion, unique, insensible à la casse. */
+  readonly username: string;
+  /** Un compte d'administration ouvre en plus l'espace de pilotage. */
+  readonly role: UserRole;
   /** Code lisible communiqué à l'apprenant : sert de clé de rapprochement. */
   readonly code: string;
   /**
@@ -75,6 +79,7 @@ export interface LearnerReport {
 export interface InvitePayload {
   readonly kind: 'lumiere.invite.v2';
   readonly code: string;
+  readonly username: string;
   readonly firstName: string;
   readonly lastName: string;
   readonly email: string;
@@ -116,6 +121,7 @@ export function normalizeCode(input: string): string {
 /* ---------------------------- Comptes ------------------------------ */
 
 export interface CreateLearnerInput {
+  readonly username: string;
   readonly firstName: string;
   readonly lastName?: string;
   readonly email: string;
@@ -128,8 +134,21 @@ export type CreateLearnerOutcome =
   | { readonly ok: true; readonly learner: LearnerAccount }
   | {
       readonly ok: false;
-      readonly reason: 'name-required' | 'email-invalid' | 'email-duplicate' | 'password-too-short';
+      readonly reason:
+        | 'name-required'
+        | 'username-invalid'
+        | 'username-duplicate'
+        | 'email-invalid'
+        | 'email-duplicate'
+        | 'password-too-short';
     };
+
+/** Lettres, chiffres, point, tiret et souligné : dictable et sans ambiguïté d'URL. */
+const USERNAME_RE = /^[A-Za-z0-9._-]{3,32}$/;
+
+export function normalizeUsername(input: string): string {
+  return input.trim().toLowerCase();
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -147,8 +166,13 @@ export function validateLearnerInput(
 ): Exclude<CreateLearnerOutcome, { ok: true }> | null {
   const firstName = input.firstName.trim();
   const email = input.email.trim().toLowerCase();
+  const username = normalizeUsername(input.username);
 
   if (firstName.length === 0) return { ok: false, reason: 'name-required' };
+  if (!USERNAME_RE.test(input.username.trim())) return { ok: false, reason: 'username-invalid' };
+  if (existing.some((learner) => normalizeUsername(learner.username) === username && learner.archivedAt === null)) {
+    return { ok: false, reason: 'username-duplicate' };
+  }
   if (!EMAIL_RE.test(email)) return { ok: false, reason: 'email-invalid' };
   if (input.password.length < MIN_LEARNER_PASSWORD_LENGTH) return { ok: false, reason: 'password-too-short' };
   if (existing.some((learner) => learner.email === email && learner.archivedAt === null)) {
@@ -179,6 +203,8 @@ export async function createLearner(
     ok: true,
     learner: {
       id: createId('lrn', random),
+      username: input.username.trim(),
+      role: 'learner',
       code,
       firstName: input.firstName.trim(),
       lastName: (input.lastName ?? '').trim(),
@@ -257,6 +283,7 @@ export function encodeInvite(learner: LearnerAccount): string {
   const payload: InvitePayload = {
     kind: 'lumiere.invite.v2',
     code: learner.code,
+    username: learner.username,
     firstName: learner.firstName,
     lastName: learner.lastName,
     email: learner.email,
@@ -277,6 +304,7 @@ export function decodeInvite(encoded: string): InvitePayload | null {
     const record = parsed as Record<string, unknown>;
     if (record['kind'] !== 'lumiere.invite.v2') return null;
     const code = record['code'];
+    const username = record['username'];
     const firstName = record['firstName'];
     const email = record['email'];
     const passwordHash = record['passwordHash'];
@@ -284,6 +312,7 @@ export function decodeInvite(encoded: string): InvitePayload | null {
     const level = record['targetLevel'];
     if (
       typeof code !== 'string' ||
+      typeof username !== 'string' ||
       typeof firstName !== 'string' ||
       typeof email !== 'string' ||
       typeof passwordHash !== 'string' ||
@@ -294,6 +323,7 @@ export function decodeInvite(encoded: string): InvitePayload | null {
     return {
       kind: 'lumiere.invite.v2',
       code,
+      username,
       firstName,
       lastName: typeof record['lastName'] === 'string' ? record['lastName'] : '',
       email,
@@ -481,6 +511,8 @@ function timingSafeEqual(a: string, b: string): boolean {
  */
 export interface LearnerCredentials {
   readonly code: string;
+  readonly username: string;
+  readonly role: UserRole;
   readonly firstName: string;
   readonly lastName: string;
   readonly email: string;
@@ -492,6 +524,8 @@ export interface LearnerCredentials {
 export function credentialsOfLearner(learner: LearnerAccount): LearnerCredentials {
   return {
     code: learner.code,
+    username: learner.username,
+    role: learner.role,
     firstName: learner.firstName,
     lastName: learner.lastName,
     email: learner.email,
@@ -504,6 +538,9 @@ export function credentialsOfLearner(learner: LearnerAccount): LearnerCredential
 export function credentialsOfInvite(invite: InvitePayload): LearnerCredentials {
   return {
     code: invite.code,
+    username: invite.username,
+    // Une invitation n'ouvre jamais l'espace de pilotage.
+    role: 'learner',
     firstName: invite.firstName,
     lastName: invite.lastName,
     email: invite.email,
@@ -520,6 +557,25 @@ export function findLearnerByEmail(
 ): LearnerAccount | null {
   const needle = email.trim().toLowerCase();
   return learners.find((learner) => learner.email === needle && learner.archivedAt === null) ?? null;
+}
+
+/**
+ * Retrouve un compte actif par son identifiant de connexion. L'adresse est
+ * acceptée en second recours : un apprenant qui saisit son courriel plutôt
+ * que son identifiant n'est pas bloqué pour autant.
+ */
+export function findLearnerByLogin(
+  learners: readonly LearnerAccount[],
+  login: string,
+): LearnerAccount | null {
+  const needle = normalizeUsername(login);
+  if (needle.length === 0) return null;
+  return (
+    learners.find(
+      (learner) => normalizeUsername(learner.username) === needle && learner.archivedAt === null,
+    ) ??
+    findLearnerByEmail(learners, login)
+  );
 }
 
 export async function verifyLearnerPassword(

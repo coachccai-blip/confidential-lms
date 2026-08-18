@@ -1,7 +1,9 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppProvider, useApp } from './state/app-context';
+import { ClickSound } from './feedback/ClickSound';
 import { GlossaryProvider } from './components/GlossaryProvider';
 import { ScrollToTop } from './components/ScrollToTop';
+import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { CataloguePage } from './pages/CataloguePage';
@@ -15,7 +17,7 @@ import type { ReactElement } from 'react';
 
 function RequireAuth({ children, adminOnly = false }: { readonly children: ReactElement; readonly adminOnly?: boolean }) {
   const { user } = useApp();
-  if (!user) return <Navigate to="/" replace />;
+  if (!user) return <Navigate to="/connexion" replace />;
   if (adminOnly && user.role !== 'admin') return <Navigate to="/app" replace />;
   return children;
 }
@@ -23,7 +25,8 @@ function RequireAuth({ children, adminOnly = false }: { readonly children: React
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/connexion" element={<LoginPage />} />
       <Route
         path="/app"
         element={
@@ -98,6 +101,7 @@ export function App() {
     <AppProvider>
       <HashRouter>
         <ScrollToTop />
+        <ClickSound />
         <GlossaryProvider>
           <AppRoutes />
         </GlossaryProvider>

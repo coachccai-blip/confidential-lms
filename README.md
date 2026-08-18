@@ -6,9 +6,15 @@ catalogue couvre les six niveaux du CECRL, de A1 à C2, à raison de trois cours
 
 **➜ Démonstration en ligne : https://coachccai-blip.github.io/confidential-lms/**
 
-Connexion libre : renseignez un prénom, une adresse et un mot de passe d'au moins huit
-caractères. Le prénom apparaîtra dans le corps des leçons. Une adresse commençant par `admin@`
-ouvre en plus l'espace d'administration.
+**L'accès est fermé : il faut un compte.** Deux comptes de démonstration sont livrés avec
+l'application et affichés sur l'écran de connexion.
+
+| Rôle | Identifiant | Mot de passe |
+|---|---|---|
+| Apprenant | `Bob` | `Bob12345+` |
+| Enseignant | `SuperBob` | `SuperBob12345+` |
+
+Le compte enseignant ouvre en plus l'espace de pilotage, où se créent les autres comptes.
 
 ---
 
@@ -24,6 +30,7 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 
 | Livré ici | Statut |
 |---|---|
+| Page d'accueil publique + connexion par identifiant et mot de passe | ✅ Fonctionnel |
 | Application apprenant complète (catalogue, lecteur, quiz, progression, compte) | ✅ Fonctionnel |
 | Interface **et** contenu en français, anglais et chinois | ✅ Fonctionnel |
 | Glossaire : mots difficiles cliquables, définis dans les trois langues | ✅ 49 entrées |
@@ -31,7 +38,7 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 | Comptes apprenants, invitations et suivi de progression | ✅ Fonctionnel, **sans serveur** (§7) |
 | Toutes les protections réalisables dans un navigateur | ✅ Fonctionnel |
 | Contenu nominatif (prénom dans les leçons) + empreinte invisible par apprenant | ✅ Fonctionnel |
-| Comptes apprenants avec mot de passe, créés par l'enseignant | ✅ Fonctionnel, **vérifié côté client** (§7) |
+| Comptes apprenants avec mot de passe, créés par l'enseignant | ✅ Fonctionnel, **vérifié côté client** (§9) |
 | Schémas manipulables, animations, points, séries et badges | ✅ Fonctionnel |
 | Session unique, limite de 3 appareils, journal de sécurité | ✅ Fonctionnel, **simulé côté client** |
 | Espace admin : suivi apprenants, vérificateur d'empreinte, matrice de protection | ✅ Fonctionnel, données de démonstration |
@@ -188,13 +195,68 @@ c'est sa meilleure tentative qui compte.
 
 ---
 
-## 6. Protections implémentées — et leurs limites réelles
+## 6. Couleurs, contrastes et retour sensoriel
+
+### 6.1 Une palette vérifiée, pas estimée
+
+Les couleurs de texte ne sont pas choisies à l'œil : un script calcule le contraste WCAG de
+chaque paire employée, dans les deux thèmes, et le tableau doit être vert avant livraison.
+
+La passe a corrigé de vrais défauts, tous du côté clair : les mentions secondaires à 3,75:1, les
+tons de succès et d'avertissement sous le seuil, et surtout des **bordures de champ à 1,25:1** —
+autrement dit des zones de saisie sans contour visible, ce qui rendait les listes déroulantes
+difficiles à repérer.
+
+Trois familles de traits sont désormais distinguées, parce qu'elles ne répondent pas aux mêmes
+exigences :
+
+| Jeton | Rôle | Seuil visé |
+|---|---|---|
+| `--border` | filet de séparation, purement décoratif | aucun |
+| `--border-strong` | structure d'un bloc | aucun |
+| `--field-border` | contour d'un champ, d'un bouton, d'une option | **3:1** (WCAG 1.4.11) |
+
+La liste déroulante reçoit en plus son propre chevron : celui du système ne suit pas le thème de
+la page, et ses options sont repeintes explicitement, faute de quoi le menu s'ouvre aux couleurs
+du système d'exploitation.
+
+### 6.2 Sons, appuis et célébrations
+
+Les bruitages sont **synthétisés par l'API Web Audio** : aucun fichier à charger, donc rien qui
+parte sur le réseau. Huit sons courts, construits sur une gamme pentatonique — deux notes prises
+au hasard dedans ne peuvent pas sonner faux.
+
+| Geste | Son |
+|---|---|
+| Clic sur une commande | note brève |
+| Choix dans un schéma ou une réponse de quiz | note plus haute |
+| Étape terminée | arpège de quatre notes + confettis |
+| Quiz réussi | tierce montante + confettis |
+| Sans-faute, changement de palier | arpège prolongé + confettis |
+| Badge obtenu | deux notes cristallines |
+| Quiz échoué | deux notes descendantes, sourdes |
+
+Un seul écouteur en phase de capture couvre toute l'application : rien à brancher bouton par
+bouton, donc rien à oublier. Les confettis sont dessinés sur un canevas créé à la demande et
+retiré dès la fin.
+
+Trois garde-fous : le son se **coupe d'un clic** depuis la barre supérieure et le choix survit au
+rechargement ; `prefers-reduced-motion: reduce` désactive sons et confettis ensemble ; et un
+navigateur qui refuse l'audio ne provoque jamais d'erreur — un bruitage est un agrément, il ne
+doit rien interrompre.
+
+La célébration est accrochée à **la progression, pas au clic** : une leçon s'achève aussi bien
+par son bouton qu'en atteignant le bas de la page, et les deux méritent la même fête.
+
+---
+
+## 7. Protections implémentées — et leurs limites réelles
 
 Le principe directeur du brief est conservé : la protection absolue n'existe pas, l'objectif est
 la **dissuasion maximale et la traçabilité**. Chaque mesure ci-dessous est accompagnée de ce
 qu'elle ne fait pas.
 
-### 6.1 Marquage nominatif du contenu
+### 7.1 Marquage nominatif du contenu
 
 Une première version barrait chaque écran d'une mosaïque `email · téléphone · horodatage`. Elle a
 été **retirée** : elle gênait la lecture et exposait des données personnelles en permanence, pour
@@ -214,7 +276,7 @@ de numéro par-dessus le texte.
 > le partage spontané d'une capture, pas un effacement délibéré — c'est l'empreinte invisible du
 > paragraphe suivant qui couvre ce cas.
 
-### 6.2 Empreinte invisible dans le texte
+### 7.2 Empreinte invisible dans le texte
 
 Chaque chaîne de texte servie est marquée par des **caractères de largeur nulle** encodant
 l'identifiant de l'apprenant, celui de l'appareil et l'heure de consultation. L'encodage utilise
@@ -232,7 +294,7 @@ avec puis sans filigrane, pour comparer les deux verdicts.
 > opportuniste — capture de texte, transfert par email, dépôt sur un drive — pas l'adversaire
 > expert.
 
-### 6.3 Blocage des gestes de copie
+### 7.3 Blocage des gestes de copie
 
 Sur les écrans de contenu : menu contextuel, sélection de texte, glisser-déposer, `Ctrl/Cmd+C`,
 `Ctrl/Cmd+X`, `Ctrl/Cmd+S`, `Ctrl/Cmd+U`, `Ctrl/Cmd+P`, `F12` et `Ctrl+Shift+I/J/C` sont
@@ -245,7 +307,7 @@ l'export PDF. Si une copie parvient tout de même à s'exécuter, le presse-papi
 > réseau contourne l'ensemble. C'est un frein, pas une barrière. Le blocage véritable suppose
 > l'application desktop (phase 2).
 
-### 6.4 Masquage automatique
+### 7.4 Masquage automatique
 
 Le contenu est remplacé par un écran de garde flouté dès que la fenêtre perd le focus plus de
 700 ms ou que l'onglet passe en arrière-plan (`visibilitychange`), ainsi que pendant une tentative
@@ -258,7 +320,7 @@ développement ancrés et déclenche un événement critique.
 > d'avertir l'utilisateur. La détection d'outils de développement est heuristique et se contourne
 > trivialement (fenêtre détachée).
 
-### 6.5 Ce qui est structurellement impossible sur le web
+### 7.5 Ce qui est structurellement impossible sur le web
 
 | Mesure du brief | Web | Desktop Electron | Mobile React Native |
 |---|---|---|---|
@@ -274,7 +336,7 @@ recommandé.**
 
 ---
 
-## 7. Sessions et anti-partage
+## 8. Sessions et anti-partage
 
 - **Session unique** : toute nouvelle connexion révoque les sessions actives précédentes
   (`revokeOtherSessions`). La révocation est propagée aux autres onglets en temps réel via
@@ -293,7 +355,7 @@ recommandé.**
 
 ---
 
-## 8. Espace enseignant : comptes et suivi
+## 9. Espace enseignant : comptes et suivi
 
 L'espace `/admin` est protégé par un **mot de passe** choisi à la première ouverture, puis
 redemandé à chaque rechargement de la page. Il donne accès à la création de comptes apprenants
@@ -360,14 +422,14 @@ jusqu'à l'apprenant, l'appareil et l'heure de consultation.
 
 ---
 
-## 9. Architecture et design
+## 10. Architecture et design
 
 Monorepo pnpm, TypeScript strict partout (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
 `verbatimModuleSyntax`).
 
 ```
 confidential-lms/
-├── packages/core/          # Logique métier pure, sans dépendance UI — 71 tests unitaires
+├── packages/core/          # Logique métier pure, sans dépendance UI — 111 tests unitaires
 │   └── src/
 │       ├── locale.ts       # Locale, LocalizedText, résolution avec repli
 │       ├── types.ts        # Modèle de données complet, entièrement localisé
@@ -387,6 +449,7 @@ confidential-lms/
         ├── state/          # Contexte applicatif, persistance, session inter-onglets
         ├── components/     # Coque, glossaire, sélecteur de langue, rendu des blocs
         ├── components/     # Coquille, catalogue, contenu de leçon, schémas manipulables, gamification
+        ├── feedback/       # Bruitages synthétisés, confettis, son au clic
         ├── pages/          # Connexion, tableau de bord, catalogue, cours, leçon, quiz, compte, sécurité, admin
         └── styles/         # Design system « bleu océan », thèmes clair et sombre
 ```
@@ -407,7 +470,7 @@ le chinois s'affiche correctement sans requête réseau.
 
 ---
 
-## 10. Feuille de route
+## 11. Feuille de route
 
 **Phase 1 restante — backend.** API Fastify + PostgreSQL/Prisma reprenant `packages/core`,
 argon2id, JWT 15 min + refresh tokens révocables, filigranage du texte **côté serveur**, rate
@@ -424,7 +487,7 @@ manuelle sur les quatre systèmes.
 
 ---
 
-## 11. Couverture du brief
+## 12. Couverture du brief
 
 | Exigence | État |
 |---|---|
@@ -435,21 +498,24 @@ manuelle sur les quatre systèmes.
 | §4.5 URLs signées, HLS chiffré, rate limiting | Phase 1/2 — aucun média n'est servi ici |
 | §5 Quiz notés, seuils, tentatives, corrections | ✅ 18 quiz, 114 questions |
 | §5 Progression par cours/module, reprise | ✅ |
-| §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §8) |
+| §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §9) |
 | §5 Tableau de bord admin et journal | ✅ (alimenté par les remontées importées) |
-| §5 Mot de passe administrateur | ⚠️ verrou d'affichage, pas une authentification — voir §8 |
-| §5 Mot de passe apprenant défini par l'enseignant | ⚠️ vérifié côté client — voir §8 |
+| §5 Mot de passe administrateur | ⚠️ verrou d'affichage, pas une authentification — voir §9 |
+| §5 Mot de passe apprenant défini par l'enseignant | ⚠️ vérifié côté client — voir §9 |
 | §5 Gamification : points, niveaux, séries, badges | ✅ dérivée de la progression réelle (§5.4) |
+| §5 Bruitages, appuis et célébrations | ✅ synthétisés, coupables d'un clic (§6.2) |
+| §7 Accès fermé par identifiant et mot de passe | ⚠️ vérifié côté client — voir §9 |
+| §7 Contrastes conformes WCAG AA dans les deux thèmes | ✅ vérifiés par calcul (§6.1) |
 | §5 Contenu interactif (schémas manipulables) | ✅ 20 schémas, au moins un par cours (§5.1) |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
-| §8 TypeScript strict, tests sur sessions et protections | ✅ 118 tests (109 métier + 9 cohérence i18n) |
+| §8 TypeScript strict, tests sur sessions et protections | ✅ 125 tests (111 métier + 14 applicatifs) |
 | §8 README documentant honnêtement les limites | ✅ ce document |
 | §8 Budget services tiers = 0 € | ✅ aucune dépendance payante, aucun appel réseau externe |
 
 ---
 
-## 12. Démarrage
+## 13. Démarrage
 
 ```bash
 pnpm install
@@ -472,20 +538,22 @@ branche `gh-pages`, dossier `/ (root)`**.
 
 ### Vérification manuelle des protections
 
-1. Ouvrir une leçon → votre prénom apparaît dans le texte, à l'ouverture, au milieu et à la fin.
-2. Manipuler un schéma (roue, matrice, frise) → au clavier aussi : `Tab` puis `Entrée`.
-3. Cliquer sur un mot souligné → la définition apparaît en français, anglais et chinois.
-4. Basculer FR / EN / ZH → interface **et** contenu changent, les exemples restent en français.
-5. Clic droit → menu bloqué ; `Ctrl+C` → notification et entrée au journal.
-6. `Ctrl+P` → impression neutralisée, événement critique enregistré.
-7. Changer d'onglet → le contenu est masqué par l'écran de garde.
-8. Terminer une leçon → points crédités, badge « premier pas » annoncé.
-9. Espace admin → « Insérer un extrait filigrané » → l'empreinte identifie l'apprenant.
-10. Ouvrir un second onglet et s'y reconnecter → le premier onglet est déconnecté.
+1. Se connecter avec `Bob` / `Bob12345+` — sans compte, la plateforme reste fermée.
+2. Ouvrir une leçon → votre prénom apparaît dans le texte, à l'ouverture, au milieu et à la fin.
+3. Manipuler un schéma (roue, matrice, frise) → au clavier aussi : `Tab` puis `Entrée`.
+4. Cliquer sur un mot souligné → la définition apparaît en français, anglais et chinois.
+5. Basculer FR / EN / ZH → interface **et** contenu changent, les exemples restent en français.
+6. Clic droit → menu bloqué ; `Ctrl+C` → notification et entrée au journal.
+7. `Ctrl+P` → impression neutralisée, événement critique enregistré.
+8. Changer d'onglet → le contenu est masqué par l'écran de garde.
+9. Terminer une leçon → arpège, confettis, points crédités, badge « premier pas » annoncé.
+10. Couper le son depuis la barre supérieure → le choix survit au rechargement.
+11. Se connecter en `SuperBob` → l'espace de pilotage apparaît dans le menu.
+12. Ouvrir un second onglet et s'y reconnecter → le premier onglet est déconnecté.
 
 ---
 
-## 13. Confidentialité de la démonstration
+## 14. Confidentialité de la démonstration
 
 Cette application ne communique avec aucun serveur. Les informations saisies à la connexion
 (prénom, adresse) restent dans le `localStorage` de votre navigateur, servent à personnaliser les

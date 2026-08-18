@@ -19,8 +19,11 @@
   transform: translateY(1px);
 }
 
+/* Un bouton inactif doit rester lisible : à 45 % d'opacité, son libellé
+   passait sous le seuil de contraste. On désature plutôt que d'effacer. */
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.7;
+  filter: saturate(0.35);
   cursor: not-allowed;
 }
 
@@ -37,7 +40,7 @@
 
 .btn--secondary {
   background: var(--panel);
-  border-color: var(--border);
+  border-color: var(--field-border);
   color: var(--text);
 }
 
@@ -46,12 +49,16 @@
   border-color: var(--border-strong);
 }
 
+/* Un bouton fantôme reste discret, mais un contour l'annonce comme
+   cliquable — sans lui, il se confond avec une simple mention. */
 .btn--ghost {
   color: var(--text-secondary);
+  border-color: var(--border);
 }
 
 .btn--ghost:hover:not(:disabled) {
   background: var(--panel-hover);
+  border-color: var(--field-border);
   color: var(--text);
 }
 
@@ -258,15 +265,43 @@
   color: var(--text-muted);
 }
 
+/* Une zone de saisie doit se voir : sa bordure tient le seuil de 3:1, à la
+   différence des filets de séparation qui, eux, ne portent rien. */
 .input,
 .textarea {
   width: 100%;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
+  border: 1px solid var(--field-border);
   background: var(--panel-2);
+  color: var(--text);
   transition: border-color var(--speed) var(--ease), box-shadow var(--speed) var(--ease);
   font-size: 0.9rem;
+}
+
+.input:hover:not(:disabled),
+.textarea:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+/* Liste déroulante : la flèche du système ne suit pas le thème, on la
+   remplace. `appearance: none` impose de rendre la place au chevron. */
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 15px;
+  cursor: pointer;
+}
+
+/* Le menu déroulant est peint par le système : sans couleurs explicites, il
+   ignore le thème de la page. */
+select.input option {
+  background: var(--panel);
+  color: var(--text);
 }
 
 /* Invitations et relevés : suites de caractères sans espace, à lire par blocs. */
@@ -432,4 +467,95 @@
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------------
+   Retour au clic.
+
+   L'enfoncement doit se sentir : le bouton descend et rétrécit très
+   légèrement, puis remonte. Assez pour être perçu, assez court pour ne
+   jamais retarder l'action.
+   ------------------------------------------------------------------ */
+
+.btn:active:not(:disabled),
+.option:active,
+.icon-btn:active,
+.ix-chip:active,
+.ix-step:active,
+.ix-seg:active,
+.ix-timeline__stop:active,
+.ix-wheel__spoke:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+/* Le bouton qui achève une étape se gonfle avant de rendre la main : le
+   geste est récompensé au moment même où on le fait. */
+@keyframes btn-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn--celebrate:active:not(:disabled) {
+  animation: btn-pop 320ms var(--ease);
+  transform: none;
+}
+
+/* Halo qui s'échappe du bouton au clic, en complément des confettis. */
+.btn--celebrate {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--celebrate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, var(--accent-soft), transparent 62%);
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
+}
+
+.btn--celebrate:active:not(:disabled)::after {
+  animation: btn-halo 460ms var(--ease);
+}
+
+@keyframes btn-halo {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+/* Le canevas des confettis : au-dessus de tout, transparent aux clics. */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:active:not(:disabled),
+  .option:active,
+  .icon-btn:active {
+    transform: none;
+  }
+
+  .btn--celebrate:active:not(:disabled),
+  .btn--celebrate:active:not(:disabled)::after {
+    animation: none;
+  }
 }

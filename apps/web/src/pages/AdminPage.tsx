@@ -177,6 +177,7 @@ function AdminLockScreen() {
 function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAccount) => void }) {
   const { createLearner } = useApp();
   const { l } = useI18n();
+  const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -192,6 +193,7 @@ function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAc
     setBusy(true);
     try {
       const outcome = await createLearner({
+        username,
         firstName,
         lastName,
         email,
@@ -204,16 +206,21 @@ function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAc
           l(
             outcome.reason === 'name-required'
               ? D.admin.errorNameRequired
-              : outcome.reason === 'email-invalid'
-                ? D.admin.errorEmailInvalid
-                : outcome.reason === 'password-too-short'
-                  ? D.admin.errorPasswordShort(MIN_LEARNER_PASSWORD_LENGTH)
-                  : D.admin.errorEmailDuplicate,
+              : outcome.reason === 'username-invalid'
+                ? D.admin.errorUsernameInvalid
+                : outcome.reason === 'username-duplicate'
+                  ? D.admin.errorUsernameDuplicate
+                  : outcome.reason === 'email-invalid'
+                    ? D.admin.errorEmailInvalid
+                    : outcome.reason === 'password-too-short'
+                      ? D.admin.errorPasswordShort(MIN_LEARNER_PASSWORD_LENGTH)
+                      : D.admin.errorEmailDuplicate,
           ),
         );
         return;
       }
       setError(null);
+      setUsername('');
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -229,6 +236,20 @@ function NewLearnerForm({ onCreated }: { readonly onCreated: (learner: LearnerAc
   return (
     <form onSubmit={onSubmit}>
       <div className="grid grid--2">
+        <div className="field">
+          <label className="field__label" htmlFor="learner-username">
+            {l(D.admin.fieldUsername)}
+          </label>
+          <input
+            id="learner-username"
+            className="input"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="off"
+            required
+          />
+          <span className="field__hint">{l(D.admin.fieldUsernameHint)}</span>
+        </div>
         <div className="field">
           <label className="field__label" htmlFor="learner-first">
             {l(D.admin.fieldFirstName)}
@@ -564,7 +585,7 @@ export function AdminPage() {
                           {row.learner.email}
                         </div>
                         <div className="mono muted" style={{ fontSize: '0.72rem' }}>
-                          {row.learner.code}
+                          {row.learner.username} · {row.learner.code}
                         </div>
                       </td>
                       <td>

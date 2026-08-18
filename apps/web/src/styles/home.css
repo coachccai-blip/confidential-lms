@@ -1,0 +1,491 @@
+/* ------------------------------------------------------------------
+   Page d'accueil publique.
+
+   Elle est bâtie sur la surface profonde — le même bleu que la barre
+   latérale de l'application — de sorte que la transition vers la
+   plateforme ne soit pas une rupture. Le fond ne dépend pas du thème :
+   c'est une vitrine, elle garde son caractère jour comme nuit.
+   ------------------------------------------------------------------ */
+
+.home {
+  min-height: 100%;
+  background: var(--deep);
+  color: var(--on-deep);
+  overflow-x: hidden;
+}
+
+.home__bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-12));
+  background: color-mix(in srgb, var(--deep) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--deep-border);
+}
+
+.brand--link {
+  text-decoration: none;
+}
+
+.icon-btn--deep {
+  border-color: var(--deep-border);
+  color: var(--on-deep-secondary);
+}
+
+.icon-btn--deep:hover {
+  background: rgba(148, 197, 245, 0.12);
+  color: var(--on-deep);
+}
+
+/* ------------------------------ Bandeau ------------------------------ */
+
+.hero {
+  position: relative;
+  padding: clamp(var(--space-12), 9vw, 120px) clamp(var(--space-4), 4vw, var(--space-12))
+    clamp(var(--space-12), 7vw, 88px);
+  overflow: hidden;
+}
+
+/* Halo d'azur derrière le titre : de la profondeur sans image à charger. */
+.hero__glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: min(1100px, 130%);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.22) 0%,
+    rgba(37, 99, 235, 0.12) 38%,
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  max-width: 940px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero__eyebrow {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--deep-border);
+  background: rgba(148, 197, 245, 0.08);
+  font-size: 0.76rem;
+  font-weight: 620;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-deep-secondary);
+  animation: home-rise 620ms var(--ease) both;
+}
+
+.hero__title {
+  margin: var(--space-6) 0 0;
+  font-size: clamp(2.1rem, 1.2rem + 4.2vw, 3.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--on-deep);
+  animation: home-rise 620ms 80ms var(--ease) both;
+}
+
+.hero__title-accent {
+  background: linear-gradient(120deg, var(--ocean-1), var(--ocean-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__text {
+  max-width: 62ch;
+  margin: var(--space-6) auto 0;
+  font-size: clamp(0.98rem, 0.9rem + 0.3vw, 1.14rem);
+  line-height: 1.65;
+  color: var(--on-deep-secondary);
+  animation: home-rise 620ms 160ms var(--ease) both;
+}
+
+.hero__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-8);
+  animation: home-rise 620ms 240ms var(--ease) both;
+}
+
+/* Sur le bleu profond, le bouton secondaire prend les couleurs de la surface. */
+.hero__actions .btn--secondary,
+.home__bar .btn--secondary {
+  background: rgba(148, 197, 245, 0.1);
+  border-color: var(--deep-border);
+  color: var(--on-deep);
+}
+
+.hero__actions .btn--secondary:hover {
+  background: rgba(148, 197, 245, 0.18);
+  border-color: rgba(148, 197, 245, 0.4);
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-4);
+  margin: clamp(var(--space-10), 6vw, 72px) 0 0;
+  animation: home-rise 620ms 320ms var(--ease) both;
+}
+
+.hero__stats div {
+  padding: var(--space-5) var(--space-3);
+  border: 1px solid var(--deep-border);
+  border-radius: var(--radius-lg);
+  background: rgba(148, 197, 245, 0.06);
+}
+
+.hero__stats dt {
+  font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.4rem);
+  font-weight: 680;
+  line-height: 1;
+  color: var(--ocean-1);
+}
+
+.hero__stats dd {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--on-deep-muted);
+}
+
+@keyframes home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------- Corps ------------------------------- */
+
+.home__body {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 clamp(var(--space-4), 4vw, var(--space-8)) clamp(var(--space-12), 8vw, 96px);
+}
+
+.home__section {
+  padding-top: clamp(var(--space-12), 7vw, 88px);
+}
+
+.home__section h2 {
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2rem);
+  color: var(--on-deep);
+  text-align: center;
+}
+
+.home__lede {
+  max-width: 62ch;
+  margin: var(--space-4) auto 0;
+  text-align: center;
+  color: var(--on-deep-secondary);
+  line-height: 1.65;
+}
+
+/* --------------------------- Échelle CECRL --------------------------- */
+
+.ladder {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.ladder__step {
+  padding: var(--space-5);
+  border: 1px solid var(--deep-border);
+  border-radius: var(--radius-lg);
+  /* Le fond s'éclaircit d'un palier à l'autre : l'échelle se lit d'un coup. */
+  background: linear-gradient(
+    160deg,
+    rgba(148, 197, 245, calc(0.05 + var(--i) * 0.017)),
+    rgba(148, 197, 245, 0.03)
+  );
+  transition: transform var(--speed) var(--ease), border-color var(--speed) var(--ease);
+}
+
+.ladder__step:hover {
+  transform: translateY(-3px);
+  border-color: rgba(148, 197, 245, 0.34);
+}
+
+.ladder__step header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ladder__badge {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gradient);
+  color: #04121f;
+  font-weight: 720;
+  font-size: 0.92rem;
+}
+
+.ladder__name {
+  font-weight: 620;
+  color: var(--on-deep);
+}
+
+.ladder__hint {
+  margin: var(--space-3) 0 var(--space-4);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--on-deep-muted);
+}
+
+.ladder__courses {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ladder__courses li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--on-deep-secondary);
+}
+
+.ladder__courses li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ocean-2);
+}
+
+/* ------------------------------ Arguments ---------------------------- */
+
+.pitch {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.pitch__card {
+  padding: var(--space-6);
+  border: 1px solid var(--deep-border);
+  border-radius: var(--radius-lg);
+  background: rgba(148, 197, 245, 0.05);
+  transition: transform var(--speed) var(--ease), background var(--speed) var(--ease);
+}
+
+.pitch__card:hover {
+  transform: translateY(-3px);
+  background: rgba(148, 197, 245, 0.1);
+}
+
+.pitch__emoji {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.pitch__card h3 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 1rem;
+  color: var(--on-deep);
+}
+
+.pitch__card p {
+  font-size: 0.87rem;
+  line-height: 1.62;
+  color: var(--on-deep-secondary);
+}
+
+/* ------------------------------- Étapes ------------------------------ */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.steps li {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-5);
+  border-left: 2px solid var(--ocean-2);
+  background: rgba(148, 197, 245, 0.05);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.steps li::before {
+  content: none;
+}
+
+.steps__rank {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #04121f;
+  font-weight: 720;
+  font-size: 0.86rem;
+}
+
+.steps li strong {
+  display: block;
+  color: var(--on-deep);
+  font-size: 0.93rem;
+}
+
+.steps li span {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--on-deep-muted);
+}
+
+/* ------------------------------- Appel ------------------------------- */
+
+.home__cta {
+  margin-top: clamp(var(--space-12), 7vw, 88px);
+  padding: clamp(var(--space-8), 5vw, var(--space-16)) var(--space-6);
+  text-align: center;
+  border: 1px solid var(--deep-border);
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.16), rgba(148, 197, 245, 0.04) 62%);
+}
+
+.home__cta h2 {
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2rem);
+  color: var(--on-deep);
+}
+
+.home__cta p {
+  max-width: 52ch;
+  margin: var(--space-4) auto var(--space-6);
+  color: var(--on-deep-secondary);
+  line-height: 1.6;
+}
+
+.home__footer {
+  padding: var(--space-6) var(--space-4) var(--space-10);
+  text-align: center;
+  font-size: 0.79rem;
+  color: var(--on-deep-muted);
+  border-top: 1px solid var(--deep-border);
+}
+
+/* --------------------- Comptes de démonstration ---------------------- */
+
+.demo-accounts {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-accounts li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+}
+
+.demo-accounts li::before {
+  content: none;
+}
+
+.demo-accounts__role {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* Pas de largeur plancher : « SuperBob12345+ » a besoin de la place. */
+  min-width: 0;
+  font-size: 0.73rem;
+  font-weight: 620;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.demo-accounts code {
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text);
+}
+
+.demo-accounts li .btn {
+  margin-left: auto;
+}
+
+.auth__invite {
+  margin-top: var(--space-2);
+}
+
+.auth__invite summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.auth__invite summary:hover {
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow,
+  .hero__title,
+  .hero__text,
+  .hero__actions,
+  .hero__stats {
+    animation: none;
+  }
+
+  .ladder__step,
+  .pitch__card {
+    transition: none;
+  }
+}

@@ -17,6 +17,7 @@ import { getCourseBySlug, getQuiz } from '../content';
 import { Shield, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
+import { useFeedback } from '../feedback/useFeedback';
 import {
   IconAlert,
   IconAward,
@@ -33,6 +34,7 @@ export function QuizPage() {
   const { slug, quizId } = useParams();
   const { user, state, pushToast, recordAttempt, completeLesson } = useApp();
   const { l, formatNumber, formatDate } = useI18n();
+  const { play, celebrate } = useFeedback();
   const firstName = user?.firstName?.trim() || DEFAULT_FIRST_NAME;
   /** Resout `{prenom}` dans les trois langues avant affichage. */
   const personaliseText = (text: LocalizedText): LocalizedText => ({
@@ -99,6 +101,9 @@ export function QuizPage() {
     recordAttempt(attempt, l(quiz.title));
     if (lesson) completeLesson(lesson.id, l(lesson.title));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Le résultat remonte en haut de page : la gerbe part de là.
+    if (graded.passed) celebrate(graded.percentage === 100 ? 'levelUp' : 'success', { x: 0.5, y: 0.3 });
+    else play('error');
     pushToast({
       tone: graded.passed ? 'success' : 'warning',
       title: graded.passed ? D.quiz.toastPassed : D.quiz.toastFailed,
@@ -284,7 +289,10 @@ export function QuizPage() {
                           type="button"
                           className={className}
                           key={answer.id}
-                          onClick={() => toggleAnswer(question.id, answer.id, multiple)}
+                          onClick={() => {
+                            toggleAnswer(question.id, answer.id, multiple);
+                            play('select');
+                          }}
                           aria-pressed={isSelected}
                           disabled={locked}
                         >

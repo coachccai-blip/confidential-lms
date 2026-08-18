@@ -5,6 +5,7 @@ import {
   credentialsOfInvite,
   credentialsOfLearner,
   findLearnerByEmail,
+  findLearnerByLogin,
   fullName,
   suggestPassword,
   validateLearnerInput,
@@ -40,6 +41,8 @@ const NOW = '2026-03-01T10:00:00.000Z';
 function makeLearner(overrides: Partial<LearnerAccount> = {}): LearnerAccount {
   return {
     id: 'lrn_1',
+    username: 'wei.chen',
+    role: 'learner',
     code: 'LUM-ABCD-2345',
     firstName: 'Wei',
     lastName: 'Chen',
@@ -56,6 +59,7 @@ function makeLearner(overrides: Partial<LearnerAccount> = {}): LearnerAccount {
 }
 
 const VALID_INPUT = {
+  username: 'wei.chen',
   firstName: 'Wei',
   lastName: 'Chen',
   email: 'Chen.Wei@Exemple.cn',
@@ -96,16 +100,25 @@ describe('création de comptes', () => {
 
   it('refuse un prénom vide, un courriel invalide, un mot de passe court, un doublon', () => {
     const existing = [makeLearner()];
-    expect(validateLearnerInput(existing, { ...VALID_INPUT, firstName: '  ' })?.reason).toBe('name-required');
-    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'pas-un-email' })?.reason).toBe('email-invalid');
-    expect(validateLearnerInput(existing, { ...VALID_INPUT, password: 'court' })?.reason).toBe('password-too-short');
-    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'chen.wei@exemple.cn' })?.reason).toBe(
-      'email-duplicate',
-    );
-    expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'autre@exemple.fr' })).toBeNull();
+    const free = { ...VALID_INPUT, username: 'libre', email: 'autre@exemple.fr' };
+    expect(validateLearnerInput(existing, { ...free, firstName: '  ' })?.reason).toBe('name-required');
+    expect(validateLearnerInput(existing, { ...free, email: 'pas-un-email' })?.reason).toBe('email-invalid');
+    expect(validateLearnerInput(existing, { ...free, password: 'court' })?.reason).toBe('password-too-short');
+    expect(validateLearnerInput(existing, { ...free, email: 'chen.wei@exemple.cn' })?.reason).toBe('email-duplicate');
+    expect(validateLearnerInput(existing, free)).toBeNull();
   });
 
-  it('autorise à réutiliser le courriel d’un compte archivé', () => {
+  it('refuse un identifiant mal formé ou déjà pris', () => {
+    const existing = [makeLearner()];
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, username: 'ab' })?.reason).toBe('username-invalid');
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, username: 'avec espace' })?.reason).toBe('username-invalid');
+    // L'unicité ne tient pas compte de la casse.
+    expect(validateLearnerInput(existing, { ...VALID_INPUT, username: 'WEI.CHEN', email: 'x@y.fr' })?.reason).toBe(
+      'username-duplicate',
+    );
+  });
+
+  it('autorise à réutiliser courriel et identifiant d’un compte archivé', () => {
     const existing = [makeLearner({ archivedAt: NOW })];
     expect(validateLearnerInput(existing, { ...VALID_INPUT, email: 'chen.wei@exemple.cn' })).toBeNull();
   });
@@ -159,6 +172,14 @@ describe('connexion d’un apprenant', () => {
     expect(findLearnerByEmail(learners, 'inconnu@exemple.fr')).toBeNull();
   });
 
+  it('retrouve un compte par identifiant, et retombe sur l’adresse', () => {
+    const learners = [makeLearner()];
+    expect(findLearnerByLogin(learners, ' WEI.Chen ')?.id).toBe('lrn_1');
+    expect(findLearnerByLogin(learners, 'chen.wei@exemple.cn')?.id).toBe('lrn_1');
+    expect(findLearnerByLogin(learners, 'inconnu')).toBeNull();
+    expect(findLearnerByLogin(learners, '   ')).toBeNull();
+  });
+
   it('sale le condensé : deux comptes du même mot de passe diffèrent', async () => {
     const a = await createLearner([], VALID_INPUT, NOW, seeded(3));
     const b = await createLearner([], { ...VALID_INPUT, email: 'autre@exemple.fr' }, NOW, seeded(9));
@@ -176,6 +197,7 @@ describe('invitations', () => {
     expect(decoded).toEqual({
       kind: 'lumiere.invite.v2',
       code: learner.code,
+      username: 'wei.chen',
       firstName: 'Wei',
       lastName: 'Chen',
       email: learner.email,
@@ -193,7 +215,7 @@ describe('invitations', () => {
 
   it('refuse une invitation privée de son condensé', () => {
     const learner = makeLearner();
-    const truncated = { kind: 'lumiere.invite.v2', code: learner.code, firstName: 'Wei', email: learner.email };
+    const truncated = { kind: 'lumiere.invite.v2', code: learner.code, username: 'wei.chen', firstName: 'Wei', email: learner.email };
     expect(decodeInvite(btoa(JSON.stringify(truncated)))).toBeNull();
   });
 

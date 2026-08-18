@@ -134,7 +134,11 @@ export function LessonPage() {
               <span style={{ fontSize: '0.83rem' }}>{l(D.coach.personalNoteText)}</span>
             </div>
             {!done ? (
-              <button type="button" className="btn btn--secondary" onClick={() => completeLesson(lesson.id, l(lesson.title))}>
+              <button
+                type="button"
+                className="btn btn--secondary btn--celebrate"
+                onClick={() => completeLesson(lesson.id, l(lesson.title))}
+              >
                 <IconCheck size={15} /> {l(D.lesson.markDone)}
               </button>
             ) : null}

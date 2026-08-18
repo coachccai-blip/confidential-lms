@@ -38,6 +38,8 @@ export interface PersistedState {
   readonly localesUsed: readonly Locale[];
   /** Badges déjà notifiés, pour ne pas réannoncer les mêmes. */
   readonly badgesSeen: readonly string[];
+  /** Bruitages : coupés d'un clic, et le choix survit au rechargement. */
+  readonly soundOn: boolean;
 }
 
 export const STORAGE_KEY = 'magmatica.state.v1';
@@ -62,6 +64,7 @@ export const EMPTY_STATE: PersistedState = {
   enrolmentCode: null,
   localesUsed: [DEFAULT_LOCALE],
   badgesSeen: [],
+  soundOn: true,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

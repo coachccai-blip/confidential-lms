@@ -20,7 +20,7 @@ import {
   credentialsOfInvite,
   credentialsOfLearner,
   decodeReport,
-  findLearnerByEmail,
+  findLearnerByLogin,
   mergeReport,
   registerDevice,
   restoreLearner as restoreLearnerIn,
@@ -44,6 +44,7 @@ import {
   type User,
 } from '@lms/core';
 import { EMPTY_STATE, STORAGE_KEY, clearState, loadState, saveState, type PersistedState, type ThemeName } from './storage';
+import { withSeedAccounts } from './seed-accounts';
 import { LOCALE_TAGS } from '@lms/core';
 import { D } from '../i18n/dictionary';
 
@@ -59,10 +60,9 @@ export interface Toast {
 }
 
 export interface SignInInput {
-  readonly email: string;
+  /** Identifiant de connexion, ou adresse électronique en second recours. */
+  readonly login: string;
   readonly password: string;
-  readonly firstName: string;
-  readonly lastName?: string;
   /** Invitation collée à l'instant, si l'apprenant arrive sur un appareil neuf. */
   readonly invite?: InvitePayload | null;
 }
@@ -75,7 +75,9 @@ export type ImportOutcome =
 export type SignInOutcome =
   | { readonly ok: true }
   | { readonly ok: false; readonly reason: 'device-limit'; readonly message: string }
-  | { readonly ok: false; readonly reason: 'bad-password' };
+  /** Compte inconnu ou mot de passe faux : un seul message, pour ne pas
+      révéler quels identifiants existent. */
+  | { readonly ok: false; readonly reason: 'bad-credentials' };
 
 export interface AppContextValue {
   readonly state: PersistedState;
@@ -93,6 +95,7 @@ export interface AppContextValue {
   readonly setTheme: (theme: ThemeName) => void;
   readonly setLocale: (locale: Locale) => void;
   readonly toggleTheme: () => void;
+  readonly toggleSound: () => void;
   readonly logEvent: (type: SecurityEventType, metadata?: Record<string, string | number | boolean>) => void;
   readonly markLessonViewed: (lessonId: string, ratio?: number) => void;
   readonly completeLesson: (lessonId: string, title: string) => void;
@@ -163,7 +166,12 @@ function describeEnvironment(): { label: string; fingerprint: string } {
 }
 
 export function AppProvider({ children }: { readonly children: ReactNode }) {
-  const [state, setState] = useState<PersistedState>(() => loadState());
+  const [state, setState] = useState<PersistedState>(() => {
+    // Les comptes livrés sont semés dès le premier rendu : sans eux, un
+    // navigateur neuf n'aurait aucun moyen d'ouvrir la plateforme.
+    const stored = loadState();
+    return { ...stored, learners: withSeedAccounts(stored.learners) };
+  });
   const [toasts, setToasts] = useState<readonly Toast[]>([]);
   const sessionRef = useRef<string | null>(state.currentSessionId);
 
@@ -223,44 +231,42 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       const now = new Date();
       const nowIso = now.toISOString();
       const environment = describeEnvironment();
-      const current = loadState();
+      const stored = loadState();
+      const current: PersistedState = { ...stored, learners: withSeedAccounts(stored.learners) };
 
       /*
-       * Deux régimes cohabitent.
-       *
-       * 1. Un compte créé par l'enseignant — présent dans ce navigateur, ou
-       *    porté par l'invitation que l'apprenant vient de coller. Le mot de
-       *    passe est alors vérifié contre le condensé salé du compte.
-       * 2. La démonstration publique, ouverte : aucun compte n'existe, on
-       *    laisse entrer et l'identité saisie sert de repère.
+       * L'accès est fermé : il faut un compte. Il vient soit du navigateur —
+       * les deux comptes de démonstration y sont semés, plus ceux créés par
+       * l'enseignant — soit de l'invitation que l'apprenant vient de coller.
        *
        * Rappel : cette vérification s'exécute dans le navigateur. Elle empêche
-       * un tiers d'ouvrir le compte de quelqu'un d'autre avec sa seule adresse,
-       * elle ne remplace pas une authentification serveur.
+       * un tiers d'ouvrir le compte de quelqu'un d'autre, elle ne remplace pas
+       * une authentification serveur.
        */
       const known = input.invite
         ? credentialsOfInvite(input.invite)
         : (() => {
-            const account = findLearnerByEmail(current.learners, input.email);
+            const account = findLearnerByLogin(current.learners, input.login);
             return account ? credentialsOfLearner(account) : null;
           })();
 
-      if (known && !(await verifyLearnerPassword(known, input.password))) {
+      // Compte inconnu et mot de passe faux donnent la même réponse : sinon,
+      // l'écran de connexion révélerait quels identifiants existent.
+      if (!known || !(await verifyLearnerPassword(known, input.password))) {
         setState((previous) => ({ ...previous, events: appendEvent(previous, 'login-refused') }));
-        return { ok: false, reason: 'bad-password' };
+        return { ok: false, reason: 'bad-credentials' };
       }
 
-      const firstName = (known?.firstName ?? input.firstName).trim() || 'Apprenant';
-      const lastName = (known?.lastName ?? input.lastName ?? '').trim();
-      const email = (known?.email ?? input.email).trim().toLowerCase();
-      const displayName = `${firstName} ${lastName}`.trim();
+      const firstName = known.firstName.trim() || 'Apprenant';
+      const displayName = `${firstName} ${known.lastName}`.trim();
+      const email = known.email.trim().toLowerCase();
 
       const user: User =
         current.user && current.user.email === email
-          ? { ...current.user, firstName, displayName }
+          ? { ...current.user, firstName, displayName, role: known.role }
           : {
               id: createId('usr'),
-              role: email.startsWith('admin@') ? 'admin' : 'learner',
+              role: known.role,
               email,
               firstName,
               displayName,
@@ -290,7 +296,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         };
       }
 
-      const enrolmentCode = known ? known.code : current.enrolmentCode;
+      const enrolmentCode = known.code;
 
       const session: SessionToken = {
         id: createId('ses'),
@@ -403,6 +409,10 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       // On mémorise chaque langue essayée : c'est ce qui débloque « polyglotte ».
       localesUsed: previous.localesUsed.includes(locale) ? previous.localesUsed : [...previous.localesUsed, locale],
     }));
+  }, []);
+
+  const toggleSound = useCallback(() => {
+    setState((previous) => ({ ...previous, soundOn: !previous.soundOn }));
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -625,6 +635,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       setTheme,
       setLocale,
       toggleTheme,
+      toggleSound,
       logEvent,
       markLessonViewed,
       completeLesson,
@@ -657,6 +668,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       setTheme,
       setLocale,
       toggleTheme,
+      toggleSound,
       logEvent,
       markLessonViewed,
       completeLesson,

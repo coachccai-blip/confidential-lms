@@ -1,16 +1,19 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { decodeInvite, type InvitePayload } from '@lms/core';
 import { useApp } from '../state/app-context';
+import { DEMO_CREDENTIALS } from '../state/seed-accounts';
 import { D, useI18n } from '../i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import {
+  IconChevronLeft,
   IconEyeOff,
   IconFingerprint,
   IconLayers,
   IconLock,
   IconMoon,
   IconSun,
+  IconUser,
 } from '../components/Icons';
 import { Toasts } from '../components/Toasts';
 
@@ -20,9 +23,8 @@ export function LoginPage() {
   const { user, signIn, theme, toggleTheme, pushToast } = useApp();
   const { l } = useI18n();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('marie.dubois@exemple.fr');
-  const [firstName, setFirstName] = useState('Marie');
-  const [password, setPassword] = useState('demo-lumiere');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
   const [invite, setInvite] = useState('');
   const [applied, setApplied] = useState<InvitePayload | null>(null);
   const [inviteNotice, setInviteNotice] = useState<{ ok: boolean; text: string } | null>(null);
@@ -35,25 +37,16 @@ export function LoginPage() {
     event.preventDefault();
     setError(null);
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError(l(D.login.errorEmail));
-      return;
-    }
-    if (password.length < 8) {
-      setError(l(D.login.errorPassword));
+    if (login.trim().length === 0 || password.length === 0) {
+      setError(l(D.login.errorRequired));
       return;
     }
 
     setBusy(true);
     try {
-      const outcome = await signIn({
-        email: email.trim(),
-        password,
-        firstName: firstName.trim(),
-        invite: applied,
-      });
+      const outcome = await signIn({ login: login.trim(), password, invite: applied });
       if (!outcome.ok) {
-        setError(outcome.reason === 'bad-password' ? l(D.login.errorWrongPassword) : outcome.message);
+        setError(outcome.reason === 'device-limit' ? outcome.message : l(D.login.errorBadCredentials));
         return;
       }
       pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
@@ -65,7 +58,7 @@ export function LoginPage() {
 
   /**
    * L'invitation remplit le formulaire au lieu de le remplacer : l'apprenant
-   * voit ce qui a été renseigné et reste libre de le corriger.
+   * voit ce qui a été renseigné et garde la main.
    */
   function applyInvite() {
     const decoded = decodeInvite(invite);
@@ -74,8 +67,7 @@ export function LoginPage() {
       setInviteNotice({ ok: false, text: l(D.login.inviteFailed) });
       return;
     }
-    setFirstName(decoded.firstName);
-    setEmail(decoded.email);
+    setLogin(decoded.username);
     setPassword('');
     setApplied(decoded);
     setInviteNotice({ ok: true, text: l(D.login.inviteOk(decoded.firstName)) });
@@ -84,7 +76,7 @@ export function LoginPage() {
   return (
     <div className="auth">
       <section className="auth__aside">
-        <div className="brand">
+        <Link to="/" className="brand brand--link">
           <span className="brand__mark">
             <IconLayers size={19} style={{ color: '#04121f' }} />
           </span>
@@ -94,7 +86,7 @@ export function LoginPage() {
               {l(D.brand.tagline)}
             </span>
           </span>
-        </div>
+        </Link>
 
         <div className="auth__pitch">
           <h1>{l(D.login.headline)}</h1>
@@ -133,10 +125,53 @@ export function LoginPage() {
           </div>
 
           <div className="field">
-            <label className="field__label" htmlFor="invite">
-              {l(D.login.inviteLabel)}
+            <label className="field__label" htmlFor="login">
+              {l(D.login.login)}
             </label>
-            <div className="row" style={{ alignItems: 'stretch' }}>
+            <input
+              id="login"
+              className="input"
+              value={login}
+              onChange={(event) => setLogin(event.target.value)}
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              required
+            />
+            <span className="field__hint">{l(D.login.loginHint)}</span>
+          </div>
+
+          <div className="field">
+            <label className="field__label" htmlFor="password">
+              {l(D.login.password)}
+            </label>
+            <input
+              id="password"
+              className="input"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+
+          {error ? (
+            <div className="callout callout--danger" style={{ padding: 'var(--space-3) var(--space-4)' }}>
+              <span className="callout__icon">
+                <IconLock size={16} />
+              </span>
+              <span style={{ fontSize: '0.85rem' }}>{error}</span>
+            </div>
+          ) : null}
+
+          <button type="submit" className="btn btn--primary btn--lg btn--block" disabled={busy}>
+            {l(D.login.submit)}
+          </button>
+
+          <details className="auth__invite">
+            <summary>{l(D.login.inviteLabel)}</summary>
+            <div className="row" style={{ alignItems: 'stretch', marginTop: 'var(--space-3)' }}>
               <input
                 id="invite"
                 className="input"
@@ -159,71 +194,40 @@ export function LoginPage() {
                 {inviteNotice.text}
               </span>
             ) : null}
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor="firstName">
-              {l(D.login.firstName)}
-            </label>
-            <input
-              id="firstName"
-              className="input"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              autoComplete="given-name"
-              required
-            />
-            <span className="field__hint">{l(D.login.firstNameHint)}</span>
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor="email">
-              {l(D.login.email)}
-            </label>
-            <input
-              id="email"
-              className="input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-            <span className="field__hint">{l(D.login.emailHint)}</span>
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor="password">
-              {l(D.login.password)}
-            </label>
-            <input
-              id="password"
-              className="input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-            />
-          </div>
-
-          {error ? (
-            <div className="callout callout--danger" style={{ padding: 'var(--space-3) var(--space-4)' }}>
-              <span className="callout__icon">
-                <IconLock size={16} />
-              </span>
-              <span style={{ fontSize: '0.85rem' }}>{error}</span>
-            </div>
-          ) : null}
-
-          <button type="submit" className="btn btn--primary btn--lg btn--block" disabled={busy}>
-            {l(D.login.submit)}
-          </button>
+          </details>
 
           <div className="auth__demo">
-            <strong style={{ color: 'var(--text-secondary)' }}>{l(D.login.demoTitle)}</strong>
+            <strong style={{ color: 'var(--text-secondary)' }}>{l(D.login.demoAccounts)}</strong>
+            <ul className="demo-accounts">
+              {DEMO_CREDENTIALS.map((account) => (
+                <li key={account.username}>
+                  <span className="demo-accounts__role">
+                    <IconUser size={13} />
+                    {l(account.role === 'admin' ? D.login.demoRoleAdmin : D.login.demoRoleLearner)}
+                  </span>
+                  <code>{account.username}</code>
+                  <code>{account.password}</code>
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm"
+                    onClick={() => {
+                      setLogin(account.username);
+                      setPassword(account.password);
+                      setApplied(null);
+                      setError(null);
+                    }}
+                  >
+                    {l(D.login.demoFill)}
+                  </button>
+                </li>
+              ))}
+            </ul>
             <span>{l(D.login.demoText)}</span>
           </div>
+
+          <Link to="/" className="btn btn--ghost btn--block">
+            <IconChevronLeft size={15} /> {l(D.login.backHome)}
+          </Link>
         </form>
       </section>
 

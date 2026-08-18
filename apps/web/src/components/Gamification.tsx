@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { XP } from '@lms/core';
 import { D, useI18n } from '../i18n';
+import { useFeedback } from '../feedback/useFeedback';
 import { useApp } from '../state/app-context';
 import { ALL_BADGES, useGamification } from '../state/useGamification';
 import { IconAward, IconSparkle } from './Icons';
@@ -46,7 +47,33 @@ function LevelRing({ percentage, level }: { readonly percentage: number; readonl
 export function GamificationWatcher() {
   const { state, user, pushToast, markBadgesSeen } = useApp();
   const { level, badges } = useGamification();
+  const { play, celebrate } = useFeedback();
   const previousLevel = useRef<number | null>(null);
+  const knownLessons = useRef<Set<string> | null>(null);
+
+  /*
+   * Une leçon s'achève de deux façons : par le bouton, ou en atteignant le
+   * bas de la page. La célébration est donc accrochée à la progression
+   * elle-même, pas au clic — sinon la moitié des fins passeraient inaperçues.
+   */
+  useEffect(() => {
+    const completed = new Set(
+      Object.entries(state.progress)
+        .filter(([, entry]) => entry?.completed)
+        .map(([lessonId]) => lessonId),
+    );
+
+    // Au premier rendu on enregistre l'existant sans rien fêter : rouvrir
+    // l'application ne doit pas rejouer les leçons d'hier.
+    if (knownLessons.current === null) {
+      knownLessons.current = completed;
+      return;
+    }
+
+    const fresh = [...completed].filter((id) => !knownLessons.current?.has(id));
+    knownLessons.current = completed;
+    if (fresh.length > 0) celebrate('complete', { x: 0.5, y: 0.55 });
+  }, [state.progress, celebrate]);
 
   useEffect(() => {
     if (previousLevel.current !== null && level.level > previousLevel.current) {
@@ -55,9 +82,11 @@ export function GamificationWatcher() {
         title: D.game.levelUpTitle,
         text: D.game.levelUpText(user?.firstName ?? '', level.level),
       });
+      // Un palier franchi mérite plus qu'un badge : gerbe pleine largeur.
+      celebrate('levelUp', { x: 0.5, y: 0.35 });
     }
     previousLevel.current = level.level;
-  }, [level.level, pushToast, user?.firstName]);
+  }, [level.level, pushToast, user?.firstName, celebrate]);
 
   useEffect(() => {
     const fresh = badges.filter((id) => !state.badgesSeen.includes(id));
@@ -74,8 +103,9 @@ export function GamificationWatcher() {
         },
       });
     }
+    play('badge');
     markBadgesSeen(fresh);
-  }, [badges, state.badgesSeen, pushToast, markBadgesSeen]);
+  }, [badges, state.badgesSeen, pushToast, markBadgesSeen, play]);
 
   return null;
 }

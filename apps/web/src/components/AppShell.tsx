@@ -13,9 +13,12 @@ import {
   IconMoon,
   IconShieldCheck,
   IconSun,
+  IconVolume,
+  IconVolumeOff,
   IconUser,
   IconLayers,
 } from './Icons';
+import { playSound } from '../feedback/sounds';
 import { GamificationWatcher, LevelChip } from './Gamification';
 import { LanguageSwitch } from './LanguageSwitch';
 import { ProgressBar } from './Progress';
@@ -30,7 +33,7 @@ export interface AppShellProps {
 }
 
 export function AppShell({ title, crumb, actions, children, wide = false }: AppShellProps) {
-  const { user, state, signOut, theme, toggleTheme } = useApp();
+  const { user, state, signOut, theme, toggleTheme, toggleSound } = useApp();
   const { l } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
@@ -163,6 +166,21 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
           <div className="topbar__actions">
             {actions}
             <LanguageSwitch />
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={() => {
+                // Le son de bascule ne se joue qu'à l'allumage : le couper
+                // en émettant un bruit serait contradictoire.
+                if (!state.soundOn) playSound('toggle', true);
+                toggleSound();
+              }}
+              aria-pressed={state.soundOn}
+              aria-label={l(state.soundOn ? D.common.soundOff : D.common.soundOn)}
+              title={l(state.soundOn ? D.common.soundOff : D.common.soundOn)}
+            >
+              {state.soundOn ? <IconVolume size={17} /> : <IconVolumeOff size={17} />}
+            </button>
             <button
               type="button"
               className="icon-btn"

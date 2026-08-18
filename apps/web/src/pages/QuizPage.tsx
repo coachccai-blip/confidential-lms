@@ -1,0 +1,345 @@
+import { useCallback, useMemo, useState } from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import { attemptsLeft, createId, gradeQuiz, type QuizAttempt, type QuizResult } from '@lms/core';
+import { AppShell } from '../components/AppShell';
+import { ProgressBar } from '../components/Progress';
+import { getCourseBySlug, getQuiz } from '../content';
+import { Shield, Watermark, useContentProtection } from '../protection';
+import { useApp } from '../state/app-context';
+import { formatNumber } from '../lib/format';
+import {
+  IconAlert,
+  IconAward,
+  IconCheck,
+  IconChevronRight,
+  IconClock,
+  IconInfo,
+  IconMinus,
+  IconShieldCheck,
+  IconX,
+} from '../components/Icons';
+
+const KIND_LABEL = {
+  single: 'Une seule bonne réponse',
+  multiple: 'Plusieurs bonnes réponses',
+  boolean: 'Vrai ou faux',
+} as const;
+
+export function QuizPage() {
+  const { slug, quizId } = useParams();
+  const { user, state, fingerprint, logEvent, pushToast, recordAttempt, completeLesson } = useApp();
+  const course = getCourseBySlug(slug);
+  const quiz = getQuiz(quizId ?? '');
+
+  const [responses, setResponses] = useState<Record<string, readonly string[]>>({});
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const [startedAt] = useState(() => new Date().toISOString());
+
+  const onNotice = useCallback(
+    (notice: { tone: 'warning' | 'danger' | 'info'; title: string; text: string }) =>
+      pushToast({ tone: notice.tone, title: notice.title, text: notice.text }),
+    [pushToast],
+  );
+
+  const { shieldReason } = useContentProtection({ enabled: true, fingerprint, onEvent: logEvent, onNotice });
+
+  const history = useMemo(
+    () => state.attempts.filter((attempt) => attempt.quizId === quizId),
+    [state.attempts, quizId],
+  );
+
+  if (!course || course.status !== 'published') return <Navigate to="/app" replace />;
+  if (!quiz) return <Navigate to={`/app/cours/${course.slug}`} replace />;
+
+  const lesson = course.modules.flatMap((module) => module.lessons).find((item) => item.quizId === quiz.id);
+  const left = attemptsLeft(quiz, state.attempts);
+  const answeredCount = quiz.questions.filter((question) => (responses[question.id] ?? []).length > 0).length;
+  const locked = result !== null;
+
+  function toggleAnswer(questionId: string, answerId: string, multiple: boolean) {
+    if (locked) return;
+    setResponses((current) => {
+      const previous = current[questionId] ?? [];
+      if (!multiple) return { ...current, [questionId]: [answerId] };
+      return {
+        ...current,
+        [questionId]: previous.includes(answerId)
+          ? previous.filter((id) => id !== answerId)
+          : [...previous, answerId],
+      };
+    });
+  }
+
+  function submit() {
+    if (!quiz) return;
+    const graded = gradeQuiz(quiz, responses);
+    const attempt: QuizAttempt = {
+      id: createId('att'),
+      quizId: quiz.id,
+      startedAt,
+      submittedAt: new Date().toISOString(),
+      score: graded.score,
+      maxScore: graded.maxScore,
+      percentage: graded.percentage,
+      passed: graded.passed,
+      responses,
+    };
+    setResult(graded);
+    recordAttempt(attempt, quiz.title);
+    if (lesson) completeLesson(lesson.id, lesson.title);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    pushToast({
+      tone: graded.passed ? 'success' : 'warning',
+      title: graded.passed ? 'Quiz réussi' : 'Seuil non atteint',
+      text: `Score : ${graded.percentage} % (seuil ${quiz.passingScore} %).`,
+    });
+  }
+
+  function retry() {
+    setResponses({});
+    setResult(null);
+    window.scrollTo({ top: 0 });
+  }
+
+  const exhausted = left <= 0 && !result;
+
+  return (
+    <AppShell
+      title={quiz.title}
+      crumb={course.title}
+      actions={
+        <span className="badge badge--success">
+          <IconShieldCheck size={12} /> Protégé
+        </span>
+      }
+    >
+      <Shield reason={shieldReason} />
+      {user ? <Watermark email={user.email} phone={user.phone} fixed repeat={18} /> : null}
+
+      <div className="quiz protected">
+        <header className="quiz__head">
+          <div style={{ flex: '1 1 320px' }}>
+            <h1>{quiz.title}</h1>
+            <p className="secondary" style={{ marginTop: 'var(--space-2)', maxWidth: '62ch' }}>
+              {quiz.description}
+            </p>
+          </div>
+        </header>
+
+        <div className="quiz__rules">
+          <span className="badge">
+            <IconAward size={12} /> Seuil de réussite {quiz.passingScore} %
+          </span>
+          <span className="badge">
+            <IconClock size={12} /> {quiz.questions.length} questions
+          </span>
+          <span className="badge">
+            {quiz.maxAttempts === 0
+              ? 'Tentatives illimitées'
+              : `${Number.isFinite(left) ? left : quiz.maxAttempts} tentative${left > 1 ? 's' : ''} restante${left > 1 ? 's' : ''} sur ${quiz.maxAttempts}`}
+          </span>
+          <span className="badge">{quiz.partialCredit ? 'Crédit partiel activé' : 'Sans crédit partiel'}</span>
+        </div>
+
+        {result ? (
+          <section className={result.passed ? 'result result--passed' : 'result result--failed'}>
+            <div
+              className="result__glow"
+              style={{
+                background: result.passed
+                  ? 'linear-gradient(120deg, #3ecf8e, #17845a)'
+                  : `linear-gradient(120deg, ${course.accentFrom}, ${course.accentTo})`,
+              }}
+            />
+            <span className={result.passed ? 'badge badge--success' : 'badge badge--warning'}>
+              {result.passed ? 'Quiz validé' : 'Seuil non atteint'}
+            </span>
+            <div className="result__score">{result.percentage}%</div>
+            <p className="result__label">
+              {result.passed
+                ? `Vous avez répondu correctement à ${result.correctCount} question${result.correctCount > 1 ? 's' : ''} sur ${result.total}. Le détail des corrections figure ci-dessous.`
+                : `Il fallait atteindre ${quiz.passingScore} %. Relisez les corrections ci-dessous avant de retenter.`}
+            </p>
+            <div className="result__stats">
+              <span className="result__stat">
+                <span>
+                  {formatNumber(result.score)} / {result.maxScore}
+                </span>
+                <span>Points</span>
+              </span>
+              <span className="result__stat">
+                <span>
+                  {result.correctCount} / {result.total}
+                </span>
+                <span>Questions justes</span>
+              </span>
+              <span className="result__stat">
+                <span>{Number.isFinite(left) ? Math.max(0, left) : '∞'}</span>
+                <span>Tentatives restantes</span>
+              </span>
+            </div>
+            <div className="row" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
+              {left > 0 ? (
+                <button type="button" className="btn btn--secondary" onClick={retry}>
+                  Refaire le quiz
+                </button>
+              ) : null}
+              <Link className="btn btn--primary" to={`/app/cours/${course.slug}`}>
+                Retour au sommaire <IconChevronRight size={15} />
+              </Link>
+            </div>
+          </section>
+        ) : exhausted ? (
+          <section className="empty">
+            <IconAlert size={22} />
+            <strong style={{ color: 'var(--text)' }}>Nombre de tentatives épuisé</strong>
+            <span>
+              Vous avez utilisé les {quiz.maxAttempts} tentatives autorisées pour ce quiz. Contactez votre formateur pour
+              en obtenir une supplémentaire.
+            </span>
+            <Link className="btn btn--secondary" to={`/app/cours/${course.slug}`}>
+              Retour au sommaire
+            </Link>
+          </section>
+        ) : (
+          <div className="quiz__progress">
+            <span className="muted tabnum" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+              {answeredCount} / {quiz.questions.length} répondues
+            </span>
+            <ProgressBar value={(answeredCount / quiz.questions.length) * 100} thin />
+            <button
+              type="button"
+              className="btn btn--primary"
+              disabled={answeredCount < quiz.questions.length}
+              onClick={submit}
+            >
+              Valider mes réponses
+            </button>
+          </div>
+        )}
+
+        {!exhausted || result
+          ? quiz.questions.map((question, index) => {
+              const graded = result?.questions.find((item) => item.questionId === question.id);
+              const selected = responses[question.id] ?? [];
+              const multiple = question.kind === 'multiple';
+
+              return (
+                <article
+                  className={
+                    graded ? (graded.correct ? 'question question--correct' : 'question question--wrong') : 'question'
+                  }
+                  key={question.id}
+                  id={`q-${question.id}`}
+                >
+                  <div className="question__head">
+                    <span className="question__num">{index + 1}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div className="question__prompt">{question.prompt}</div>
+                      <div className="question__meta">
+                        <span>{KIND_LABEL[question.kind]}</span>
+                        <span>
+                          {question.points} point{question.points > 1 ? 's' : ''}
+                        </span>
+                        {graded ? (
+                          <span className={graded.correct ? 'severity severity--info' : 'severity severity--critical'}>
+                            {formatNumber(graded.earned)} / {graded.possible}
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="options" role={multiple ? 'group' : 'radiogroup'}>
+                    {question.answers.map((answer) => {
+                      const isSelected = selected.includes(answer.id);
+                      const isCorrect = answer.correct;
+                      let className = 'option';
+                      if (graded) {
+                        className += ' option--locked';
+                        if (isSelected && isCorrect) className += ' option--correct';
+                        else if (isSelected && !isCorrect) className += ' option--incorrect';
+                        else if (!isSelected && isCorrect) className += ' option--missed';
+                      } else if (isSelected) {
+                        className += ' option--selected';
+                      }
+
+                      return (
+                        <button
+                          type="button"
+                          className={className}
+                          key={answer.id}
+                          onClick={() => toggleAnswer(question.id, answer.id, multiple)}
+                          aria-pressed={isSelected}
+                          disabled={locked}
+                        >
+                          <span className={multiple ? 'option__box' : 'option__box option__box--radio'}>
+                            {graded && !isSelected && isCorrect ? (
+                              <IconMinus size={11} />
+                            ) : graded && isSelected && !isCorrect ? (
+                              <IconX size={11} />
+                            ) : (
+                              <IconCheck size={11} />
+                            )}
+                          </span>
+                          <span>{answer.text}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {graded ? (
+                    <div className="explanation">
+                      <span className="explanation__icon">
+                        <IconInfo size={16} />
+                      </span>
+                      <span>
+                        <strong>Correction. </strong>
+                        {question.explanation}
+                      </span>
+                    </div>
+                  ) : null}
+                </article>
+              );
+            })
+          : null}
+
+        {!result && !exhausted ? (
+          <button
+            type="button"
+            className="btn btn--primary btn--lg"
+            disabled={answeredCount < quiz.questions.length}
+            onClick={submit}
+          >
+            Valider mes réponses ({answeredCount}/{quiz.questions.length})
+          </button>
+        ) : null}
+
+        {history.length > 0 ? (
+          <section className="card card--flush">
+            <div className="card__header">
+              <h3>Historique des tentatives</h3>
+              <span className="card__hint">{history.length} enregistrée(s)</span>
+            </div>
+            {history.map((attempt, index) => (
+              <div className="attempt-row" key={attempt.id}>
+                <span className="muted tabnum" style={{ width: 28 }}>
+                  #{history.length - index}
+                </span>
+                <span className={attempt.passed ? 'badge badge--success' : 'badge badge--danger'}>
+                  {attempt.percentage}%
+                </span>
+                <span className="muted">
+                  {formatNumber(attempt.score)} / {attempt.maxScore} points
+                </span>
+                <span className="muted" style={{ marginLeft: 'auto', fontSize: '0.78rem' }}>
+                  {new Date(attempt.submittedAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}
+                </span>
+              </div>
+            ))}
+          </section>
+        ) : null}
+      </div>
+    </AppShell>
+  );
+}

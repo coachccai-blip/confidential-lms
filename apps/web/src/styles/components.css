@@ -1,0 +1,421 @@
+/* ---------------- Boutons ---------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 9px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 560;
+  border: 1px solid transparent;
+  transition: background var(--speed) var(--ease), border-color var(--speed) var(--ease),
+    transform var(--speed) var(--ease), opacity var(--speed) var(--ease);
+  white-space: nowrap;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent-gradient);
+  color: #180d05;
+  font-weight: 620;
+  box-shadow: 0 8px 22px -14px var(--ember-3);
+}
+
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.btn--secondary {
+  background: var(--panel);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--panel-hover);
+  border-color: var(--border-strong);
+}
+
+.btn--ghost {
+  color: var(--text-secondary);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--panel-hover);
+  color: var(--text);
+}
+
+.btn--danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--lg {
+  padding: 12px 20px;
+  font-size: 0.94rem;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
+}
+
+.icon-btn:hover {
+  background: var(--panel-hover);
+  color: var(--text);
+}
+
+/* ---------------- Cartes ---------------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.card__header h3 {
+  font-size: 0.95rem;
+}
+
+.card__header .card__hint {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.card__body {
+  padding: var(--space-6);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+/* ---------------- Badges & pastilles ---------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 580;
+  letter-spacing: 0.01em;
+  background: var(--panel-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.badge--accent { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
+.badge--success { background: var(--success-soft); color: var(--success); border-color: color-mix(in srgb, var(--success) 28%, transparent); }
+.badge--warning { background: var(--warning-soft); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 28%, transparent); }
+.badge--danger { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 28%, transparent); }
+.badge--info { background: var(--info-soft); color: var(--info); border-color: color-mix(in srgb, var(--info) 28%, transparent); }
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+  flex: none;
+}
+
+/* ---------------- Barres de progression ---------------- */
+
+.progress {
+  position: relative;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--panel-2);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--radius-full);
+  background: var(--accent-gradient);
+  transition: width 420ms var(--ease);
+}
+
+.progress--thin { height: 4px; }
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring__track {
+  stroke: var(--border);
+}
+
+.progress-ring__value {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 600ms var(--ease);
+}
+
+/* ---------------- Statistiques ---------------- */
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+
+.stat__label {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.stat__value {
+  font-size: 1.7rem;
+  font-weight: 640;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.stat__hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ---------------- Formulaires ---------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 0.8rem;
+  font-weight: 560;
+  color: var(--text-secondary);
+}
+
+.field__hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  transition: border-color var(--speed) var(--ease), box-shadow var(--speed) var(--ease);
+  font-size: 0.9rem;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* ---------------- Tableaux ---------------- */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.855rem;
+}
+
+.table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  font-weight: 620;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover td {
+  background: var(--panel-2);
+}
+
+.table td strong {
+  color: var(--text);
+  font-weight: 560;
+}
+
+/* ---------------- Divers ---------------- */
+
+.empty {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12);
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  border: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.muted { color: var(--text-muted); }
+.secondary { color: var(--text-secondary); }
+.tabnum { font-variant-numeric: tabular-nums; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stack--tight { gap: var(--space-2); }
+.stack--loose { gap: var(--space-8); }
+
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------------- Toasts ---------------- */
+
+.toasts {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+  animation: toast-in 260ms var(--ease);
+  font-size: 0.85rem;
+}
+
+.toast__icon { flex: none; margin-top: 2px; }
+.toast__title { font-weight: 580; }
+.toast__text { color: var(--text-secondary); font-size: 0.8rem; }
+.toast--warning .toast__icon { color: var(--warning); }
+.toast--danger .toast__icon { color: var(--danger); }
+.toast--info .toast__icon { color: var(--info); }
+.toast--success .toast__icon { color: var(--success); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}

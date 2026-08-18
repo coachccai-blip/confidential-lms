@@ -1,0 +1,138 @@
+/* ---------------- Couche de protection ---------------- */
+
+/* Zone protegee : selection, glisser-deposer et menu contextuel neutralises. */
+.protected {
+  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+.protected img,
+.protected svg {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Filigrane visible, non interceptif, repete en mosaique. */
+.watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.watermark__grid {
+  position: absolute;
+  inset: -25%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7vh 2vw;
+  align-content: space-around;
+  transition: transform 1400ms var(--ease);
+  will-change: transform;
+}
+
+.watermark__text {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--watermark-color);
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 600;
+}
+
+.watermark--fixed {
+  position: fixed;
+  z-index: 90;
+}
+
+/* Ecran de garde : masque le contenu en cas de perte de focus, d'onglet
+   masque, ou de detection d'un enregistrement d'ecran. */
+.shield {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(22px) saturate(140%);
+  animation: shield-in 160ms var(--ease);
+  text-align: center;
+}
+
+@keyframes shield-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.shield__card {
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.shield__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.shield__title { font-size: 1.1rem; font-weight: 620; }
+.shield__text { font-size: 0.875rem; color: var(--text-secondary); }
+
+/* Bandeau d'etat des protections. */
+.shield-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.shield-bar__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 0.72rem;
+  font-weight: 580;
+  border: 1px solid color-mix(in srgb, var(--success) 26%, transparent);
+}
+
+.severity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 560;
+}
+
+.severity--info { color: var(--text-muted); }
+.severity--warning { color: var(--warning); }
+.severity--critical { color: var(--danger); }

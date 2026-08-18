@@ -1,0 +1,117 @@
+/* ------------------------------------------------------------------
+   Design tokens — palette sombre par defaut, palette claire au choix.
+   Inspiration : interfaces Linear / Notion, accent « magma ».
+   ------------------------------------------------------------------ */
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --speed: 180ms;
+
+  --ember-1: #ffb020;
+  --ember-2: #ff7a2f;
+  --ember-3: #e2453b;
+  --accent-gradient: linear-gradient(135deg, var(--ember-1), var(--ember-3));
+
+  --sidebar-w: 268px;
+  --content-max: 760px;
+}
+
+/* Theme sombre (defaut) */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #08090b;
+  --bg-elevated: #0d0f12;
+  --panel: #111317;
+  --panel-2: #15181d;
+  --panel-hover: #1a1e24;
+  --border: #21252c;
+  --border-strong: #2c323b;
+
+  --text: #edeff3;
+  --text-secondary: #b3b9c4;
+  --text-muted: #7c838f;
+  --text-inverse: #0a0b0d;
+
+  --accent: #ff8a3d;
+  --accent-hover: #ff9d5c;
+  --accent-soft: rgba(255, 138, 61, 0.14);
+  --accent-border: rgba(255, 138, 61, 0.32);
+
+  --success: #3ecf8e;
+  --success-soft: rgba(62, 207, 142, 0.13);
+  --warning: #f5b544;
+  --warning-soft: rgba(245, 181, 68, 0.13);
+  --danger: #f2635a;
+  --danger-soft: rgba(242, 99, 90, 0.13);
+  --info: #5aa9f8;
+  --info-soft: rgba(90, 169, 248, 0.13);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 24px 64px -24px rgba(0, 0, 0, 0.9);
+
+  --watermark-color: rgba(255, 255, 255, 0.085);
+  --grid-line: rgba(255, 255, 255, 0.028);
+}
+
+/* Theme clair */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f7f8fa;
+  --bg-elevated: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f4f5f8;
+  --panel-hover: #eef0f4;
+  --border: #e4e7ec;
+  --border-strong: #d3d8e0;
+
+  --text: #10131a;
+  --text-secondary: #4a515e;
+  --text-muted: #79808d;
+  --text-inverse: #ffffff;
+
+  --accent: #d9541e;
+  --accent-hover: #c04716;
+  --accent-soft: rgba(217, 84, 30, 0.09);
+  --accent-border: rgba(217, 84, 30, 0.26);
+
+  --success: #17845a;
+  --success-soft: rgba(23, 132, 90, 0.1);
+  --warning: #a86a10;
+  --warning-soft: rgba(168, 106, 16, 0.1);
+  --danger: #c0392f;
+  --danger-soft: rgba(192, 57, 47, 0.09);
+  --info: #1c6fc4;
+  --info-soft: rgba(28, 111, 196, 0.09);
+
+  --shadow-sm: 0 1px 2px rgba(16, 19, 26, 0.06);
+  --shadow-md: 0 10px 30px -18px rgba(16, 19, 26, 0.35);
+  --shadow-lg: 0 30px 70px -32px rgba(16, 19, 26, 0.35);
+
+  --watermark-color: rgba(16, 19, 26, 0.115);
+  --grid-line: rgba(16, 19, 26, 0.03);
+}

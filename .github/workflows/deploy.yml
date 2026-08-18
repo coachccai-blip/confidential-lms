@@ -1,0 +1,65 @@
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une seule publication à la fois ; les publications en attente sont annulées.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Tests, typage et build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Installation des dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Vérification des types
+        run: pnpm typecheck
+
+      - name: Tests unitaires
+        run: pnpm test
+
+      - name: Build de l'application web
+        # `base` doit correspondre au chemin servi par GitHub Pages : /<repo>/
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: pnpm build
+
+      - name: Fallback SPA (404 → index)
+        run: cp apps/web/dist/index.html apps/web/dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    name: Publication
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

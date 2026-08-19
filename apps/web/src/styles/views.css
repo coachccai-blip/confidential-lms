@@ -135,7 +135,9 @@
 }
 
 .course-card__cover {
-  height: 132px;
+  /* Les vignettes sont rendues en 16:9 : on donne a la bande le meme rapport
+     pour qu'aucun sujet ne soit rogne, quelle que soit la largeur de la carte. */
+  aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
 }

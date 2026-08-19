@@ -15,18 +15,19 @@ reste cohérent même partiellement illustré.
 
 ## Cadrage
 
-La carte affiche une bande de **132 px de haut** sur environ 320 px de large,
-soit un rapport proche de 2,4:1, recadrée depuis le centre. Générez en 16:9 :
-les bords haut et bas seront rognés, gardez donc le sujet centré.
+La carte affiche la vignette en **16:9**, sur toute sa largeur (240 a 340 px
+selon la grille). Générez donc en 16:9 : rien n'est rogné, le sujet est vu
+entier.
 
-Le **coin inférieur gauche** reçoit la lettre du niveau (« A1 ») en blanc.
-Laissez-le vide.
+Le **coin inférieur gauche** reçoit la lettre du niveau (« A1 ») en blanc, sur
+un léger assombrissement. Gardez-le calme.
 
 ## Poids
 
-Visez moins de 200 Ko par image, en 800 à 1200 px de large. Au-delà, le
-catalogue devient lent à afficher pour un gain invisible : la vignette n'est
-jamais rendue à plus de 360 px de large.
+Les 36 vignettes actuelles sont des `.webp` de 960 x 540, qualité 82, entre 11
+et 34 Ko pièce — 690 Ko pour le catalogue entier. Restez dans cet ordre de
+grandeur : au-delà de 200 Ko l'image ralentit la page sans rien apporter, elle
+n'est jamais rendue à plus de 340 px de large.
 
 ## Les 36 slugs attendus
 

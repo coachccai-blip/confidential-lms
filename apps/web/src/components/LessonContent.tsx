@@ -107,7 +107,7 @@ function BlockRenderer({ block, fingerprint, locale, l, firstName }: BlockProps)
     case 'list': {
       const Tag = block.ordered ? 'ol' : 'ul';
       return (
-        <Tag>
+        <Tag className="prose-list">
           {block.items.map((item, index) => (
             <li key={index}>
               <span>

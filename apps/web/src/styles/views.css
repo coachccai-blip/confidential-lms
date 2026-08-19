@@ -476,21 +476,23 @@
 
 .prose em { color: var(--text); font-style: italic; }
 
-.prose ul,
-.prose ol {
+/* Liste du fil de lecture. La classe est portee par la liste elle-meme, et non
+   heritee de `.prose` : sans cela, la mise en page (puce, colonne de 18 px)
+   descendait aussi dans les listes des widgets, qui ont la leur. */
+.prose-list {
   display: grid;
   gap: var(--space-3);
   padding-left: var(--space-2);
 }
 
-.prose li {
+.prose-list > li {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   gap: var(--space-2);
   align-items: baseline;
 }
 
-.prose li::before {
+.prose-list > li::before {
   content: '';
   width: 5px;
   height: 5px;
@@ -500,11 +502,11 @@
   justify-self: center;
 }
 
-.prose ol {
+ol.prose-list {
   counter-reset: item;
 }
 
-.prose ol li::before {
+ol.prose-list > li::before {
   counter-increment: item;
   content: counter(item);
   width: auto;

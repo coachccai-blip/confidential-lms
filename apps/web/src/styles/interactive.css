@@ -290,6 +290,40 @@
   font-weight: 620;
 }
 
+/* Sur telephone, cinq arrets alignes laissent 60 px par etiquette : les mots se
+   brisent en colonnes d'une syllabe et le dernier arret sort du cadre. La frise
+   bascule donc a la verticale, ou chaque etiquette dispose de toute la largeur. */
+@media (max-width: 560px) {
+  .ix-timeline__track {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .ix-timeline__line {
+    top: calc(var(--space-4) + 8px);
+    bottom: 12px;
+    left: 9px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .ix-timeline__stop {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0 0 0 2px;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+
+  .ix-timeline__label {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 /* --- Sélecteur en crans --- */
 
 .ix-switcher__steps {

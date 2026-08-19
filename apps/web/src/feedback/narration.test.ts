@@ -103,3 +103,92 @@ describe('segmentation de la narration', () => {
     expect(result.map((section) => section.index)).toEqual([0, 1]);
   });
 });
+
+describe('français enchâssé dans les segments anglais et chinois', () => {
+  const one = (blocks: readonly LessonBlock[], locale: 'en' | 'zh') =>
+    buildNarration(blocks, locale, undefined, 'T', PHRASES).flatMap((section) => section.segments);
+
+  const partsOf = (segment: { text: string; parts: readonly { lang: string; start: number; end: number }[] }) =>
+    segment.parts.map((part) => [part.lang, segment.text.slice(part.start, part.end)] as const);
+
+  it('en chinois, toute suite latine est lue par la voix française', () => {
+    const [seg] = one([{ type: 'paragraph', text: t('x', 'x', '两者并列，用逗号分隔。切勿写 “Cher Monsieur”。') }], 'zh');
+    expect(partsOf(seg!)).toEqual([
+      ['zh', '两者并列，用逗号分隔。切勿写'],
+      ['fr', 'Cher Monsieur'],
+    ]);
+  });
+
+  it('en anglais, une citation française passe en voix française, une anglaise non', () => {
+    const [seg] = one(
+      [{ type: 'paragraph', text: t('x', 'Do not translate “Best regards” as “Meilleures salutations”.', 'x') }],
+      'en',
+    );
+    const parts = partsOf(seg!);
+    expect(parts.map(([lang]) => lang)).toEqual(['en', 'fr']);
+    expect(parts[0]![1]).toContain('Best regards');
+    expect(parts[1]![1]).toContain('Meilleures salutations');
+  });
+
+  it('tranche le gras au cas par cas : français en voix française, anglais en voix anglaise', () => {
+    const [fr] = one([{ type: 'paragraph', text: t('x', 'Use **à terme** here.', 'x') }], 'en');
+    expect(partsOf(fr!).map(([lang]) => lang)).toEqual(['en', 'fr', 'en']);
+    const [en] = one([{ type: 'paragraph', text: t('x', 'A CV fits on **one page** here.', 'x') }], 'en');
+    expect(en!.parts.map((part) => part.lang)).toEqual(['en']);
+  });
+
+  it('reconnaît une formule entièrement française sans balisage', () => {
+    const [seg] = one([{ type: 'paragraph', text: t('x', 'Je vous prie d’agréer…', 'x') }], 'en');
+    expect(seg!.parts.map((part) => part.lang)).toEqual(['fr']);
+  });
+
+  it('étend un mot à diacritique à ses voisins français, pas aux mots anglais', () => {
+    const [seg] = one([{ type: 'paragraph', text: t('x', 'The phrase à terme is common.', 'x') }], 'en');
+    expect(partsOf(seg!)).toEqual([
+      ['en', 'The phrase'],
+      ['fr', 'à terme'],
+      ['en', 'is common.'],
+    ]);
+  });
+
+  it('suit la langue du libellé de glossaire : traduit → langue du texte, français → voix française', () => {
+    const [tr] = one([{ type: 'paragraph', text: t('x', 'This is the [[concordance|sequence of tenses]] rule.', 'x') }], 'en');
+    expect(tr!.parts.map((part) => part.lang)).toEqual(['en']);
+    const [fr] = one([{ type: 'paragraph', text: t('x', 'The [[passe-compose|passé composé]] moves the story.', 'x') }], 'en');
+    expect(partsOf(fr!).some(([lang, text]) => lang === 'fr' && (text ?? '').includes('passé composé'))).toBe(true);
+  });
+
+  it('lit toujours les citations « » en français', () => {
+    const [seg] = one(
+      [{ type: 'paragraph', text: t('x', 'A famous line: « Les cons, ça ose tout. »', 'x') }],
+      'en',
+    );
+    expect(partsOf(seg!).some(([lang, text]) => lang === 'fr' && (text ?? '').includes('Les cons'))).toBe(true);
+  });
+
+  it('borne un passage français à sa virgule : la suite anglaise garde sa voix', () => {
+    const [seg] = one(
+      [{ type: 'paragraph', text: t('x', 'Bonne journée / Bonne soirée, when leaving the shop.', 'x') }],
+      'en',
+    );
+    const parts = partsOf(seg!);
+    expect(parts[0]![0]).toBe('fr');
+    expect(parts[parts.length - 1]![0]).toBe('en');
+    expect(parts[parts.length - 1]![1]).toContain('when leaving');
+  });
+
+  it('garde des index de parties exacts, contigus et non vides', () => {
+    const segments = one(
+      [{ type: 'paragraph', text: t('x', 'Say “bonjour madame” then “merci beaucoup” politely.', 'x') }],
+      'en',
+    );
+    const seg = segments[0]!;
+    for (const part of seg.parts) {
+      expect(part.start).toBeLessThan(part.end);
+      expect(seg.text.slice(part.start, part.end).trim().length).toBeGreaterThan(0);
+    }
+    for (let i = 1; i < seg.parts.length; i += 1) {
+      expect(seg.parts[i]!.start).toBeGreaterThanOrEqual(seg.parts[i - 1]!.end);
+    }
+  });
+});

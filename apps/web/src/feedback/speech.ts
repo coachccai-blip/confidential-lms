@@ -56,12 +56,39 @@ const PREFERRED_TAGS: Readonly<Record<SpeechLang, readonly string[]>> = {
   zh: ['zh-cn', 'cmn-hans-cn', 'zh-tw', 'zh-hk'],
 };
 
+/** Voix haut de gamme identifiables au nom, quel que soit le moteur. */
+const QUALITY_HINT = /natural|neural|premium|enhanced|wavenet|studio|journey|polyglot/i;
+/** Voix françaises réputées naturelles (Apple, Microsoft). */
+const FR_GOOD_NAMES = /audrey|am[ée]lie|thomas|marie|denise|henri|[ée]loise|vivienne|r[ée]my|jacques/i;
+/** Moteurs robotiques ou versions dégradées : à fuir si mieux existe. */
+const POOR_HINT = /espeak|eloquence|compact|whisper|novelty|bad news|albert|zarvox/i;
+
 /**
- * Choisit la meilleure voix disponible pour une langue.
+ * Note une voix : la qualité perçue d'abord, la variante préférée ensuite,
+ * le fonctionnement hors connexion en dernier.
  *
- * Les voix locales passent avant les voix réseau : elles démarrent sans
- * latence et fonctionnent hors connexion.
+ * L'intuition « voix locale = meilleure » est fausse : les voix locales de
+ * secours (eSpeak sous Linux, voix « compactes » ailleurs) sont les plus
+ * robotiques du lot, tandis que les voix réseau d'Edge (« Natural ») ou de
+ * Chrome (« Google français ») sont quasi natives. On classe donc par
+ * indice de qualité, et le local ne sert que d'arbitre entre égaux.
  */
+function scoreVoice(voice: SpeechSynthesisVoice, lang: SpeechLang): number {
+  const name = voice.name ?? '';
+  const tag = voice.lang.toLowerCase();
+  let score = 0;
+  if (QUALITY_HINT.test(name)) score += 400;
+  if (/google/i.test(name)) score += 250;
+  if (/siri/i.test(name)) score += 220;
+  if (lang === 'fr' && FR_GOOD_NAMES.test(name)) score += 150;
+  const rank = PREFERRED_TAGS[lang].indexOf(tag);
+  if (rank >= 0) score += 100 - rank * 10;
+  if (voice.localService) score += 30;
+  if (POOR_HINT.test(name)) score -= 500;
+  return score;
+}
+
+/** Choisit la meilleure voix disponible pour une langue. */
 export function pickVoiceFor(lang: SpeechLang): SpeechSynthesisVoice | null {
   if (voices.length === 0) refreshVoices();
   const candidates = voices.filter((voice) => voice.lang.toLowerCase().startsWith(lang === 'zh' ? 'zh' : lang));
@@ -70,13 +97,16 @@ export function pickVoiceFor(lang: SpeechLang): SpeechSynthesisVoice | null {
     candidates.push(...voices.filter((voice) => voice.lang.toLowerCase().startsWith('cmn')));
   }
   if (candidates.length === 0) return null;
-  for (const tag of PREFERRED_TAGS[lang]) {
-    const local = candidates.find((voice) => voice.lang.toLowerCase() === tag && voice.localService);
-    if (local) return local;
-    const any = candidates.find((voice) => voice.lang.toLowerCase() === tag);
-    if (any) return any;
+  let best: SpeechSynthesisVoice | null = null;
+  let bestScore = -Infinity;
+  for (const candidate of candidates) {
+    const score = scoreVoice(candidate, lang);
+    if (score > bestScore) {
+      best = candidate;
+      bestScore = score;
+    }
   }
-  return candidates.find((voice) => voice.localService) ?? candidates[0] ?? null;
+  return best;
 }
 
 function pickVoice(): SpeechSynthesisVoice | null {
@@ -123,12 +153,22 @@ export function onVoicesReady(callback: () => void): () => void {
  * virgules et normalise les blancs.
  */
 export function cleanForSpeech(text: string): string {
-  return text
-    .replace(/\*\*/g, '')
-    .replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g, (_, id: string, label: string) => label || id)
-    .replace(/·/g, ', ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return (
+    text
+      .replace(/\*\*/g, '')
+      .replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g, (_, id: string, label: string) => label || id)
+      .replace(/·/g, ', ')
+      // Les signes visuels se lisent mal (« barre oblique », « tiret ») :
+      // on les convertit en respirations, comme le ferait un narrateur.
+      .replace(/\s*\/\s*/g, ', ')
+      .replace(/\s+[—–]\s+/g, ', ')
+      .replace(/\s*(?:→|⇒)\s*/g, ', ')
+      .replace(/\s*=\s*/g, ', ')
+      // Les ponctuations empilées (« Cordialement, . ») valent une seule pause.
+      .replace(/([.,;:!?…])(?:\s*[.,;:])+/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
 }
 
 /* ------------------------------------------------------------------

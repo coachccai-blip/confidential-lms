@@ -41,6 +41,6 @@ Un fichier par ligne, l'extension au choix. Cochez au fur et à mesure.
 | C1 | `c1-academique` · `c1-debat` · `c1-lexique` · `c1-oral-rapide` · `c1-orthographe` · `dalf-c1` |
 | C2 | `c2-litterature` · `c2-institutions` · `c2-stylistique` · `c2-traduction` · `c2-humour` · `dalf-c2` |
 
-Attention aux trois slugs qui ne portent pas le préfixe de leur niveau :
+Attention aux six slugs qui ne portent pas le préfixe de leur niveau :
 `grammaire`, `conjugaison` (B1) et les quatre diplômes `delf-b1`, `delf-b2`,
 `dalf-c1`, `dalf-c2`.

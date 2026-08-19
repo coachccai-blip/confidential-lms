@@ -1099,6 +1099,44 @@ export const D = {
   },
 
   /** Libellés des schémas manipulables. */
+  /* ---------------- Narration audio des leçons ---------------- */
+  narration: {
+    listenLesson: t('Écouter la leçon', 'Listen to this lesson', '收听本课'),
+    listenSection: t('Écouter cette partie', 'Listen to this part', '收听这一部分'),
+    listenRest: t('Écouter la suite', 'Listen to the rest', '继续收听下一部分'),
+    nowPlaying: t('Narration en cours', 'Now narrating', '正在朗读'),
+    pause: t('Mettre en pause', 'Pause', '暂停'),
+    resume: t('Reprendre la lecture', 'Resume', '继续播放'),
+    stop: t('Arrêter la lecture', 'Stop', '停止播放'),
+    back5: t('Reculer de 5 secondes', 'Back 5 seconds', '后退 5 秒'),
+    forward5: t('Avancer de 5 secondes', 'Forward 5 seconds', '前进 5 秒'),
+    previousSegment: t('Segment précédent', 'Previous segment', '上一段'),
+    nextSegment: t('Segment suivant', 'Next segment', '下一段'),
+    slowMode: t('Vitesse lente', 'Slow speed', '慢速'),
+    speed: t('Vitesse de lecture', 'Playback speed', '播放速度'),
+    speedNormal: t('normale', 'normal', '正常'),
+    speedSlow: t('lente', 'slow', '慢速'),
+    speedFast: t('rapide', 'fast', '快速'),
+    sectionOf: (a: number, b: number) => t(`Partie ${a} / ${b}`, `Part ${a} / ${b}`, `第 ${a} / ${b} 部分`),
+    segmentOf: (a: number, b: number) => t(`Segment ${a} / ${b}`, `Segment ${a} / ${b}`, `第 ${a} / ${b} 段`),
+    activityInvite: t(
+      'À vous : faites l’activité à l’écran, puis lancez la suite de l’écoute.',
+      'Your turn: do the activity on screen, then start the next part of the audio.',
+      '轮到你了：先完成屏幕上的活动，再继续收听下一部分。',
+    ),
+    avoid: t('À ne pas dire :', 'Do not say:', '不要这样说：'),
+    afterActivityHint: t(
+      'La narration s’arrête ici le temps de l’activité.',
+      'Narration pauses here while you do the activity.',
+      '朗读在此暂停，等你完成活动。',
+    ),
+    noVoiceForLocale: t(
+      'Votre navigateur ne propose pas de voix pour cette langue : la narration est indisponible.',
+      'Your browser offers no voice for this language, so narration is unavailable.',
+      '你的浏览器没有本语言的语音，因此无法朗读讲解。',
+    ),
+  },
+
   ix: {
     documentLabel: t('Page de document', 'Document page', '文档页面'),
     playOrder: t('Voir dans l’ordre', 'Watch the order', '按顺序演示'),

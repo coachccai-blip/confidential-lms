@@ -17,10 +17,15 @@
      on annule systématiquement ce qui est en cours.
    ------------------------------------------------------------------ */
 
-/** Vitesse de lecture : normale pour écouter, lente pour répéter. */
-export type SpeechRate = 'normal' | 'slow';
+/** Vitesse de lecture : normale pour écouter, lente pour répéter, rapide pour réviser. */
+export type SpeechRate = 'normal' | 'slow' | 'fast';
 
-const RATES: Readonly<Record<SpeechRate, number>> = { normal: 0.95, slow: 0.62 };
+const RATES: Readonly<Record<SpeechRate, number>> = { normal: 0.95, slow: 0.62, fast: 1.5 };
+
+/** Valeur numérique d'une vitesse, pour les lecteurs qui fabriquent leurs utterances. */
+export function rateValue(rate: SpeechRate): number {
+  return RATES[rate];
+}
 
 let voices: SpeechSynthesisVoice[] = [];
 let listening = false;
@@ -36,29 +41,56 @@ function refreshVoices(): void {
   voices = engine.getVoices();
 }
 
+/** Langues que la plateforme sait faire parler : celles de l'interface. */
+export type SpeechLang = 'fr' | 'en' | 'zh';
+
 /**
- * Choisit la meilleure voix française disponible.
- *
- * On préfère le français de France quand il existe : les autres variantes
- * sont excellentes, mais le catalogue enseigne les normes hexagonales
- * (liaisons, « soixante-dix »), et faire entendre autre chose brouillerait
- * la leçon.
+ * Variante préférée par langue. Pour le français, la norme hexagonale
+ * (liaisons, « soixante-dix ») est celle que le catalogue enseigne ;
+ * pour l'anglais et le chinois, on prend les variantes les plus répandues
+ * chez les apprenants visés.
  */
-function pickVoice(): SpeechSynthesisVoice | null {
+const PREFERRED_TAGS: Readonly<Record<SpeechLang, readonly string[]>> = {
+  fr: ['fr-fr'],
+  en: ['en-us', 'en-gb'],
+  zh: ['zh-cn', 'cmn-hans-cn', 'zh-tw', 'zh-hk'],
+};
+
+/**
+ * Choisit la meilleure voix disponible pour une langue.
+ *
+ * Les voix locales passent avant les voix réseau : elles démarrent sans
+ * latence et fonctionnent hors connexion.
+ */
+export function pickVoiceFor(lang: SpeechLang): SpeechSynthesisVoice | null {
   if (voices.length === 0) refreshVoices();
-  const french = voices.filter((voice) => voice.lang.toLowerCase().startsWith('fr'));
-  if (french.length === 0) return null;
-  return (
-    french.find((voice) => voice.lang.toLowerCase() === 'fr-fr' && voice.localService) ??
-    french.find((voice) => voice.lang.toLowerCase() === 'fr-fr') ??
-    french[0] ??
-    null
-  );
+  const candidates = voices.filter((voice) => voice.lang.toLowerCase().startsWith(lang === 'zh' ? 'zh' : lang));
+  if (candidates.length === 0 && lang === 'zh') {
+    // Certains moteurs étiquettent le mandarin « cmn-… » plutôt que « zh-… ».
+    candidates.push(...voices.filter((voice) => voice.lang.toLowerCase().startsWith('cmn')));
+  }
+  if (candidates.length === 0) return null;
+  for (const tag of PREFERRED_TAGS[lang]) {
+    const local = candidates.find((voice) => voice.lang.toLowerCase() === tag && voice.localService);
+    if (local) return local;
+    const any = candidates.find((voice) => voice.lang.toLowerCase() === tag);
+    if (any) return any;
+  }
+  return candidates.find((voice) => voice.localService) ?? candidates[0] ?? null;
+}
+
+function pickVoice(): SpeechSynthesisVoice | null {
+  return pickVoiceFor('fr');
+}
+
+/** Vrai si le navigateur peut lire la langue demandée à voix haute. */
+export function canSpeak(lang: SpeechLang): boolean {
+  return synth() !== null && pickVoiceFor(lang) !== null;
 }
 
 /** Vrai si le navigateur peut lire du français à voix haute. */
 export function canSpeakFrench(): boolean {
-  return synth() !== null && pickVoice() !== null;
+  return canSpeak('fr');
 }
 
 /**
@@ -85,6 +117,42 @@ export function onVoicesReady(callback: () => void): () => void {
   return () => engine.removeEventListener('voiceschanged', handler);
 }
 
+/**
+ * Prépare un texte de leçon pour la voix : retire le gras `**`, résout les
+ * mots de glossaire `[[id|libellé]]`, remplace les puces médianes par des
+ * virgules et normalise les blancs.
+ */
+export function cleanForSpeech(text: string): string {
+  return text
+    .replace(/\*\*/g, '')
+    .replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g, (_, id: string, label: string) => label || id)
+    .replace(/·/g, ', ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/* ------------------------------------------------------------------
+   Médiation entre lectures concurrentes.
+
+   `speechSynthesis` est un canal unique : si un bouton d'exemple parle
+   pendant que le narrateur lit la leçon, le dernier arrivé coupe l'autre
+   sans prévenir. Le narrateur s'abonne donc ici pour se mettre en pause
+   proprement quand une lecture ponctuelle démarre.
+   ------------------------------------------------------------------ */
+
+const externalSpeakListeners = new Set<() => void>();
+
+/** Prévient les lecteurs de longue durée qu'une lecture ponctuelle démarre. */
+function notifyExternalSpeak(): void {
+  for (const listener of externalSpeakListeners) listener();
+}
+
+/** S'abonne aux lectures ponctuelles (boutons d'exemple, dictée). */
+export function onExternalSpeak(listener: () => void): () => void {
+  externalSpeakListeners.add(listener);
+  return () => externalSpeakListeners.delete(listener);
+}
+
 export interface SpeakOptions {
   readonly rate?: SpeechRate;
   /** Appelé à la fin de la lecture, y compris en cas d'interruption. */
@@ -103,12 +171,8 @@ export function speakFrench(text: string, options: SpeakOptions = {}): boolean {
   if (!engine || !voice) return false;
 
   engine.cancel();
-  const clean = text
-    .replace(/\*\*/g, '')
-    .replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g, (_, id: string, label: string) => label || id)
-    .replace(/·/g, ', ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  notifyExternalSpeak();
+  const clean = cleanForSpeech(text);
   if (clean.length === 0) return false;
 
   const utterance = new SpeechSynthesisUtterance(clean);

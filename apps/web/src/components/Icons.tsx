@@ -147,6 +147,27 @@ export const IconPlay = (p: IconProps) => (
   </Base>
 );
 
+export const IconPause = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="6.5" y="4.5" width="3.6" height="15" rx="1" />
+    <rect x="13.9" y="4.5" width="3.6" height="15" rx="1" />
+  </Base>
+);
+
+export const IconSkipBack = (p: IconProps) => (
+  <Base {...p}>
+    <polygon points="19 20 9 12 19 4 19 20" />
+    <line x1="5" y1="19" x2="5" y2="5" />
+  </Base>
+);
+
+export const IconSkipForward = (p: IconProps) => (
+  <Base {...p}>
+    <polygon points="5 4 15 12 5 20 5 4" />
+    <line x1="19" y1="5" x2="19" y2="19" />
+  </Base>
+);
+
 export const IconClock = (p: IconProps) => (
   <Base {...p}>
     <circle cx="12" cy="12" r="8.5" />

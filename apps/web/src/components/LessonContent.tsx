@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, useEffect, type ReactNode } from 'react';
 import { personalise, pickVariant, type LessonBlock, type Locale, type LocalizedText } from '@lms/core';
 import { Figure } from '../content';
 import { getGlossaryEntry } from '../content';
@@ -7,6 +7,8 @@ import { ProtectedText } from '../protection';
 import { D, useI18n } from '../i18n';
 import { useApp } from '../state/app-context';
 import { InteractiveBlock } from './Interactive';
+import { type NarrationSection } from '../feedback/narration';
+import { NarrationChip, useNarrator } from './NarrationPlayer';
 import { Reveal } from './Reveal';
 import { useGlossary } from './GlossaryProvider';
 import { IconAlert, IconCheck, IconInfo, IconShield, IconSparkle } from './Icons';
@@ -336,11 +338,14 @@ export function LessonBlocks({
   blocks,
   fingerprint,
   lessonId,
+  narration,
 }: {
   readonly blocks: readonly LessonBlock[];
   readonly fingerprint: string;
   /** Sert de graine : une lecon garde toujours la meme phrase d'accueil. */
   readonly lessonId?: string;
+  /** Sections narrables de la leçon, pour les boutons d'écoute et le surlignage. */
+  readonly narration?: readonly NarrationSection[];
 }) {
   const { l, locale } = useI18n();
   const { user } = useApp();
@@ -352,23 +357,51 @@ export function LessonBlocks({
   // derniers : il doit relancer la lecture, pas la conclure.
   const midIndex = blocks.length >= 5 ? Math.min(Math.round(blocks.length * 0.6), blocks.length - 2) : -1;
 
+  // Narration : quel bloc la voix lit-elle en ce moment, et où commencent
+  // les sections ré-écoutables ? Le bouton de la première section vit dans
+  // l'en-tête de la page (« Écouter la leçon ») : pas de doublon ici.
+  const snapshot = useNarrator();
+  const sections = narration ?? [];
+  const narratedBlock = lessonId && snapshot.lessonKey === lessonId ? snapshot.blockIndex : null;
+  const chipAt = new Map<number, number>();
+  sections.forEach((section) => {
+    if (section.index > 0) chipAt.set(section.firstBlockIndex, section.index);
+  });
+
+  useEffect(() => {
+    if (narratedBlock === null || snapshot.status !== 'playing') return;
+    const node = document.querySelector(`[data-nblock="${narratedBlock}"]`);
+    node?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [narratedBlock, snapshot.status]);
+
   return (
     <div className="prose">
       {greeting ? <CoachLine text={greeting} fingerprint={fingerprint} /> : null}
-      {blocks.map((block, index) => (
-        <Fragment key={index}>
-          <Reveal index={index}>
-            <BlockRenderer
-              block={block}
-              fingerprint={fingerprint}
-              locale={locale}
-              l={l}
-              firstName={user?.firstName}
-            />
-          </Reveal>
-          {midway && index === midIndex ? <CoachLine text={midway} fingerprint={fingerprint} tone="mid" /> : null}
-        </Fragment>
-      ))}
+      {blocks.map((block, index) => {
+        const chipSection = chipAt.get(index);
+        return (
+          <Fragment key={index}>
+            {chipSection !== undefined && lessonId ? (
+              <NarrationChip lessonKey={lessonId} sections={sections} sectionIndex={chipSection} />
+            ) : null}
+            <div
+              data-nblock={index}
+              className={narratedBlock === index ? 'nblock nblock--live' : 'nblock'}
+            >
+              <Reveal index={index}>
+                <BlockRenderer
+                  block={block}
+                  fingerprint={fingerprint}
+                  locale={locale}
+                  l={l}
+                  firstName={user?.firstName}
+                />
+              </Reveal>
+            </div>
+            {midway && index === midIndex ? <CoachLine text={midway} fingerprint={fingerprint} tone="mid" /> : null}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }

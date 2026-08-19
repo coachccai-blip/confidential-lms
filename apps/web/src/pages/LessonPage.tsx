@@ -6,6 +6,8 @@ import { LessonBlocks, slugify } from '../components/LessonContent';
 import { ProgressBar } from '../components/Progress';
 import { findLesson, findModuleOfLesson, getCourseBySlug } from '../content';
 import { stopSpeaking } from '../feedback/speech';
+import { buildNarration, narrator } from '../feedback/narration';
+import { NarrationPlayer, useNarrationVoice, useNarrator } from '../components/NarrationPlayer';
 import { Shield, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
@@ -15,16 +17,25 @@ import {
   IconChevronRight,
   IconClock,
   IconFingerprint,
+  IconPause,
   IconShieldCheck,
+  IconVolume,
 } from '../components/Icons';
 
 export function LessonPage() {
   const { slug, lessonId } = useParams();
 
-  // La voix ne doit pas continuer à lire la leçon qu'on vient de quitter.
-  useEffect(() => stopSpeaking, [lessonId]);
+  // La voix ne doit pas continuer à lire la leçon qu'on vient de quitter —
+  // ni le bouton d'exemple, ni la narration complète.
+  useEffect(
+    () => () => {
+      stopSpeaking();
+      narrator.stop();
+    },
+    [lessonId],
+  );
   const { user, state, fingerprint, markLessonViewed, completeLesson } = useApp();
-  const { l } = useI18n();
+  const { l, locale } = useI18n();
   const course = getCourseBySlug(slug);
   const lesson = course ? findLesson(course, lessonId) : null;
   const sentinel = useRef<HTMLDivElement | null>(null);
@@ -59,6 +70,19 @@ export function LessonPage() {
     [lesson, l],
   );
 
+  // Sections narrables : calculées une fois par leçon et par langue, elles
+  // alimentent le bouton d'en-tête, les boutons de section et le lecteur.
+  const narration = useMemo(
+    () =>
+      buildNarration(lesson?.blocks ?? [], locale, user?.firstName, lesson ? l(lesson.title) : '', {
+        activityInvite: l(D.narration.activityInvite),
+        avoid: l(D.narration.avoid),
+      }),
+    [lesson, locale, user?.firstName, l],
+  );
+  const narrationReady = useNarrationVoice();
+  const narratorState = useNarrator();
+
   if (!course || course.status !== 'published') return <Navigate to="/app" replace />;
   if (!lesson) return <Navigate to={`/app/cours/${course.slug}`} replace />;
   if (lesson.kind === 'quiz' && lesson.quizId) {
@@ -88,6 +112,7 @@ export function LessonPage() {
       }
     >
       <Shield reason={shieldReason} />
+      <NarrationPlayer lessonKey={lesson.id} />
 
       <div className="reader protected" data-testid="protected-content">
         <article>
@@ -106,6 +131,38 @@ export function LessonPage() {
               </div>
               <h1>{l(lesson.title)}</h1>
               <p>{l(lesson.summary)}</p>
+              {narrationReady && narration.length > 0 ? (
+                <div style={{ marginTop: 'var(--space-4)' }}>
+                  <button
+                    type="button"
+                    className={
+                      narratorState.lessonKey === lesson.id && narratorState.status === 'playing'
+                        ? 'btn btn--secondary nlisten nlisten--on'
+                        : 'btn btn--secondary nlisten'
+                    }
+                    onClick={() => {
+                      if (narratorState.lessonKey !== lesson.id) {
+                        narrator.play(lesson.id, narration, 0);
+                      } else if (narratorState.status === 'playing') {
+                        narrator.pause();
+                      } else {
+                        narrator.resume();
+                      }
+                    }}
+                  >
+                    {narratorState.lessonKey === lesson.id && narratorState.status === 'playing' ? (
+                      <IconPause size={15} />
+                    ) : (
+                      <IconVolume size={15} />
+                    )}
+                    {narratorState.lessonKey === lesson.id && narratorState.status === 'playing'
+                      ? l(D.narration.pause)
+                      : narratorState.lessonKey === lesson.id && narratorState.status === 'paused'
+                        ? l(D.narration.resume)
+                        : l(D.narration.listenLesson)}
+                  </button>
+                </div>
+              ) : null}
               <p style={{ fontSize: '0.8rem', marginTop: 'var(--space-3)', color: 'var(--on-deep-muted)' }}>
                 {l(D.lesson.glossHint)}
               </p>
@@ -116,7 +173,12 @@ export function LessonPage() {
           </header>
 
           <div style={{ marginTop: 'var(--space-8)' }}>
-            <LessonBlocks blocks={lesson.blocks ?? []} fingerprint={fingerprint} lessonId={lesson.id} />
+            <LessonBlocks
+              blocks={lesson.blocks ?? []}
+              fingerprint={fingerprint}
+              lessonId={lesson.id}
+              narration={narration}
+            />
           </div>
 
           <div ref={sentinel} style={{ height: 1 }} aria-hidden="true" />

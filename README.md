@@ -577,11 +577,17 @@ Node 20+ et pnpm 10 requis.
 ### Déploiement
 
 `.github/workflows/deploy.yml` s'exécute à chaque push sur `main` : vérification des types, tests,
-build avec `VITE_BASE=/<nom-du-dépôt>/`, puis publication du contenu de `apps/web/dist` sur la
-branche **`gh-pages`** (avec `404.html` en filet de sécurité SPA et `.nojekyll`).
+build avec `VITE_BASE=/<nom-du-dépôt>/`, puis publication de `apps/web/dist` par le mécanisme
+officiel de GitHub Pages — `configure-pages`, `upload-pages-artifact`, `deploy-pages` — avec
+`404.html` en filet de sécurité SPA.
 
-Prérequis côté dépôt, à faire une fois : **Settings → Pages → Source = « Deploy from a branch »,
-branche `gh-pages`, dossier `/ (root)`**.
+**Aucun réglage manuel n'est requis** : l'étape `configure-pages` est appelée avec
+`enablement: true`, ce qui fixe elle-même la source du site sur « GitHub Actions ». C'est
+délibéré. Le dépôt a longtemps servi la racine de `main`, où l'absence d'`index.html` faisait
+rendre ce README à la place de l'application ; piloter la source depuis le workflow rend ce
+retour en arrière impossible.
+
+La branche `gh-pages` n'est plus utilisée et peut être supprimée.
 
 ### Vérification manuelle des protections
 

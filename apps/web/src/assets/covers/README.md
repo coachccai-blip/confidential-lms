@@ -27,3 +27,20 @@ Laissez-le vide.
 Visez moins de 200 Ko par image, en 800 à 1200 px de large. Au-delà, le
 catalogue devient lent à afficher pour un gain invisible : la vignette n'est
 jamais rendue à plus de 360 px de large.
+
+## Les 36 slugs attendus
+
+Un fichier par ligne, l'extension au choix. Cochez au fur et à mesure.
+
+| Niveau | Slugs |
+|---|---|
+| A1 | `a1-premiers-mots` · `a1-present` · `a1-nommer` · `a1-quotidien` · `a1-sons` · `a1-comprendre` |
+| A2 | `a2-raconter` · `a2-reperes` · `a2-decrire` · `a2-vie-pratique` · `a2-ecrire` · `a2-sante` |
+| B1 | `grammaire` · `conjugaison` · `b1-pronoms` · `b1-discours` · `b1-actes` · `delf-b1` |
+| B2 | `b2-demarches` · `b2-nuance` · `b2-presse` · `b2-professionnel` · `b2-relief` · `delf-b2` |
+| C1 | `c1-academique` · `c1-debat` · `c1-lexique` · `c1-oral-rapide` · `c1-orthographe` · `dalf-c1` |
+| C2 | `c2-litterature` · `c2-institutions` · `c2-stylistique` · `c2-traduction` · `c2-humour` · `dalf-c2` |
+
+Attention aux trois slugs qui ne portent pas le préfixe de leur niveau :
+`grammaire`, `conjugaison` (B1) et les quatre diplômes `delf-b1`, `delf-b2`,
+`dalf-c1`, `dalf-c2`.

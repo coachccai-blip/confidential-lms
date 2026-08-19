@@ -297,3 +297,26 @@ export const IconVolumeOff = (p: IconProps) => (
     <path d="m21.5 9.5-5 5" />
   </Base>
 );
+
+export const IconTurtle = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M3.5 17h17" />
+    <path d="M5.5 17a6.5 6.5 0 0 1 13 0" />
+    <path d="M9 10.6 10.6 17M15 10.6 13.4 17" />
+    <path d="M18.5 13.5h1.8a1.3 1.3 0 0 0 0-2.6h-1.2" />
+  </Base>
+);
+
+export const IconPencil = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 20h4l10-10-4-4L4 16z" />
+    <path d="m14 6 4 4" />
+  </Base>
+);
+
+export const IconEar = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M7 9a5 5 0 0 1 10 0c0 3-2.5 3.8-3.4 5.6-.6 1.2-.1 3.4-2.3 3.4a2.3 2.3 0 0 1-2.3-2.3" />
+    <path d="M10.2 9.3a1.9 1.9 0 0 1 3.6.7" />
+  </Base>
+);

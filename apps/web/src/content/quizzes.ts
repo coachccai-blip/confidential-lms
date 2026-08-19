@@ -1,6 +1,7 @@
 import type { Quiz } from '@lms/core';
 import { t } from './tr';
 import { complementQuizzes } from './quizzes-complements';
+import { vieQuizzes } from './quizzes-vie';
 
 /** Quiz notés du catalogue de français. Seuil 70 %, trois tentatives. */
 
@@ -2435,6 +2436,7 @@ export const quizzes: Readonly<Record<string, Quiz>> = {
   [c2Litterature.id]: c2Litterature,
   [c2Institutions.id]: c2Institutions,
   ...complementQuizzes,
+  ...vieQuizzes,
 };
 
 export function getQuiz(quizId: string): Quiz | null {

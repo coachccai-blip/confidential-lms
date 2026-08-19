@@ -771,6 +771,331 @@
   color: var(--success);
 }
 
+/* ------------------------- Écoute (bouton) ------------------------- */
+
+.listen {
+  display: inline-flex;
+  gap: 4px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.listen__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  background: var(--panel-2);
+  transition: background var(--speed) var(--ease), color var(--speed) var(--ease),
+    border-color var(--speed) var(--ease);
+}
+
+.listen__btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.listen__btn--on {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  animation: listen-pulse 1s ease-in-out infinite;
+}
+
+@keyframes gap-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes listen-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 5px var(--accent-soft);
+  }
+}
+
+/* --------------------- Compréhension orale --------------------- */
+
+.ix-listen,
+.ix-dictation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ix-quiz,
+.ix-dictee {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--speed) var(--ease), background var(--speed) var(--ease);
+}
+
+.ix-quiz--correct,
+.ix-dictee--done {
+  border-color: color-mix(in srgb, var(--success) 40%, transparent);
+  background: var(--success-soft);
+}
+
+.ix-quiz__audio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.ix-quiz__index {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  font-size: 0.74rem;
+  font-weight: 640;
+  color: var(--text-secondary);
+  flex: none;
+}
+
+.ix-quiz__sentence {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-style: italic;
+}
+
+.ix-quiz__question {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 560;
+  color: var(--text);
+}
+
+/* ------------------------------ Dictée ------------------------------ */
+
+.ix-dictee__hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.ix-dictee__input {
+  font-size: 0.95rem;
+}
+
+.ix-dictee__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.ix-dictee__tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0 0 var(--space-2);
+}
+
+.ix-word {
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 0.86rem;
+  border: 1px solid transparent;
+}
+
+.ix-word--ok {
+  background: var(--success-soft);
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+.ix-word--ko {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+  letter-spacing: 2px;
+}
+
+.ix-dictee__result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ix-dictee__answer {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 560;
+}
+
+.ix-dictee__answer svg {
+  color: var(--success);
+  transform: translateY(2px);
+}
+
+/* ------------------------- Atelier d'écriture ------------------------- */
+
+.ix-writing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ix-writing__brief {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--accent-soft);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.ix-writing__brief svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.ix-writing__area {
+  min-height: 150px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.ix-writing__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.ix-writing__review {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: gap-in 0.3s var(--ease);
+}
+
+.ix-writing__review-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.ix-writing__criteria {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ix-crit {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  transition: border-color var(--speed) var(--ease), background var(--speed) var(--ease);
+}
+
+.ix-crit:hover {
+  border-color: var(--border-strong);
+}
+
+.ix-crit--on {
+  border-color: color-mix(in srgb, var(--success) 40%, transparent);
+  background: var(--success-soft);
+  color: var(--text);
+}
+
+.ix-crit__box {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid var(--border-strong);
+  flex: none;
+  margin-top: 2px;
+  color: var(--success);
+  background: var(--panel-2);
+}
+
+.ix-crit--on .ix-crit__box {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.ix-writing__model {
+  border-top: 1px dashed var(--border-strong);
+  padding-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  animation: gap-in 0.3s var(--ease);
+}
+
+.ix-writing__model-label {
+  margin: 0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 620;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.ix-writing__model-text {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--text);
+  white-space: pre-line;
+  line-height: 1.7;
+}
+
 @media (max-width: 520px) {
   .ix-pairs__grid {
     grid-template-columns: 1fr;
@@ -786,5 +1111,9 @@
 
   .ix-token:hover:not(:disabled) {
     transform: none;
+  }
+
+  .listen__btn--on {
+    animation: none;
   }
 }

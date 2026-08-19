@@ -2,7 +2,7 @@
 
 Plateforme de cours de français dont le contenu est **trilingue** (français, anglais, chinois),
 **filigrané par apprenant** et dont les gestes de copie sont **bloqués et journalisés**. Le
-catalogue couvre les six niveaux du CECRL, de A1 à C2, à raison de cinq cours complets par palier.
+catalogue couvre les six niveaux du CECRL, de A1 à C2, à raison de six cours complets par palier.
 
 **➜ Démonstration en ligne : https://coachccai-blip.github.io/confidential-lms/**
 
@@ -34,7 +34,8 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 | Application apprenant complète (catalogue, lecteur, quiz, progression, compte) | ✅ Fonctionnel |
 | Interface **et** contenu en français, anglais et chinois | ✅ Fonctionnel |
 | Glossaire : mots difficiles cliquables, définis dans les trois langues | ✅ 49 entrées |
-| 30 cours de français rangés par niveau (A1 → C2), 126 étapes, 30 quiz notés | ✅ Contenu réel et complet |
+| 36 cours de français rangés par niveau (A1 → C2), 150 étapes, 36 quiz notés | ✅ Contenu réel et complet |
+| Écoute des exemples (synthèse vocale), dictées et ateliers d’écriture auto-corrigés | ✅ Fonctionnel, sans fichier audio |
 | Comptes apprenants, invitations et suivi de progression | ✅ Fonctionnel, **sans serveur** (§7) |
 | Toutes les protections réalisables dans un navigateur | ✅ Fonctionnel |
 | Contenu nominatif (prénom dans les leçons) + empreinte invisible par apprenant | ✅ Fonctionnel |
@@ -57,7 +58,7 @@ produit qui a un sens sur cette cible, sans en masquer les limites :
 
 ## 2. Le catalogue
 
-Le **niveau du CECRL est la catégorie** : trente cours, cinq par palier, du débutant complet
+Le **niveau du CECRL est la catégorie** : trente-six cours, six par palier, du débutant complet
 à la maîtrise.
 
 | Niveau | Cours | Contenu |
@@ -67,35 +68,41 @@ Le **niveau du CECRL est la catégorie** : trente cours, cinq par palier, du dé
 | | Nommer les choses : articles, genre et nombre | Le système des articles · le pluriel · question et négation |
 | | Ma vie de tous les jours | Possessifs et famille · les pièces du logement · le déroulé d'une journée |
 | | Les sons du français | Lettres muettes · liaisons obligatoires et interdites · les sons difficiles |
+| | Se faire comprendre | Phrases de secours · l'impératif poli · **premières dictées** |
 | **A2 · Survie** | Raconter au passé : composé et imparfait | Choix de l'auxiliaire et accord · l'imparfait · décor contre événement |
 | | Se repérer : lieu, temps et quantité | Prépositions de lieu et pronom « y » · depuis / pendant / il y a / dans · quantités et pronom « en » |
 | | Décrire, comparer, donner son avis | Place et accord de l'adjectif · comparatif et superlatif · annoncer, justifier, nuancer |
 | | Se débrouiller au quotidien | Faire ses courses · au restaurant · transports et rendez-vous |
 | | Écrire au quotidien | Message et carte postale · **la lettre sur feuille A4, zone par zone** · remplir un formulaire |
+| | Le corps et la santé | Avoir mal à · la consultation et **l'ordonnance zone par zone** · pharmacie et urgences |
 | **B1 · Seuil** | Grammaire française essentielle | Genre des noms · accord du participe passé · pronoms relatifs · connecteurs logiques |
 | | Conjugaison : les temps qui comptent | Imparfait vs passé composé · plus-que-parfait · futur et conditionnel · subjonctif |
 | | Les pronoms sans hésiter | Direct ou indirect · y et en · qui, que, dont, où |
 | | Rapporter ce qui a été dit | Concordance des temps · questions rapportées · ordres et verbes de parole |
+| | Demander, refuser, se plaindre | Échelle de politesse · l'anatomie du non · **atelier : la réclamation** |
 | | Préparation au DELF B1 | Format et barème · méthode des compréhensions · production écrite · production orale |
 | **B2 · Avancé** | Préparation au DELF B2 | Essai argumenté · lettre formelle · repérage de l'implicite · monologue et débat |
 | | Nuancer sa pensée | Subjonctif · système hypothétique à trois niveaux · concession et restriction |
 | | Le français professionnel | Courriel · prise de parole en réunion · CV, lettre de motivation, entretien |
 | | Lire la presse française | **Anatomie d'une page de journal** · la langue des titres · repérer le point de vue |
 | | Donner du relief à ses phrases | Mise en relief · voix passive, « on » et « se » · style nominal |
+| | Vivre en France : les démarches | Vocabulaire administratif · **le CERFA zone par zone** · logement et banque |
 | **C1 · Autonome** | Préparation au DALF C1 | Lecture croisée · rédaction de la synthèse · exposé sur dossier · registre soutenu |
 | | Écrire à l'université | Méthode de la dissertation · synthèse de documents · style académique et modalisation |
 | | Comprendre le français parlé vite | Réductions de l'oral · quatre registres · litote, ironie, sous-entendus |
 | | Le mot juste | Nuances entre synonymes · couples verbe-nom · faux amis tenaces |
 | | Débattre et convaincre | Structurer une intervention · répondre à une objection · prendre et garder la parole |
+| | Écrire sans faute | Homophones et tests de substitution · accords traîtres · ponctuation et **dictée des pièges** |
 | **C2 · Maîtrise** | Préparation au DALF C2 | Compte rendu oral · reformulation avancée · article structuré · style et implicite |
 | | Lire la littérature française | Temps du récit littéraire · figures de style · commentaire composé |
 | | France et francophonie | Institutions de la Ve République · références culturelles · variantes du français |
 | | Le style : rythme, figures, ironie | Rythme de la phrase · six figures et leur effet · signaux d'ironie |
 | | Penser en français, pas traduire | Nom contre verbe · expressions sans équivalent · réécrire une phrase traduite |
+| | L'humour et les jeux de langue | Mécanismes du rire · satire de presse · références partagées |
 
 Chaque cours comprend **3 ou 4 leçons** et **1 quiz noté** (6 à 8 questions, seuil 70 %, trois
-tentatives, crédit partiel, correction commentée question par question). Soit **126 étapes**,
-**30 quiz** et **192 questions** au total.
+tentatives, crédit partiel, correction commentée question par question). Soit **150 étapes**,
+**36 quiz** et **228 questions** au total.
 
 Les leçons utilisent des blocs typés adaptés à l'enseignement d'une langue : paragraphes,
 tableaux comparatifs, **tableaux de conjugaison**, **séries d'exemples** (phrase française +
@@ -158,8 +165,8 @@ des examens (synthèse, reformulation, problématique, litote, périphrase, bar�
 
 ### 5.1 Schémas manipulables
 
-Un tableau se lit, un schéma se manipule. Neuf familles couvrent ce que l'enseignement d'une
-langue demande le plus souvent ; **les trente cours en comptent au moins un**, soixante-treize
+Un tableau se lit, un schéma se manipule. Douze familles couvrent ce que l'enseignement d'une
+langue demande le plus souvent ; **les trente-six cours en comptent au moins un**, cent trois
 au total.
 
 | Famille | Ce qu'elle sert | Exemple dans le catalogue |
@@ -173,6 +180,9 @@ au total.
 | **Remise en ordre** | reconstituer une suite d'étapes | les huit éléments d'une lettre (A2), les cinq mouvements d'une réfutation (C1) |
 | **Appariement** | relier une expression à ce qu'elle signifie | le vocabulaire des formulaires (A2), les faux amis (C1) |
 | **Texte à trous** | choisir la forme juste, avec l'explication | direct ou indirect (B1), le mot qui oriente un article (B2) |
+| **Écoute** | comprendre une phrase dite à voix haute | le pharmacien au comptoir (A2), les refus enveloppés (B1) |
+| **Dictée** | écrire ce qu'on entend, correction mot à mot | premières dictées (A1), la dictée des pièges (C1) |
+| **Atelier d'écriture** | rédiger, puis se relire avec une grille d'examinateur | la réclamation (B1), la lettre au propriétaire (B2) |
 
 Le **document** répond à une demande précise : pour apprendre à rédiger une lettre, rien ne
 remplace une feuille A4 dont chaque zone s'allume à son tour. Le bouton « Voir dans l'ordre »
@@ -184,21 +194,35 @@ identique au clavier et au doigt ; **une seule zone de réponse**, à hauteur pl
 page ne saute pas sous le lecteur ; **une sélection par défaut**, sans quoi un schéma vide ne
 montre pas ce qu'il sait faire.
 
-### 5.2 Emojis et repères visuels
+### 5.2 Écouter le français
 
-**396 blocs** portent un emoji, choisi d'après le sujet du titre — 🪤 pour un piège, 🔄 pour une
+Chaque exemple français — dans les leçons comme dans les schémas — porte un bouton d'écoute à
+deux vitesses : normale, et lente pour distinguer les syllabes. Le son est produit par la
+**synthèse vocale du navigateur** (`speechSynthesis`) : aucun fichier audio, rien à télécharger,
+compatible avec l'hébergement statique. Si aucune voix française n'est installée, les boutons
+disparaissent — plutôt que de faire lire du français par une voix anglaise — et les exercices
+d'écoute basculent en mode lecture, la transcription remplaçant l'audio.
+
+Trois exercices s'appuient dessus : la **compréhension orale** (écouter, puis répondre), la
+**dictée** (écouter, écrire, correction mot à mot par alignement — un mot sauté ne fait pas
+perdre le reste de la phrase) et l'**atelier d'écriture** (rédiger, puis se relire avec la
+grille de critères d'un examinateur, avant de découvrir un texte modèle).
+
+### 5.3 Emojis et repères visuels
+
+**468 blocs** portent un emoji, choisi d'après le sujet du titre — 🪤 pour un piège, 🔄 pour une
 conjugaison, 🗣️ pour un point d'oral, ⚖️ pour une comparaison. La règle est **un emoji au plus par
 bloc**, jamais deux, et jamais dans le corps du texte : il sert de repère de balayage, pas de
 décoration.
 
-### 5.3 Apparition à la lecture
+### 5.4 Apparition à la lecture
 
 Les blocs montent de quelques pixels en se révélant, une fois, quand ils entrent dans la fenêtre.
 Le contenu est présent dans le DOM dès le départ — l'animation ne porte que sur l'opacité et la
 translation — de sorte que la recherche dans la page, la lecture d'écran et l'impression voient
 tout. `prefers-reduced-motion: reduce` désactive l'ensemble.
 
-### 5.4 Points, séries et badges
+### 5.5 Points, séries et badges
 
 | Ce qui rapporte | Points |
 |---|---|
@@ -466,7 +490,7 @@ confidential-lms/
 │       └── roster.ts       # Comptes apprenants, invitations, remontées, verrou admin
 └── apps/web/               # Application React 19 + Vite, déployée sur Pages
     └── src/
-        ├── content/        # 30 cours (A1 → C2), 30 quiz, glossaire, 7 figures SVG
+        ├── content/        # 36 cours (A1 → C2), 36 quiz, glossaire, 7 figures SVG
         ├── i18n/           # Dictionnaire trilingue unique + hook useI18n
         ├── protection/     # Watermark, ProtectedText, Shield, useProtectedScreen
         ├── state/          # Contexte applicatif, persistance, session inter-onglets
@@ -519,7 +543,7 @@ manuelle sur les quatre systèmes.
 | §4.3 Marquage nominatif du contenu + empreinte invisible par apprenant | ✅ (filigrane en mosaïque retiré, voir §5.1) |
 | §4.4 Session unique, 3 appareils, journal de sécurité | ✅ (arbitré client dans la démo) |
 | §4.5 URLs signées, HLS chiffré, rate limiting | Phase 1/2 — aucun média n'est servi ici |
-| §5 Quiz notés, seuils, tentatives, corrections | ✅ 30 quiz, 192 questions |
+| §5 Quiz notés, seuils, tentatives, corrections | ✅ 36 quiz, 228 questions |
 | §5 Progression par cours/module, reprise | ✅ |
 | §5 Comptes apprenants créés par l'enseignant | ✅ (invitation + remontée, sans serveur — voir §9) |
 | §5 Tableau de bord admin et journal | ✅ (alimenté par les remontées importées) |
@@ -529,7 +553,7 @@ manuelle sur les quatre systèmes.
 | §5 Bruitages, appuis et célébrations | ✅ synthétisés, coupables d'un clic (§6.2) |
 | §7 Accès fermé par identifiant et mot de passe | ⚠️ vérifié côté client — voir §9 |
 | §7 Contrastes conformes WCAG AA dans les deux thèmes | ✅ vérifiés par calcul (§6.1) |
-| §5 Contenu interactif (schémas manipulables) | ✅ 73 schémas, neuf familles, au moins un par cours (§5.1) |
+| §5 Contenu interactif (schémas manipulables) | ✅ 103 schémas, douze familles, au moins un par cours (§5.1) |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
 | §8 TypeScript strict, tests sur sessions et protections | ✅ 125 tests (111 métier + 14 applicatifs) |

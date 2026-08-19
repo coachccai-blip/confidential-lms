@@ -4,31 +4,37 @@ import { a1PresentCourse } from './courses/a1-present';
 import { a1NommerCourse } from './courses/a1-nommer';
 import { a1QuotidienCourse } from './courses/a1-quotidien';
 import { a1SonsCourse } from './courses/a1-sons';
+import { a1ComprendreCourse } from './courses/a1-comprendre';
 import { a2RaconterCourse } from './courses/a2-raconter';
 import { a2ReperesCourse } from './courses/a2-reperes';
 import { a2DecrireCourse } from './courses/a2-decrire';
 import { a2PratiqueCourse } from './courses/a2-vie-pratique';
 import { a2EcrireCourse } from './courses/a2-ecrire';
+import { a2SanteCourse } from './courses/a2-sante';
 import { grammaireCourse } from './courses/grammaire';
 import { conjugaisonCourse } from './courses/conjugaison';
 import { b1PronomsCourse } from './courses/b1-pronoms';
 import { b1DiscoursCourse } from './courses/b1-discours';
+import { b1ActesCourse } from './courses/b1-actes';
 import { delfB1Course } from './courses/delf-b1';
 import { delfB2Course } from './courses/delf-b2';
 import { b2NuanceCourse } from './courses/b2-nuance';
 import { b2ProfessionnelCourse } from './courses/b2-professionnel';
 import { b2PresseCourse } from './courses/b2-presse';
 import { b2ReliefCourse } from './courses/b2-relief';
+import { b2DemarchesCourse } from './courses/b2-demarches';
 import { dalfC1Course } from './courses/dalf-c1';
 import { c1AcademiqueCourse } from './courses/c1-academique';
 import { c1OralCourse } from './courses/c1-oral-rapide';
 import { c1LexiqueCourse } from './courses/c1-lexique';
 import { c1DebatCourse } from './courses/c1-debat';
+import { c1OrthographeCourse } from './courses/c1-orthographe';
 import { dalfC2Course } from './courses/dalf-c2';
 import { c2LitteratureCourse } from './courses/c2-litterature';
 import { c2InstitutionsCourse } from './courses/c2-institutions';
 import { c2StylistiqueCourse } from './courses/c2-stylistique';
 import { c2TraductionCourse } from './courses/c2-traduction';
+import { c2HumourCourse } from './courses/c2-humour';
 
 /** Le catalogue, rangé par palier du CECRL : du débutant complet à la maîtrise. */
 export const courses: readonly Course[] = [
@@ -37,31 +43,37 @@ export const courses: readonly Course[] = [
   a1NommerCourse,
   a1QuotidienCourse,
   a1SonsCourse,
+  a1ComprendreCourse,
   a2RaconterCourse,
   a2ReperesCourse,
   a2DecrireCourse,
   a2PratiqueCourse,
   a2EcrireCourse,
+  a2SanteCourse,
   grammaireCourse,
   conjugaisonCourse,
   b1PronomsCourse,
   b1DiscoursCourse,
+  b1ActesCourse,
   delfB1Course,
   delfB2Course,
   b2NuanceCourse,
   b2ProfessionnelCourse,
   b2PresseCourse,
   b2ReliefCourse,
+  b2DemarchesCourse,
   dalfC1Course,
   c1AcademiqueCourse,
   c1OralCourse,
   c1LexiqueCourse,
   c1DebatCourse,
+  c1OrthographeCourse,
   dalfC2Course,
   c2LitteratureCourse,
   c2InstitutionsCourse,
   c2StylistiqueCourse,
   c2TraductionCourse,
+  c2HumourCourse,
 ];
 
 /** Ordre d'affichage des niveaux dans le catalogue. */

@@ -113,11 +113,11 @@ export const D = {
     statLanguages: t('langues d’interface', 'interface languages', '种界面语言'),
     statSchemas: t('schémas manipulables', 'hands-on diagrams', '个可操作图示'),
 
-    levelsTitle: t('Six niveaux, cinq cours chacun', 'Six levels, five courses each', '六个等级，每级五门课'),
+    levelsTitle: t('Six niveaux, six cours chacun', 'Six levels, six courses each', '六个等级，每级六门课'),
     levelsText: t(
-      'Le niveau du Cadre européen est la catégorie : on entre au palier qui correspond, on en sort quand les cinq cours sont terminés.',
-      'The Common European Framework level is the category: you start at the step that fits and leave it when all five courses are done.',
-      '欧洲共同框架的等级即为分类：从合适的层级进入，五门课程全部完成后即可离开。',
+      'Le niveau du Cadre européen est la catégorie : on entre au palier qui correspond, on en sort quand les six cours sont terminés.',
+      'The Common European Framework level is the category: you start at the step that fits and leave it when all six courses are done.',
+      '欧洲共同框架的等级即为分类：从合适的层级进入，六门课程全部完成后即可离开。',
     ),
 
     featuresTitle: t('Ce qui distingue ces cours', 'What sets these courses apart', '这些课程的独到之处'),
@@ -316,9 +316,9 @@ export const D = {
       '从上次中断处继续。每完成一步都会保存进度。',
     ),
     introNew: t(
-      'Six niveaux vous attendent, du A1 au C2, avec cinq cours complets par palier.',
-      'Six levels are waiting, from A1 to C2, with five complete courses at each step.',
-      '六个等级已就绪，从 A1 到 C2，每个等级各有五门完整课程。',
+      'Six niveaux vous attendent, du A1 au C2, avec six cours complets par palier.',
+      'Six levels are waiting, from A1 to C2, with six complete courses at each step.',
+      '六个等级已就绪，从 A1 到 C2，每个等级各有六门完整课程。',
     ),
     statProgress: t('Progression globale', 'Overall progress', '总体进度'),
     statSteps: t('Étapes terminées', 'Steps completed', '已完成步骤'),
@@ -1093,7 +1093,7 @@ export const D = {
       },
       'level-done': {
         name: t('Palier franchi', 'Level cleared', '通关一级'),
-        hint: t('Terminer les cinq cours d’un niveau du CECRL.', 'Finish all five courses of one CEFR level.', '完成某一 CEFR 等级的五门课程。'),
+        hint: t('Terminer les six cours d’un niveau du CECRL.', 'Finish all six courses of one CEFR level.', '完成某一 CEFR 等级的六门课程。'),
       },
     },
   },
@@ -1114,6 +1114,59 @@ export const D = {
       'Now pick what it means.',
       '现在选择它的意思。',
     ),
+
+    /* Écoute */
+    listen: t('Écouter', 'Listen', '朗读'),
+    listenSlow: t('Écouter lentement', 'Listen slowly', '慢速朗读'),
+    listening: t('Lecture en cours', 'Playing', '正在朗读'),
+    noVoice: t(
+      'Votre navigateur ne propose pas de voix française : l’écoute est indisponible ici.',
+      'Your browser offers no French voice, so listening is unavailable here.',
+      '你的浏览器没有法语语音，因此无法朗读。',
+    ),
+
+    /* Dictée */
+    dictationPlay: t('Écouter la phrase', 'Play the sentence', '播放句子'),
+    dictationPlaceholder: t('Écrivez ce que vous entendez…', 'Write what you hear…', '写下你听到的内容……'),
+    dictationCheck: t('Vérifier', 'Check', '检查'),
+    dictationRetry: t('Réessayer', 'Try again', '再试一次'),
+    dictationReveal: t('Voir la réponse', 'Show the answer', '显示答案'),
+    dictationPerfect: t('Sans faute', 'Word perfect', '完全正确'),
+    dictationClose: (n: number) =>
+      t(
+        `Presque : ${n} mot${n > 1 ? 's' : ''} à corriger.`,
+        `Almost: ${n} word${n > 1 ? 's' : ''} to fix.`,
+        `就差一点：还有 ${n} 个词要改。`,
+      ),
+    dictationScore: (ok: number, total: number) =>
+      t(`${ok} mots justes sur ${total}`, `${ok} words right out of ${total}`, `${total} 个词中对了 ${ok} 个`),
+    dictationLegend: t(
+      'En vert ce qui est juste, en rouge ce qui diffère de la phrase entendue.',
+      'Green is right, red differs from the sentence you heard.',
+      '绿色表示正确，红色表示与听到的句子不同。',
+    ),
+
+    /* Atelier d’écriture */
+    writingYourTurn: t('À vous d’écrire', 'Your turn to write', '轮到你来写'),
+    writingPlaceholder: t('Écrivez votre réponse ici…', 'Write your answer here…', '在此写下你的答案……'),
+    writingCheck: t('Je me relis', 'Check my work', '开始自查'),
+    writingChecklist: t('Grille de relecture', 'Self-check list', '自查清单'),
+    writingChecklistHint: t(
+      'Cochez chaque point que votre texte respecte. Ce qui reste décoché est ce qu’il faut reprendre.',
+      'Tick every point your text meets. What stays unticked is what to rework.',
+      '逐条勾选你的文本已经做到的地方。没勾上的就是要修改的。',
+    ),
+    writingModel: t('Voir un texte modèle', 'Show a model answer', '查看范文'),
+    writingModelLabel: t('Un texte possible', 'One possible text', '一种可能的写法'),
+    writingCount: (n: number) =>
+      t(`${n} mots écrits`, `${n} words written`, `已写 ${n} 个词`),
+    writingDone: (ok: number, total: number) =>
+      t(
+        `${ok} critères sur ${total} respectés`,
+        `${ok} of ${total} criteria met`,
+        `${total} 条标准中达成 ${ok} 条`,
+      ),
+    writingAllDone: t('Tout y est', 'Everything is there', '全部达成'),
   },
 
   securityEvents: {

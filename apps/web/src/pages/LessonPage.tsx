@@ -5,6 +5,7 @@ import { AppShell } from '../components/AppShell';
 import { LessonBlocks, slugify } from '../components/LessonContent';
 import { ProgressBar } from '../components/Progress';
 import { findLesson, findModuleOfLesson, getCourseBySlug } from '../content';
+import { stopSpeaking } from '../feedback/speech';
 import { Shield, useProtectedScreen } from '../protection';
 import { useApp } from '../state/app-context';
 import { D, useI18n } from '../i18n';
@@ -19,6 +20,9 @@ import {
 
 export function LessonPage() {
   const { slug, lessonId } = useParams();
+
+  // La voix ne doit pas continuer à lire la leçon qu'on vient de quitter.
+  useEffect(() => stopSpeaking, [lessonId]);
   const { user, state, fingerprint, markLessonViewed, completeLesson } = useApp();
   const { l } = useI18n();
   const course = getCourseBySlug(slug);

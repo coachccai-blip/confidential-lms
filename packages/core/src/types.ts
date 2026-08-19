@@ -281,6 +281,72 @@ export interface WidgetFill {
   }[];
 }
 
+/* ---------------- Écoute et production ---------------- */
+
+/**
+ * Compréhension orale : on écoute une phrase, on répond sur ce qu'on a
+ * entendu. Le texte français reste dans les données — il sert à la fois
+ * à la synthèse vocale et à la transcription révélée après coup, de sorte
+ * qu'un apprenant sans voix française installée puisse quand même
+ * travailler l'exercice en lisant.
+ */
+export interface WidgetListening {
+  readonly kind: 'listening';
+  readonly prompt: LocalizedText;
+  readonly items: readonly {
+    readonly id: string;
+    /** Phrase lue à voix haute, en français. */
+    readonly sentence: string;
+    readonly question: LocalizedText;
+    readonly options: readonly LocalizedText[];
+    /** Index de la bonne réponse dans `options`. */
+    readonly answer: number;
+    readonly why: LocalizedText;
+  }[];
+}
+
+/**
+ * Dictée : on écoute, on écrit, la correction est automatique.
+ *
+ * C'est le seul exercice de production dont la correction ne demande
+ * aucun jugement : la réponse attendue est connue mot pour mot, et la
+ * comparaison se fait après normalisation (casse, accents décoratifs,
+ * ponctuation) pour ne pas sanctionner une virgule oubliée.
+ */
+export interface WidgetDictation {
+  readonly kind: 'dictation';
+  readonly prompt: LocalizedText;
+  readonly items: readonly {
+    readonly id: string;
+    readonly sentence: string;
+    /** Indice affiché avant la première écoute. */
+    readonly hint: LocalizedText;
+    /** Piège que la phrase vise, expliqué après correction. */
+    readonly trap: LocalizedText;
+  }[];
+}
+
+/**
+ * Atelier d'écriture : on rédige, puis on se relit avec une grille.
+ *
+ * Aucun serveur ne peut corriger un texte libre ici. La grille de
+ * relecture transfère donc la correction à l'apprenant, ce qui est de
+ * toute façon la compétence visée à l'examen : savoir relire sa copie.
+ * Le texte modèle n'apparaît qu'après la relecture, sinon il est recopié.
+ */
+export interface WidgetWriting {
+  readonly kind: 'writing';
+  readonly prompt: LocalizedText;
+  /** Consigne complète, comme sur un sujet d'examen. */
+  readonly brief: LocalizedText;
+  /** Nombre de mots attendu, affiché comme repère. */
+  readonly targetWords?: number;
+  readonly criteria: readonly { readonly id: string; readonly text: LocalizedText }[];
+  /** Texte modèle en français, révélé après la relecture. */
+  readonly model: string;
+  readonly modelNote: LocalizedText;
+}
+
 export type LessonWidget =
   | WidgetWheel
   | WidgetMatrix
@@ -290,7 +356,10 @@ export type LessonWidget =
   | WidgetLayout
   | WidgetOrder
   | WidgetPairs
-  | WidgetFill;
+  | WidgetFill
+  | WidgetListening
+  | WidgetDictation
+  | WidgetWriting;
 
 export interface LessonBlockInteractive {
   readonly type: 'interactive';

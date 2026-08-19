@@ -325,7 +325,7 @@ function CefrScale({ locale }: FigureProps) {
         {l(t('Le catalogue couvre les six niveaux, du débutant à la maîtrise', 'The catalogue covers all six levels, from beginner to mastery', '课程目录覆盖全部六个级别，从零基础到精通'))}
       </text>
       <text x="30" y="212" style={SMALL}>
-        {l(t('Cinq cours par niveau, du premier mot à la maîtrise stylistique.', 'Five courses per level, from the first word to stylistic mastery.', '每个级别五门课程，从第一个单词到文体驾驭。'))}
+        {l(t('Six cours par niveau, du premier mot à la maîtrise stylistique.', 'Six courses per level, from the first word to stylistic mastery.', '每个级别六门课程，从第一个单词到文体驾驭。'))}
       </text>
     </svg>
   );

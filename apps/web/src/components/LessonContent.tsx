@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { personalise, pickVariant, type LessonBlock, type Locale, type LocalizedText } from '@lms/core';
 import { Figure } from '../content';
 import { getGlossaryEntry } from '../content';
+import { Listen } from './Listen';
 import { ProtectedText } from '../protection';
 import { D, useI18n } from '../i18n';
 import { useApp } from '../state/app-context';
@@ -243,6 +244,7 @@ function BlockRenderer({ block, fingerprint, locale, l, firstName }: BlockProps)
             <div className={item.incorrect ? 'examples__item examples__item--incorrect' : 'examples__item'} key={index}>
               <span className="examples__fr">
                 <ProtectedText fingerprint={fingerprint}>{personalise(item.fr, firstName)}</ProtectedText>
+                {item.incorrect ? null : <Listen text={personalise(item.fr, firstName)} />}
               </span>
               <span className="examples__gloss">
                 <RichText text={l(item.gloss)} fingerprint={fingerprint} />

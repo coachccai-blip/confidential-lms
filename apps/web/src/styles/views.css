@@ -140,6 +140,17 @@
   overflow: hidden;
 }
 
+/* La vignette occupe toute la zone ; le degrade reste dessous et sert de
+   repli tant qu'aucune image n'est fournie pour ce cours. */
+.course-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* Courbes de niveau : evoque une carte topographique de volcan. */
 .course-card__cover::after {
   content: '';
@@ -148,6 +159,13 @@
   background:
     repeating-radial-gradient(circle at 50% 135%, rgba(255, 255, 255, 0.17) 0 1.5px, transparent 1.5px 20px),
     linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.38));
+  z-index: 1;
+}
+
+/* Avec une image, on retire les courbes de niveau — elles brouilleraient le
+   sujet — mais on garde l'assombrissement du bas, qui porte la lettre du niveau. */
+.course-card__cover--image::after {
+  background: linear-gradient(180deg, transparent 55%, rgba(3, 10, 20, 0.6));
 }
 
 .side-course {
@@ -177,6 +195,7 @@
 /* Niveau CECRL affiché sur la vignette du parcours. */
 .course-card__level {
   position: absolute;
+  z-index: 2;
   left: 16px;
   bottom: 10px;
   font-size: 1.6rem;

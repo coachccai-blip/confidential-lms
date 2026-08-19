@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { computeCourseProgress, type Course } from '@lms/core';
 import { LEVEL_ORDER, coursesByLevel } from '../content';
+import { coverOf } from '../content/covers';
 import { useApp } from '../state/app-context';
 import { D, formatDuration, useI18n } from '../i18n';
 import { ProgressBar } from './Progress';
@@ -33,12 +34,16 @@ export function CourseCatalogue() {
             <div className="grid grid--3">
               {inLevel.map((course) => {
                 const progress = computeCourseProgress(course, state.progress);
+                const cover = coverOf(course.slug);
                 return (
                   <Link className="course-card" to={`/app/cours/${course.slug}`} key={course.id}>
                     <div
-                      className="course-card__cover"
+                      className={cover ? 'course-card__cover course-card__cover--image' : 'course-card__cover'}
                       style={{ background: `linear-gradient(135deg, ${course.accentFrom}, ${course.accentTo})` }}
                     >
+                      {cover ? (
+                        <img className="course-card__img" src={cover} alt="" loading="lazy" decoding="async" />
+                      ) : null}
                       <span className="course-card__level">{course.level}</span>
                     </div>
                     <div className="course-card__body">

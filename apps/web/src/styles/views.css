@@ -401,14 +401,30 @@
   max-width: 48%;
 }
 
+/* La couleur est HERITEE du bouton, jamais imposee : sur `.btn--primary`
+   le fond est un degrade cyan clair et le texte du bouton est presque noir.
+   Forcer `--text-muted` ici — un gris calibre pour le fond sombre de la page —
+   tombait a 1,74:1 sur ce degrade, donc illisible. */
 .lesson-nav__side {
   display: flex;
   flex-direction: column;
   gap: 2px;
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: inherit;
   min-width: 0;
   line-height: 1.35;
+}
+
+/* Le sur-titre « Precedent » / « Suivant » : attenue par l'opacite, qui
+   suit la couleur heritee au lieu de la remplacer par un gris fixe. */
+.lesson-nav__label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.78;
+}
+
+.lesson-nav__title {
+  font-weight: 560;
 }
 
 @media (max-width: 1180px) {

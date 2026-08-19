@@ -153,10 +153,8 @@ export function LessonPage() {
               <Link className="btn btn--secondary" to={hrefOf(neighbours.previous)}>
                 <IconChevronLeft size={15} />
                 <span className="lesson-nav__side">
-                  <span className="muted" style={{ fontSize: '0.7rem' }}>
-                    {l(D.lesson.previous)}
-                  </span>
-                  <span style={{ color: 'var(--text)' }}>{l(neighbours.previous.title)}</span>
+                  <span className="lesson-nav__label">{l(D.lesson.previous)}</span>
+                  <span className="lesson-nav__title">{l(neighbours.previous.title)}</span>
                 </span>
               </Link>
             ) : (
@@ -165,8 +163,8 @@ export function LessonPage() {
             {neighbours.next ? (
               <Link className="btn btn--primary" to={hrefOf(neighbours.next)}>
                 <span className="lesson-nav__side" style={{ alignItems: 'flex-end' }}>
-                  <span style={{ fontSize: '0.7rem', opacity: 0.72 }}>{l(D.lesson.next)}</span>
-                  <span>{l(neighbours.next.title)}</span>
+                  <span className="lesson-nav__label">{l(D.lesson.next)}</span>
+                  <span className="lesson-nav__title">{l(neighbours.next.title)}</span>
                 </span>
                 <IconChevronRight size={15} />
               </Link>

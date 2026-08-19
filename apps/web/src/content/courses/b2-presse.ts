@@ -87,7 +87,7 @@ export const b2PresseCourse: Course = {
                   {
                     id: 'j4',
                     label: t('La signature', 'The byline', '署名'),
-                    x: 6, y: 40, w: 40, h: 5,
+                    x: 6, y: 40, w: 46, h: 7,
                     sample: 'Par Claire Dumont, envoyée spéciale',
                     detail: t('« Envoyé spécial » signifie sur place ; « correspondant » signifie installé dans le pays. Une dépêche non signée vient d’une agence.', '“Envoyé spécial” means on site; “correspondant” means based in the country. An unsigned piece comes from a news agency.', '“envoyé spécial”指赴现场采访；“correspondant”指常驻该国。未署名的消息来自通讯社。'),
                   },

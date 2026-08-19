@@ -166,8 +166,8 @@ des examens (synthèse, reformulation, problématique, litote, périphrase, bar�
 ### 5.1 Schémas manipulables
 
 Un tableau se lit, un schéma se manipule. Douze familles couvrent ce que l'enseignement d'une
-langue demande le plus souvent ; **les trente-six cours en comptent au moins un**, cent trois
-au total.
+langue demande le plus souvent ; **chaque leçon en compte au moins un**, cent quarante au
+total.
 
 | Famille | Ce qu'elle sert | Exemple dans le catalogue |
 |---|---|---|
@@ -210,7 +210,7 @@ grille de critères d'un examinateur, avant de découvrir un texte modèle).
 
 ### 5.3 Emojis et repères visuels
 
-**468 blocs** portent un emoji, choisi d'après le sujet du titre — 🪤 pour un piège, 🔄 pour une
+**505 blocs** portent un emoji, choisi d'après le sujet du titre — 🪤 pour un piège, 🔄 pour une
 conjugaison, 🗣️ pour un point d'oral, ⚖️ pour une comparaison. La règle est **un emoji au plus par
 bloc**, jamais deux, et jamais dans le corps du texte : il sert de repère de balayage, pas de
 décoration.
@@ -553,7 +553,7 @@ manuelle sur les quatre systèmes.
 | §5 Bruitages, appuis et célébrations | ✅ synthétisés, coupables d'un clic (§6.2) |
 | §7 Accès fermé par identifiant et mot de passe | ⚠️ vérifié côté client — voir §9 |
 | §7 Contrastes conformes WCAG AA dans les deux thèmes | ✅ vérifiés par calcul (§6.1) |
-| §5 Contenu interactif (schémas manipulables) | ✅ 103 schémas, douze familles, au moins un par cours (§5.1) |
+| §5 Contenu interactif (schémas manipulables) | ✅ 140 schémas, douze familles, au moins un par leçon (§5.1) |
 | §5 Builder de cours en glisser-déposer | Phase 1 — le contenu est versionné en TypeScript typé |
 | §6 Modèle de données | ✅ intégralement typé dans `packages/core/src/types.ts` |
 | §8 TypeScript strict, tests sur sessions et protections | ✅ 125 tests (111 métier + 14 applicatifs) |

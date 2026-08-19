@@ -20,7 +20,7 @@ export const b2PresseCourse: Course = {
   tags: [t('Compréhension écrite', 'Reading', '阅读'), t('Actualité', 'Current affairs', '时事')],
   modules: [
     {
-      id: 'mod_b2pr_1',
+      id: 'mod_b2ps_1',
       courseId: ID,
       title: t('Décoder un article', 'Decoding an article', '解读一篇报道'),
       summary: t(
@@ -30,8 +30,8 @@ export const b2PresseCourse: Course = {
       ),
       lessons: [
         {
-          id: 'les_b2pr_1',
-          moduleId: 'mod_b2pr_1',
+          id: 'les_b2ps_1',
+          moduleId: 'mod_b2ps_1',
           kind: 'text',
           durationMin: 12,
           title: t('L’anatomie d’une page de journal', 'The anatomy of a newspaper page', '报纸版面的构造'),
@@ -136,8 +136,8 @@ export const b2PresseCourse: Course = {
           ],
         },
         {
-          id: 'les_b2pr_2',
-          moduleId: 'mod_b2pr_1',
+          id: 'les_b2ps_2',
+          moduleId: 'mod_b2ps_1',
           kind: 'text',
           durationMin: 11,
           title: t('La langue des titres', 'The language of headlines', '标题的语言'),
@@ -226,8 +226,8 @@ export const b2PresseCourse: Course = {
           ],
         },
         {
-          id: 'les_b2pr_3',
-          moduleId: 'mod_b2pr_1',
+          id: 'les_b2ps_3',
+          moduleId: 'mod_b2ps_1',
           kind: 'text',
           durationMin: 12,
           title: t('Repérer le point de vue', 'Spotting the angle', '识别立场'),
@@ -329,14 +329,14 @@ export const b2PresseCourse: Course = {
       ],
     },
     {
-      id: 'mod_b2pr_q',
+      id: 'mod_b2ps_q',
       courseId: ID,
       title: t('Évaluation', 'Assessment', '测评'),
       summary: t('Six questions sur la lecture de la presse.', 'Six questions on reading the press.', '六道题，考查报刊阅读。'),
       lessons: [
         {
-          id: 'les_b2pr_q',
-          moduleId: 'mod_b2pr_q',
+          id: 'les_b2ps_q',
+          moduleId: 'mod_b2ps_q',
           kind: 'quiz',
           durationMin: 8,
           quizId: 'qz_b2_presse',

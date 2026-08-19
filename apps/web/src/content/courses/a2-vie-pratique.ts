@@ -322,7 +322,7 @@ export const a2PratiqueCourse: Course = {
           moduleId: 'mod_a2pr_q',
           kind: 'quiz',
           durationMin: 7,
-          quizId: 'qz_a2_pratique',
+          quizId: 'qz_a2_vie_pratique',
           title: t('Quiz — Se débrouiller', 'Quiz — Getting by', '测验 — 应对日常'),
           summary: t('6 questions sur les situations du quotidien.', '6 questions on everyday situations.', '6 道题，考查日常场景。'),
         },

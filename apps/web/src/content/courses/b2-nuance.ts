@@ -115,6 +115,42 @@ export const b2NuanceCourse: Course = {
                 '若主从句主语相同，用不定式代替虚拟式：说 “je veux **partir**”，而非 “je veux que je parte”。同理用 “avant de partir” 而非 “avant que je parte”。更简洁，且永远正确。',
               ),
             },
+            {
+              type: 'interactive',
+              emoji: '✏️',
+              title: t('Fait ou non-fait ?', 'Fact or non-fact?', '事实还是非事实？'),
+              hint: t('Demandez-vous si la subordonnée décrit un fait posé comme réel.', 'Ask whether the clause states something as real.', '先问自己：从句是否把内容当作事实。'),
+              widget: {
+                kind: 'fill',
+                prompt: t('Indicatif ou subjonctif ?', 'Indicative or subjunctive?', '直陈式还是虚拟式？'),
+                items: [
+                  {
+                    id: 'f1',
+                    before: 'Je doute qu’il',
+                    after: 'venir avant midi.',
+                    options: ['puisse', 'peut'],
+                    answer: 'puisse',
+                    why: t('Le doute annule le fait : subjonctif. « Je doute » est l’un des déclencheurs les plus fiables.', 'Doubt cancels the fact: subjunctive. “Je doute” is one of the most reliable triggers.', '怀疑取消了事实：用虚拟式。“je doute” 是最可靠的触发词之一。'),
+                  },
+                  {
+                    id: 'f2',
+                    before: 'Il est certain que ce projet',
+                    after: '.',
+                    options: ['aboutira', 'aboutisse'],
+                    answer: 'aboutira',
+                    why: t('« Il est certain que » pose un fait : indicatif, ici au futur. Seuls le doute et la négation feraient basculer au subjonctif.', '“Il est certain que” states a fact: indicative, here in the future. Only doubt or negation would flip it to the subjunctive.', '“il est certain que” 陈述事实：用直陈式，这里是将来时。只有怀疑或否定才会转成虚拟式。'),
+                  },
+                  {
+                    id: 'f3',
+                    before: 'C’est le meilleur film que j’',
+                    after: 'vu cette année.',
+                    options: ['aie', 'ai'],
+                    answer: 'aie',
+                    why: t('Après un superlatif — le meilleur, le seul, le premier — le subjonctif marque le jugement subjectif.', 'After a superlative — le meilleur, le seul, le premier — the subjunctive marks the subjective judgement.', '最高级之后——le meilleur、le seul、le premier——虚拟式标记主观评价。'),
+                  },
+                ],
+              },
+            },
           ],
         },
         {

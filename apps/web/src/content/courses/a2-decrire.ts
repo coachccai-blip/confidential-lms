@@ -44,9 +44,9 @@ export const a2DecrireCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'Contrairement à l’anglais et au chinois, l’adjectif français se place le plus souvent **après** le nom : « une voiture rouge », « un film intéressant ». Seule une petite famille d’adjectifs très courants se place avant.',
-                'Unlike English and Chinese, the French adjective usually goes **after** the noun: “une voiture rouge”, “un film intéressant”. Only a small family of very common adjectives comes before.',
-                '与英语和中文不同，法语形容词通常置于名词**之后**：“une voiture rouge”“un film intéressant”。只有一小类极常用的形容词前置。',
+                'En anglais et en chinois, l’adjectif se place avant le nom. En français, il vient le plus souvent **après** : « une voiture rouge », « un film intéressant ». Seule une petite famille d’adjectifs très courants se place avant.',
+                'In English and Chinese, the adjective comes before the noun. In French it usually goes **after**: “une voiture rouge”, “un film intéressant”. Only a small family of very common adjectives comes before.',
+                '英语和中文的形容词放在名词前面。法语则通常放在**后面**：“une voiture rouge”“un film intéressant”。只有一小类极常用的形容词前置。',
               ),
             },
             {
@@ -94,6 +94,42 @@ export const a2DecrireCourse: Course = {
                 { fr: 'un cas sérieux → une affaire sérieuse', gloss: t('-eux devient -euse : heureux/heureuse.', '-eux becomes -euse: heureux/heureuse.', '-eux 变 -euse：heureux/heureuse。') },
                 { fr: 'une maison blanc', gloss: t('Blanc a un féminin irrégulier : « blanche ».', 'Blanc has an irregular feminine: “blanche”.', 'Blanc 的阴性不规则：应为 “blanche”。'), incorrect: true },
               ],
+            },
+            {
+              type: 'interactive',
+              emoji: '✏️',
+              title: t('Avant ou après le nom ?', 'Before or after the noun?', '名词前还是名词后？'),
+              hint: t('Beau, grand, petit, jeune, vieux, bon : la petite famille qui passe devant.', 'Beau, grand, petit, jeune, vieux, bon: the small family that goes in front.', 'beau、grand、petit、jeune、vieux、bon：可以前置的一小家子。'),
+              widget: {
+                kind: 'fill',
+                prompt: t('Placez l’adjectif :', 'Place the adjective:', '给形容词找位置：'),
+                items: [
+                  {
+                    id: 'f1',
+                    before: 'Ils ont acheté une',
+                    after: '.',
+                    options: ['voiture rouge', 'rouge voiture'],
+                    answer: 'voiture rouge',
+                    why: t('Les couleurs se placent toujours après le nom, sans exception.', 'Colours always go after the noun, no exception.', '颜色形容词永远后置，没有例外。'),
+                  },
+                  {
+                    id: 'f2',
+                    before: 'C’est un',
+                    after: 'très sympathique.',
+                    options: ['petit café', 'café petit'],
+                    answer: 'petit café',
+                    why: t('« Petit » fait partie de la famille qui précède le nom : un petit café, une grande maison.', '“Petit” belongs to the family that precedes the noun: un petit café, une grande maison.', '“petit” 属于前置的那一小类：un petit café、une grande maison。'),
+                  },
+                  {
+                    id: 'f3',
+                    before: 'Elle porte une',
+                    after: '.',
+                    options: ['robe élégante', 'élégante robe'],
+                    answer: 'robe élégante',
+                    why: t('Hors de la petite famille, l’adjectif suit le nom : une robe élégante, un film intéressant.', 'Outside the small family, the adjective follows the noun: une robe élégante, un film intéressant.', '不在那一小类里的形容词都后置：une robe élégante、un film intéressant。'),
+                  },
+                ],
+              },
             },
           ],
         },
@@ -238,9 +274,9 @@ export const a2DecrireCourse: Course = {
               emoji: '🧠',
               title: t('Nuancer vaut mieux qu’affirmer', 'Qualifying beats asserting', '有分寸胜过绝对'),
               text: t(
-                'Un avis A2 réussi n’est pas un avis tranché, c’est un avis **construit**. Trois formules suffisent : « d’un côté… de l’autre », « c’est vrai que… mais », « ça dépend de ». Les examinateurs valorisent nettement cette souplesse.',
-                'A successful A2 opinion is not a blunt one, it is a **structured** one. Three formulas are enough: “d’un côté… de l’autre”, “c’est vrai que… mais”, “ça dépend de”. Examiners clearly reward this flexibility.',
-                '成功的 A2 观点不是斩钉截铁，而是**有结构**。三个句式就够了：“d’un côté… de l’autre”“c’est vrai que… mais”“ça dépend de”。考官明显更青睐这种灵活性。',
+                'Retenez ceci, {prenom} : un avis A2 réussi n’est pas un avis tranché, c’est un avis **construit**. Trois formules suffisent : « d’un côté… de l’autre », « c’est vrai que… mais », « ça dépend de ». Les examinateurs valorisent nettement cette souplesse.',
+                'Remember this, {prenom}: a successful A2 opinion is not a blunt one, it is a **structured** one. Three formulas are enough: “d’un côté… de l’autre”, “c’est vrai que… mais”, “ça dépend de”. Examiners clearly reward this flexibility.',
+                '{prenom}，请记住：成功的 A2 观点不是斩钉截铁，而是**有结构**。三个句式就够了：“d’un côté… de l’autre”“c’est vrai que… mais”“ça dépend de”。考官明显更青睐这种灵活性。',
               ),
             },
             {
@@ -251,6 +287,23 @@ export const a2DecrireCourse: Course = {
                 '我认为住在城市比住在乡下更方便，因为一切都在附近：商店、交通、工作。的确更吵也更贵，但我觉得能省下很多时间。这也取决于人生阶段：如果有了孩子，我或许会选择乡下。',
               ),
               source: t('Réponse type — annoncer, justifier, nuancer', 'Model answer — state, justify, qualify', '范例回答 —— 提出、论证、补充分寸'),
+            },
+            {
+              type: 'interactive',
+              emoji: '🔗',
+              title: t('Chaque formule à sa place', 'Each phrase in its place', '每个句式各就各位'),
+              hint: t('Annoncer, nuancer, conclure : trois moments, trois outils.', 'Announcing, qualifying, concluding: three moments, three tools.', '亮观点、留余地、下结论：三个时刻，三样工具。'),
+              widget: {
+                kind: 'pairs',
+                prompt: t('Cette formule sert à…', 'This phrase is for…', '这个句式用来……'),
+                pairs: [
+                  { id: 'p1', left: 'À mon avis,', right: t('annoncer que ce qui suit est une opinion', 'announce that an opinion follows', '预告接下来是个人观点') },
+                  { id: 'p2', left: 'parce que', right: t('donner la raison, juste après l’avis', 'give the reason, right after the opinion', '紧跟观点给出理由') },
+                  { id: 'p3', left: 'c’est vrai que… mais', right: t('reconnaître l’autre côté avant de trancher', 'grant the other side before deciding', '先承认另一面再作取舍') },
+                  { id: 'p4', left: 'par exemple', right: t('appuyer l’avis sur un cas concret', 'back the opinion with a concrete case', '用具体事例支撑观点') },
+                  { id: 'p5', left: 'donc', right: t('fermer le raisonnement par la conclusion', 'close the reasoning with the conclusion', '用结论收束论证') },
+                ],
+              },
             },
           ],
         },

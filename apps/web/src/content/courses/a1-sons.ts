@@ -260,9 +260,9 @@ export const a1SonsCourse: Course = {
               emoji: '⏱️',
               title: t('Cinq minutes par jour suffisent', 'Five minutes a day is enough', '每天五分钟就够'),
               text: t(
-                'Choisissez une paire — « tu » et « tout » par exemple — et dites-la vingt fois de suite en exagérant. L’oreille se règle avant la bouche : au bout d’une semaine, vous entendrez la différence chez les autres.',
-                'Pick one pair — “tu” and “tout”, say — and repeat it twenty times, exaggerating. The ear tunes before the mouth: after a week you will hear the difference in other people.',
-                '挑一组音对——比如 “tu” 和 “tout”——夸张地连说二十遍。耳朵先于嘴巴调准：一周后，你就能听出别人的区别。',
+                'Choisissez une paire, {prenom} — « tu » et « tout » par exemple — et dites-la vingt fois de suite en exagérant. L’oreille se règle avant la bouche : au bout d’une semaine, vous entendrez la différence chez les autres.',
+                'Pick one pair, {prenom} — “tu” and “tout”, say — and repeat it twenty times, exaggerating. The ear tunes before the mouth: after a week you will hear the difference in other people.',
+                '{prenom}，挑一组音对——比如 “tu” 和 “tout”——夸张地连说二十遍。耳朵先于嘴巴调准：一周后，你就能听出别人的区别。',
               ),
             },
           ],

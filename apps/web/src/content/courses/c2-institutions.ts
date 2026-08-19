@@ -85,6 +85,24 @@ export const c2InstitutionsCourse: Course = {
                 '媒体以官邸地址指代机构：**l’Élysée**（总统）、**Matignon**（总理）、**Bercy**（经济与财政部）、**le Quai d’Orsay**（外交部）、**la place Beauvau**（内政部）。“Matignon a tranché” 即“总理已作出决定”。',
               ),
             },
+            {
+              type: 'interactive',
+              emoji: '🔗',
+              title: t('Le lieu et le pouvoir', 'The place and the power', '地点与权力'),
+              hint: t('La presse ne nomme jamais la fonction : elle nomme l’adresse.', 'The press never names the office: it names the address.', '报刊从不直呼职务，只说地址。'),
+              widget: {
+                kind: 'pairs',
+                prompt: t('« … a tranché » : qui a décidé ?', '“… a tranché”: who decided?', '“… a tranché”：是谁作的决定？'),
+                pairs: [
+                  { id: 'p1', left: 'l’Élysée', right: t('le président de la République', 'the President of the Republic', '共和国总统') },
+                  { id: 'p2', left: 'Matignon', right: t('le Premier ministre', 'the Prime Minister', '总理') },
+                  { id: 'p3', left: 'Bercy', right: t('le ministère de l’Économie et des Finances', 'the Economy and Finance Ministry', '经济与财政部') },
+                  { id: 'p4', left: 'le Quai d’Orsay', right: t('les Affaires étrangères', 'the Foreign Ministry', '外交部') },
+                  { id: 'p5', left: 'la place Beauvau', right: t('le ministère de l’Intérieur', 'the Interior Ministry', '内政部') },
+                  { id: 'p6', left: 'le Palais-Bourbon', right: t('l’Assemblée nationale', 'the National Assembly', '国民议会') },
+                ],
+              },
+            },
           ],
         },
         {
@@ -188,9 +206,9 @@ export const c2InstitutionsCourse: Course = {
               emoji: '✅',
               title: t('Comment combler ce socle', 'How to build this foundation', '如何补上这块基础'),
               text: t(
-                'Lisez la presse avec un carnet : chaque fois qu’un nom propre vous arrête, notez-le et cherchez-le le soir même. Une trentaine de références couvre l’essentiel du discours public français. C’est un travail de quelques semaines, pas d’années.',
-                'Read the press with a notebook: each time a proper name stops you, jot it down and look it up the same evening. Around thirty references cover the bulk of French public discourse. It is a few weeks’ work, not years.',
-                '读报时备一个本子：每遇到一个让你卡住的专有名词，就记下来，当晚查清。约三十个典故就能覆盖法国公共话语的大部分内容。这是几周的功夫，而非数年。',
+                'Lisez la presse avec un carnet, {prenom} : chaque fois qu’un nom propre vous arrête, notez-le et cherchez-le le soir même. Une trentaine de références couvre l’essentiel du discours public français. C’est un travail de quelques semaines, pas d’années.',
+                'Read the press with a notebook, {prenom}: each time a proper name stops you, jot it down and look it up the same evening. Around thirty references cover the bulk of French public discourse. It is a few weeks’ work, not years.',
+                '{prenom}，读报时备一个本子：每遇到一个让你卡住的专有名词，就记下来，当晚查清。约三十个典故就能覆盖法国公共话语的大部分内容。这是几周的功夫，而非数年。',
               ),
             },
           ],
@@ -210,8 +228,8 @@ export const c2InstitutionsCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'Le français compte plus de trois cents millions de locuteurs, dont une minorité vit en France. Traiter la norme parisienne comme le seul français correct est une erreur factuelle autant que culturelle : les variantes possèdent leurs propres académies, leurs propres dictionnaires et leur propre littérature.',
-                'French has more than three hundred million speakers, only a minority of whom live in France. Treating the Parisian norm as the only correct French is a factual as much as a cultural mistake: the variants have their own academies, dictionaries and literatures.',
+                'Le français compte plus de trois cents millions de locuteurs, dont une minorité vit en France. Traiter la norme parisienne comme le seul français correct est une erreur factuelle autant que culturelle. Les variantes possèdent leurs propres académies, leurs dictionnaires et leur littérature.',
+                'French has more than three hundred million speakers, only a minority of whom live in France. Treating the Parisian norm as the only correct French is a factual as much as a cultural mistake. The variants have their own academies, dictionaries and literatures.',
                 '法语使用者有三亿多，其中只有少数生活在法国。把巴黎标准视为唯一正确的法语，既是事实错误也是文化错误：各变体拥有各自的语言机构、词典和文学。',
               ),
             },
@@ -233,8 +251,8 @@ export const c2InstitutionsCourse: Course = {
               emoji: '🪤',
               title: t('Variante n’est pas faute', 'A variant is not a mistake', '变体不等于错误'),
               text: t(
-                '« Septante » n’est pas une déformation de « soixante-dix » : c’est la forme héritée du latin, restée en Belgique et en Suisse là où la France a adopté la numération vicésimale. Le jugement « c’est du mauvais français » repose sur une confusion entre norme dominante et correction linguistique.',
-                '“Septante” is not a deformation of “soixante-dix”: it is the form inherited from Latin, retained in Belgium and Switzerland where France adopted vigesimal counting. Judging it “bad French” confuses a dominant norm with linguistic correctness.',
+                '« Septante » n’est pas une déformation de « soixante-dix » : c’est la forme héritée du latin. Elle est restée en Belgique et en Suisse, là où la France a adopté la numération vicésimale. Le jugement « c’est du mauvais français » repose sur une confusion entre norme dominante et correction linguistique.',
+                '“Septante” is not a deformation of “soixante-dix”: it is the form inherited from Latin. It survived in Belgium and Switzerland, where France adopted vigesimal counting. Judging it “bad French” confuses a dominant norm with linguistic correctness.',
                 '“Septante” 并非 “soixante-dix” 的变形，而是承自拉丁语的形式，在比利时和瑞士保留下来，而法国改用了二十进位。把它判为“糟糕的法语”，是把主导规范与语言正确性混为一谈。',
               ),
             },
@@ -248,6 +266,23 @@ export const c2InstitutionsCourse: Course = {
                 { fr: '« Le courriel est arrivé ce matin. »', gloss: t('« Courriel », né au Québec, est aujourd’hui officiel en France aussi.', '“Courriel”, born in Quebec, is now official in France too.', '“Courriel” 源自魁北克，如今在法国也是官方用词。') },
                 { fr: '« Le français de Belgique est un français approximatif. »', gloss: t('Jugement infondé : il s’agit d’une variante normée, pas d’un écart.', 'An unfounded judgement: this is a standardised variant, not a deviation.', '毫无根据的判断：那是有规范的变体，而非偏差。'), incorrect: true },
               ],
+            },
+            {
+              type: 'interactive',
+              emoji: '🔗',
+              title: t('Un français, des accents de sens', 'One French, many shades of meaning', '同一法语，各地异义'),
+              hint: t('Le même mot ne veut pas dire la même chose partout.', 'The same word does not mean the same thing everywhere.', '同一个词在各地含义并不相同。'),
+              widget: {
+                kind: 'pairs',
+                prompt: t('Où dit-on… ?', 'Where do they say…?', '在哪里这样说……？'),
+                pairs: [
+                  { id: 'p1', left: 'septante, nonante', right: t('Belgique et Suisse — l’héritage latin, sans les vingtaines', 'Belgium and Switzerland — the Latin legacy, without the twenties', '比利时和瑞士——拉丁遗产，不用二十进位') },
+                  { id: 'p2', left: 'déjeuner = repas du matin', right: t('Québec, Belgique, Suisse — le décalage des trois repas', 'Québec, Belgium, Switzerland — the three-meal shift', '魁北克、比利时、瑞士——三餐名称整体前移') },
+                  { id: 'p3', left: 'une blonde, un chum', right: t('Québec — la petite amie, le petit ami', 'Québec — girlfriend, boyfriend', '魁北克——女朋友、男朋友') },
+                  { id: 'p4', left: 'le maquis', right: t('Afrique de l’Ouest — le petit restaurant populaire', 'West Africa — the small popular eatery', '西非——大众小餐馆') },
+                  { id: 'p5', left: 'poutine', right: t('Québec — frites, fromage en grains et sauce brune', 'Québec — fries, cheese curds and gravy', '魁北克——薯条加奶酪粒和肉汁') },
+                ],
+              },
             },
           ],
         },

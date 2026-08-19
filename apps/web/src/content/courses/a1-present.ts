@@ -198,6 +198,42 @@ export const a1PresentCourse: Course = {
                 { fr: 'Nous mangons à midi.', gloss: t('Le e manque : le g se prononcerait [g].', 'The e is missing: the g would be pronounced [g].', '少了 e，g 就会读成 [g]。'), incorrect: true },
               ],
             },
+            {
+              type: 'interactive',
+              emoji: '✏️',
+              title: t('Les terminaisons en situation', 'The endings in context', '实战中的词尾'),
+              hint: t('Quatre formes se prononcent pareil — seule l’écriture change.', 'Four forms sound the same — only the spelling changes.', '四个形式读音相同——只有拼写不同。'),
+              widget: {
+                kind: 'fill',
+                prompt: t('Choisissez la terminaison :', 'Pick the ending:', '选出词尾：'),
+                items: [
+                  {
+                    id: 'f1',
+                    before: 'Tu',
+                    after: 'français très bien.',
+                    options: ['parles', 'parle', 'parlez'],
+                    answer: 'parles',
+                    why: t('À « tu », toujours -es. La forme se prononce comme « parle » : seule l’écriture les distingue.', 'With “tu”, always -es. It sounds like “parle”: only the spelling tells them apart.', '对 “tu” 永远用 -es。读音与 “parle” 相同：只有拼写能区分。'),
+                  },
+                  {
+                    id: 'f2',
+                    before: 'Nous',
+                    after: 'à Paris depuis un an.',
+                    options: ['habitons', 'habitez', 'habite'],
+                    answer: 'habitons',
+                    why: t('« Nous » appelle -ons, l’une des deux seules terminaisons qui s’entendent.', '“Nous” takes -ons, one of only two endings you can actually hear.', '“nous” 用 -ons，是仅有的两个能听出来的词尾之一。'),
+                  },
+                  {
+                    id: 'f3',
+                    before: 'Elles',
+                    after: 'beaucoup la musique.',
+                    options: ['aiment', 'aime', 'aimes'],
+                    answer: 'aiment',
+                    why: t('« Elles » prend -ent, entièrement muet : « aiment » se prononce comme « aime ».', '“Elles” takes -ent, fully silent: “aiment” sounds like “aime”.', '“elles” 用 -ent，完全不发音：“aiment” 读起来就是 “aime”。'),
+                  },
+                ],
+              },
+            },
           ],
         },
         {
@@ -215,9 +251,9 @@ export const a1PresentCourse: Course = {
             {
               type: 'paragraph',
               text: t(
-                'Après être et avoir, ces trois verbes sont les plus utiles du français : **aller** pour se déplacer, **faire** pour l’activité et la météo, **venir** pour l’origine. Chacun ouvre en plus une construction très employée.',
-                'After être and avoir, these three verbs are the most useful in French: **aller** for movement, **faire** for activity and weather, **venir** for origin. Each one also unlocks a very common construction.',
-                '继 être 和 avoir 之后，这三个动词最为有用：**aller** 表位移，**faire** 表活动与天气，**venir** 表来源。每个动词还各自引出一种极常用的结构。',
+                'Après être et avoir, voici les trois verbes les plus utiles du français. **Aller** sert au déplacement, **faire** à l’activité et à la météo, **venir** à l’origine. Chacun ouvre en plus une construction très employée.',
+                'After être and avoir, here are the three most useful verbs in French. **Aller** is for movement, **faire** for activity and weather, **venir** for origin. Each one also unlocks a very common construction.',
+                '继 être 和 avoir 之后，最有用的就是这三个动词。**aller** 表位移，**faire** 表活动与天气，**venir** 表来源。每个动词还各自引出一种极常用的结构。',
               ),
             },
             {

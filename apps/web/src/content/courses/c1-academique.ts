@@ -91,6 +91,28 @@ export const c1AcademiqueCourse: Course = {
                 '引言遵循漏斗式四步：**切入**、**界定术语**、**提出问题**、**交代结构**。结论有两步：**总结**已走过的论证步骤，然后**开放**——提出一个相邻的问题，绝不是新的个人观点。',
               ),
             },
+            {
+              type: 'interactive',
+              emoji: '🔢',
+              title: t('La dissertation avant le premier mot', 'The dissertation before the first word', '动笔前的论说文'),
+              hint: t('Tout se joue au brouillon : la rédaction n’est que la mise au net.', 'Everything happens in the draft: writing up is just the fair copy.', '胜负在草稿上：誊写只是最后的净化。'),
+              widget: {
+                kind: 'order',
+                prompt: t('Du sujet au plan détaillé :', 'From the topic to the detailed plan:', '从题目到详细提纲：'),
+                items: [
+                  { id: 'o1', text: t('Définir chaque terme du sujet, même les évidents', 'Define every term of the topic, even the obvious ones', '定义题目中的每个词，包括看似显然的') },
+                  { id: 'o2', text: t('Chercher la tension : en quoi le sujet fait-il débat ?', 'Find the tension: what makes the topic debatable?', '找出张力：题目争议在哪里？') },
+                  { id: 'o3', text: t('Formuler la problématique en une question', 'Turn it into a one-question problématique', '将其化为一个问题式论题') },
+                  { id: 'o4', text: t('Poser deux ou trois parties qui répondent progressivement', 'Lay out two or three parts that answer step by step', '搭出两三个层层推进的部分') },
+                  { id: 'o5', text: t('Attribuer à chaque partie ses exemples, avant de rédiger', 'Assign each part its examples, before writing', '动笔前给每部分配好例证') },
+                ],
+                successNote: t(
+                  'Une heure de brouillon pour trois heures d’épreuve n’est pas du temps perdu : c’est la proportion des meilleures copies.',
+                  'One hour of drafting in a three-hour exam is not wasted time: it is the ratio of the best papers.',
+                  '三小时考试花一小时打草稿并不浪费：这正是高分卷的时间配比。',
+                ),
+              },
+            },
           ],
         },
         {
@@ -146,6 +168,34 @@ export const c1AcademiqueCourse: Course = {
                 { fr: 'Beaucoup de jeunes quittent la région. → L’exode des jeunes s’accentue.', gloss: t('Montée en généralité : le fait devient un phénomène nommé.', 'Rising in generality: the fact becomes a named phenomenon.', '上升到一般层面：具体事实变为有名称的现象。') },
                 { fr: 'Les prix ont beaucoup monté.', gloss: t('Simple substitution de synonymes : c’est de la paraphrase, pas une reformulation.', 'Mere synonym substitution: this is paraphrase, not reformulation.', '只是替换同义词：属于换词复述，而非转述。'), incorrect: true },
               ],
+            },
+            {
+              type: 'interactive',
+              emoji: '✏️',
+              title: t('Reformuler sans copier', 'Rewording without copying', '转述而不照抄'),
+              hint: t('La synthèse interdit le copié-collé : chaque idée passe par vos mots.', 'The synthesis bans copy-paste: every idea goes through your own words.', '综述禁止复制粘贴：每个观点都要经过你自己的语言。'),
+              widget: {
+                kind: 'fill',
+                prompt: t('Choisissez la reformulation correcte :', 'Pick the correct rewording:', '选出正确的转述：'),
+                items: [
+                  {
+                    id: 'f1',
+                    before: '« Les ventes ont chuté de moitié. » →',
+                    after: '',
+                    options: ['Les ventes ont été divisées par deux.', 'Les ventes ont chuté de moitié.', 'Les ventes ont un peu baissé.'],
+                    answer: 'Les ventes ont été divisées par deux.',
+                    why: t('Même fait, autres mots. Reprendre la phrase telle quelle est du copiage ; « un peu baissé » trahit le chiffre.', 'Same fact, other words. Repeating the sentence as is amounts to copying; “un peu baissé” betrays the figure.', '事实相同，措辞不同。原句照搬是抄袭；“un peu baissé” 则歪曲了数字。'),
+                  },
+                  {
+                    id: 'f2',
+                    before: '« Il est impératif d’agir vite. » → L’auteur',
+                    after: 'l’urgence d’une action.',
+                    options: ['souligne', 'dit', 'pense à'],
+                    answer: 'souligne',
+                    why: t('Reformuler, c’est aussi nominaliser : « il est impératif » devient « l’urgence ». Le verbe « souligne » rend l’insistance.', 'Rewording also means nominalising: “il est impératif” becomes “l’urgence”. The verb “souligne” carries the emphasis.', '转述也意味着名词化：“il est impératif” 变成 “l’urgence”。动词 “souligne” 传达了强调。'),
+                  },
+                ],
+              },
             },
           ],
         },
@@ -229,9 +279,9 @@ export const c1AcademiqueCourse: Course = {
               emoji: '⚠️',
               title: t('Trop de prudence tue l’argument', 'Too much caution kills the argument', '过度谨慎会毁掉论证'),
               text: t(
-                'Un texte où chaque phrase est modalisée — « il semblerait qu’on puisse peut-être envisager » — ne dit plus rien. La règle : moduler les **interprétations**, affirmer les **faits**. Un correcteur C1 sanctionne autant l’assertion brutale que l’effacement systématique.',
-                'A text in which every sentence is hedged — “it would seem that one might perhaps consider” — says nothing at all. The rule: hedge **interpretations**, assert **facts**. A C1 marker penalises blunt assertion and systematic self-effacement alike.',
-                '每句话都加限定语的文章——“似乎或许可以考虑”——等于什么也没说。规则是：对**解释**加限定，对**事实**下断言。C1 阅卷人对生硬断言和一味回避同样扣分。',
+                'Un texte où chaque phrase est modalisée — « il semblerait qu’on puisse peut-être envisager » — ne dit plus rien. La règle, {prenom} : moduler les **interprétations**, affirmer les **faits**. Un correcteur C1 sanctionne autant l’assertion brutale que l’effacement systématique.',
+                'A text in which every sentence is hedged — “it would seem that one might perhaps consider” — says nothing at all. The rule, {prenom}: hedge **interpretations**, assert **facts**. A C1 marker penalises blunt assertion and systematic self-effacement alike.',
+                '每句话都加限定语的文章——“似乎或许可以考虑”——等于什么也没说。{prenom}，规则是：对**解释**加限定，对**事实**下断言。C1 阅卷人对生硬断言和一味回避同样扣分。',
               ),
             },
             {

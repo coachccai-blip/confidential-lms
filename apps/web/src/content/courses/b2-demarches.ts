@@ -259,9 +259,9 @@ export const b2DemarchesCourse: Course = {
               type: 'paragraph',
               emoji: '🏠',
               text: t(
-                'Louer un logement en France est une démarche à vocabulaire propre, et deux mots s’y ressemblent dangereusement : la **caution** est la somme bloquée en garantie, le **garant** est la personne qui s’engage à payer si vous ne payez pas. Les confondre dans un dossier fait mauvaise impression.',
-                'Renting in France comes with its own vocabulary, and two words are dangerously alike: the **caution** is the sum held as a guarantee, the **garant** is the person who commits to pay if you do not. Mixing them up in an application looks bad.',
-                '在法国租房有一套专门词汇，其中两个词极易混淆：**caution** 是被押作担保的钱，**garant** 是承诺在你不付款时替你付的人。在申请材料里弄混会留下坏印象。',
+                'Louer un logement en France a son vocabulaire propre, et deux mots s’y ressemblent dangereusement. La **caution** est la somme bloquée en garantie ; le **garant** est la personne qui s’engage à payer si vous ne payez pas. Les confondre dans un dossier fait mauvaise impression.',
+                'Renting in France comes with its own vocabulary, and two words are dangerously alike. The **caution** is the sum held as a guarantee; the **garant** is the person who commits to pay if you do not. Mixing them up in an application looks bad.',
+                '在法国租房有一套专门词汇，其中两个词极易混淆。**caution** 是被押作担保的钱；**garant** 是承诺在你不付款时替你付的人。在申请材料里弄混会留下坏印象。',
               ),
             },
             {

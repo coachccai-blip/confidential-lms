@@ -20,7 +20,7 @@ export const c1OrthographeCourse: Course = {
   tags: [t('Écrit', 'Writing', '写作'), t('Précision', 'Precision', '精准度')],
   modules: [
     {
-      id: 'mod_c1or_1',
+      id: 'mod_c1og_1',
       courseId: ID,
       title: t('Les fautes qui restent', 'The mistakes that linger', '挥之不去的错误'),
       summary: t(
@@ -30,8 +30,8 @@ export const c1OrthographeCourse: Course = {
       ),
       lessons: [
         {
-          id: 'les_c1or_1',
-          moduleId: 'mod_c1or_1',
+          id: 'les_c1og_1',
+          moduleId: 'mod_c1og_1',
           kind: 'text',
           durationMin: 12,
           title: t('Les homophones grammaticaux', 'Grammatical homophones', '语法同音词'),
@@ -144,8 +144,8 @@ export const c1OrthographeCourse: Course = {
           ],
         },
         {
-          id: 'les_c1or_2',
-          moduleId: 'mod_c1or_1',
+          id: 'les_c1og_2',
+          moduleId: 'mod_c1og_1',
           kind: 'text',
           durationMin: 12,
           title: t('Les accords qu’on rate encore', 'The agreements you still miss', '仍会写错的配合'),
@@ -268,8 +268,8 @@ export const c1OrthographeCourse: Course = {
           ],
         },
         {
-          id: 'les_c1or_3',
-          moduleId: 'mod_c1or_1',
+          id: 'les_c1og_3',
+          moduleId: 'mod_c1og_1',
           kind: 'text',
           durationMin: 12,
           title: t('La ponctuation à la française — et la dictée', 'French punctuation — and the dictation', '法式标点——外加一场听写'),
@@ -371,14 +371,14 @@ export const c1OrthographeCourse: Course = {
       ],
     },
     {
-      id: 'mod_c1or_q',
+      id: 'mod_c1og_q',
       courseId: ID,
       title: t('Évaluation', 'Assessment', '测评'),
       summary: t('Six questions sur les homophones, les accords et la ponctuation.', 'Six questions on homophones, agreements and punctuation.', '六道题，考查同音词、配合与标点。'),
       lessons: [
         {
-          id: 'les_c1or_q',
-          moduleId: 'mod_c1or_q',
+          id: 'les_c1og_q',
+          moduleId: 'mod_c1og_q',
           kind: 'quiz',
           durationMin: 8,
           quizId: 'qz_c1_orthographe',

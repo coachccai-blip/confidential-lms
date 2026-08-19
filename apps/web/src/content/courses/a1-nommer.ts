@@ -200,6 +200,42 @@ export const a1NommerCourse: Course = {
                 { fr: 'des petit tables vert', gloss: t('Aucun accord : l’erreur la plus visible à l’écrit.', 'No agreement: the most visible written error.', '完全不配合：书面上最扎眼的错误。'), incorrect: true },
               ],
             },
+            {
+              type: 'interactive',
+              emoji: '✏️',
+              title: t('Le pluriel qui ne s’entend pas', 'The plural you cannot hear', '听不见的复数'),
+              hint: t('C’est l’article qui porte le pluriel, pas le nom.', 'The article carries the plural, not the noun.', '复数由冠词承担，而不是名词。'),
+              widget: {
+                kind: 'fill',
+                prompt: t('Choisissez la bonne forme :', 'Pick the right form:', '选出正确形式：'),
+                items: [
+                  {
+                    id: 'f1',
+                    before: 'J’ai acheté',
+                    after: 'livres ce matin.',
+                    options: ['des', 'un', 'de'],
+                    answer: 'des',
+                    why: t('« Livres » et « livre » se prononcent pareil : seul « des » dit qu’il y en a plusieurs.', '“Livres” and “livre” sound identical: only “des” says there are several.', '“livres” 和 “livre” 读音相同：只有 “des” 说明不止一本。'),
+                  },
+                  {
+                    id: 'f2',
+                    before: 'Il me faut',
+                    after: 'journaux d’hier.',
+                    options: ['les', 'le', 'la'],
+                    answer: 'les',
+                    why: t('« Journal » devient « journaux » : les mots en -al font leur pluriel en -aux, et l’article suit.', '“Journal” becomes “journaux”: -al words take -aux in the plural, and the article follows.', '“journal” 变 “journaux”：-al 结尾的词复数为 -aux，冠词随之变化。'),
+                  },
+                  {
+                    id: 'f3',
+                    before: 'Elle n’a pas',
+                    after: 'enfants.',
+                    options: ['d’', 'des', 'de'],
+                    answer: 'd’',
+                    why: t('Après une négation, « des » devient « de » — élidé en « d’ » devant la voyelle : pas d’enfants.', 'After a negation, “des” becomes “de” — elided to “d’” before a vowel: pas d’enfants.', '否定之后 “des” 变 “de”——元音前省音成 “d’”：pas d’enfants。'),
+                  },
+                ],
+              },
+            },
           ],
         },
         {

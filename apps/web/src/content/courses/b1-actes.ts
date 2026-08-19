@@ -252,7 +252,7 @@ export const b1ActesCourse: Course = {
               emoji: '🧭',
               title: t('Décoder les « oui » qui veulent dire non', 'Decoding the yeses that mean no', '识破那些意为“不”的“是”'),
               text: t(
-                '« On se rappelle », « faut qu’on se fasse un truc », « je vais voir » : sans date ni action concrète, ces formules closent la conversation plus qu’elles ne promettent. Un vrai oui français vient avec un quand.',
+                '« On se rappelle », « faut qu’on se fasse un truc », « je vais voir »… Sans date ni action concrète, ces formules closent la conversation plus qu’elles ne promettent. Un vrai oui français vient avec un quand.',
                 '“On se rappelle”, “faut qu’on se fasse un truc”, “je vais voir”: with no date or concrete action, these phrases close the conversation more than they promise anything. A real French yes comes with a when.',
                 '“On se rappelle”“faut qu’on se fasse un truc”“je vais voir”：没有日期、没有具体行动，这些话与其说是承诺，不如说是收场。真正的法式同意，一定带着时间。',
               ),

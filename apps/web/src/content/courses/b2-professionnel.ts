@@ -194,6 +194,34 @@ export const b2ProfessionnelCourse: Course = {
                 { fr: 'Vous vous trompez complètement.', gloss: t('Techniquement correct, professionnellement coûteux.', 'Technically correct, professionally costly.', '语法没错，但职场代价很高。'), incorrect: true },
               ],
             },
+            {
+              type: 'interactive',
+              emoji: '🎧',
+              title: t('La réunion, à l’oreille', 'The meeting, by ear', '用耳朵跟上会议'),
+              hint: t('Ces phrases s’enchaînent vite en réunion réelle.', 'These sentences come thick and fast in a real meeting.', '真实会议上这些话一句接一句，来得很快。'),
+              widget: {
+                kind: 'listening',
+                prompt: t('Que se passe-t-il dans la réunion ?', 'What is happening in the meeting?', '会议上发生了什么？'),
+                items: [
+                  {
+                    id: 'l1',
+                    sentence: 'On va faire un tour de table, chacun en deux minutes.',
+                    question: t('Qu’annonce l’animateur ?', 'What is the chair announcing?', '主持人在宣布什么？'),
+                    options: [t('Chaque participant va parler brièvement', 'Each participant will speak briefly', '每位与会者简短发言'), t('Une pause de deux minutes', 'A two-minute break', '休息两分钟'), t('La fin de la réunion', 'The end of the meeting', '会议结束')],
+                    answer: 0,
+                    why: t('Le « tour de table » : chacun s’exprime à son tour. L’expression ouvre la plupart des réunions françaises.', 'The “tour de table”: everyone speaks in turn. The phrase opens most French meetings.', '“tour de table”：轮流发言。多数法国会议都以这句开场。'),
+                  },
+                  {
+                    id: 'l2',
+                    sentence: 'Je propose qu’on tranche ce point et qu’on passe au suivant.',
+                    question: t('Que veut la personne ?', 'What does the speaker want?', '说话人想要什么？'),
+                    options: [t('Décider maintenant, puis avancer', 'Decide now, then move on', '现在拍板，然后继续'), t('Reporter la décision', 'Postpone the decision', '推迟决定'), t('Rouvrir le débat précédent', 'Reopen the previous debate', '重启上一个议题')],
+                    answer: 0,
+                    why: t('« Trancher » = décider définitivement. Le verbe coupe court — c’est son image : le tranchant.', '“Trancher” = to settle once and for all. The verb cuts things short — that is its image: the blade.', '“trancher” 即最终裁定。这个动词一刀两断——它的本义就是刀刃。'),
+                  },
+                ],
+              },
+            },
           ],
         },
         {
@@ -258,6 +286,22 @@ export const b2ProfessionnelCourse: Course = {
                 { fr: 'Auriez-vous des questions sur mon parcours ?', gloss: t('Reprendre l’initiative à la fin, sans forcer.', 'Taking back the initiative at the end, without forcing it.', '在结尾自然地重新掌握主动。') },
                 { fr: 'Je suis passionné et motivé.', gloss: t('Sans exemple concret, ces mots ne pèsent rien.', 'Without a concrete example these words carry no weight.', '没有具体例证，这些词毫无分量。'), incorrect: true },
               ],
+            },
+            {
+              type: 'interactive',
+              emoji: '🔗',
+              title: t('Les questions d’entretien décodées', 'Interview questions decoded', '面试问题解码'),
+              hint: t('Chaque question rituelle attend une stratégie, pas une confession.', 'Each ritual question expects a strategy, not a confession.', '每个例行问题要的是策略，不是坦白。'),
+              widget: {
+                kind: 'pairs',
+                prompt: t('À cette question, la bonne stratégie est…', 'For this question, the right strategy is…', '面对这个问题，正确策略是……'),
+                pairs: [
+                  { id: 'p1', left: 'Parlez-moi de vous.', right: t('deux minutes préparées : parcours, compétence clé, motivation', 'two prepared minutes: path, key skill, motivation', '准备好的两分钟：经历、核心能力、动机') },
+                  { id: 'p2', left: 'Quel est votre principal défaut ?', right: t('un vrai défaut, suivi de ce qu’on fait pour le corriger', 'a real flaw, followed by what you do about it', '一个真实缺点，加上正在如何改进') },
+                  { id: 'p3', left: 'Pourquoi nous ?', right: t('deux faits précis sur l’entreprise, reliés à votre profil', 'two precise facts about the company, tied to your profile', '两个关于公司的具体事实，与你的背景挂钩') },
+                  { id: 'p4', left: 'Avez-vous des questions ?', right: t('toujours en avoir deux — ne jamais répondre non', 'always have two ready — never answer no', '永远备好两个问题——绝不说没有') },
+                ],
+              },
             },
           ],
         },

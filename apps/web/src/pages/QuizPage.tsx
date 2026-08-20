@@ -125,9 +125,11 @@ export function QuizPage() {
       title={l(quiz.title)}
       crumb={l(course.title)}
       actions={
-        <span className="badge badge--success">
-          <IconShieldCheck size={12} /> {l(D.common.protected)}
-        </span>
+        user?.role === 'admin' ? (
+          <span className="badge badge--success">
+            <IconShieldCheck size={12} /> {l(D.common.protected)}
+          </span>
+        ) : undefined
       }
     >
       <Shield reason={shieldReason} />

@@ -19,7 +19,7 @@ import {
 
 export function CoursePage() {
   const { slug } = useParams();
-  const { state } = useApp();
+  const { state, user } = useApp();
   const { l } = useI18n();
   const course = getCourseBySlug(slug);
   const [collapsed, setCollapsed] = useState<readonly string[]>([]);
@@ -84,13 +84,15 @@ export function CoursePage() {
         </div>
       </section>
 
-      <div className="shield-bar" style={{ marginBottom: 'var(--space-6)' }}>
-        <IconShieldCheck size={14} />
-        {l(D.course.protectedBanner)}
-        <span className="shield-bar__pill" style={{ marginLeft: 'auto' }}>
-          {l(D.course.tracingOn)}
-        </span>
-      </div>
+      {user?.role === 'admin' ? (
+        <div className="shield-bar" style={{ marginBottom: 'var(--space-6)' }}>
+          <IconShieldCheck size={14} />
+          {l(D.course.protectedBanner)}
+          <span className="shield-bar__pill" style={{ marginLeft: 'auto' }}>
+            {l(D.course.tracingOn)}
+          </span>
+        </div>
+      ) : null}
 
       <div className="stack">
         {course.modules.map((module, moduleIndex) => {

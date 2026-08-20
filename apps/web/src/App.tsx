@@ -78,7 +78,7 @@ function AppRoutes() {
       <Route
         path="/app/securite"
         element={
-          <RequireAuth>
+          <RequireAuth adminOnly>
             <SecurityPage />
           </RequireAuth>
         }

@@ -2,7 +2,6 @@ import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { decodeInvite, type InvitePayload } from '@lms/core';
 import { useApp } from '../state/app-context';
-import { DEMO_CREDENTIALS } from '../state/seed-accounts';
 import { D, useI18n } from '../i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import {
@@ -13,7 +12,6 @@ import {
   IconLock,
   IconMoon,
   IconSun,
-  IconUser,
 } from '../components/Icons';
 import { Toasts } from '../components/Toasts';
 
@@ -49,7 +47,7 @@ export function LoginPage() {
         setError(outcome.reason === 'device-limit' ? outcome.message : l(D.login.errorBadCredentials));
         return;
       }
-      pushToast({ tone: 'success', title: D.toast.signedInTitle, text: D.toast.signedInText });
+      pushToast({ tone: 'success', title: D.toast.signedInTitle });
       navigate('/app');
     } finally {
       setBusy(false);
@@ -195,35 +193,6 @@ export function LoginPage() {
               </span>
             ) : null}
           </details>
-
-          <div className="auth__demo">
-            <strong style={{ color: 'var(--text-secondary)' }}>{l(D.login.demoAccounts)}</strong>
-            <ul className="demo-accounts">
-              {DEMO_CREDENTIALS.map((account) => (
-                <li key={account.username}>
-                  <span className="demo-accounts__role">
-                    <IconUser size={13} />
-                    {l(account.role === 'admin' ? D.login.demoRoleAdmin : D.login.demoRoleLearner)}
-                  </span>
-                  <code>{account.username}</code>
-                  <code>{account.password}</code>
-                  <button
-                    type="button"
-                    className="btn btn--ghost btn--sm"
-                    onClick={() => {
-                      setLogin(account.username);
-                      setPassword(account.password);
-                      setApplied(null);
-                      setError(null);
-                    }}
-                  >
-                    {l(D.login.demoFill)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <span>{l(D.login.demoText)}</span>
-          </div>
 
           <Link to="/" className="btn btn--ghost btn--block">
             <IconChevronLeft size={15} /> {l(D.login.backHome)}

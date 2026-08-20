@@ -99,13 +99,17 @@ export function AppShell({ title, crumb, actions, children, wide = false }: AppS
           <NavLink to="/app/compte" className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}>
             <IconUser size={17} /> {l(D.nav.devices)}
           </NavLink>
-          <NavLink
-            to="/app/securite"
-            className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}
-          >
-            <IconShieldCheck size={17} /> {l(D.nav.security)}
-            {criticalEvents > 0 ? <span className="nav__badge">{criticalEvents}</span> : null}
-          </NavLink>
+          {user?.role === 'admin' ? (
+            // La sécurité travaille pour tout le monde, mais ne se montre
+            // qu'à l'enseignant : l'apprenant n'a pas à voir la machinerie.
+            <NavLink
+              to="/app/securite"
+              className={({ isActive }) => (isActive ? 'nav__item nav__item--active' : 'nav__item')}
+            >
+              <IconShieldCheck size={17} /> {l(D.nav.security)}
+              {criticalEvents > 0 ? <span className="nav__badge">{criticalEvents}</span> : null}
+            </NavLink>
+          ) : null}
 
           {user?.role === 'admin' ? (
             <>

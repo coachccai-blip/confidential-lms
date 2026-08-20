@@ -19,6 +19,7 @@ import {
   IconFingerprint,
   IconPause,
   IconShieldCheck,
+  IconSparkle,
   IconVolume,
 } from '../components/Icons';
 
@@ -106,9 +107,11 @@ export function LessonPage() {
       title={l(lesson.title)}
       crumb={l(module?.title ?? course.title)}
       actions={
-        <span className="badge badge--success">
-          <IconShieldCheck size={12} /> {l(D.common.protected)}
-        </span>
+        user?.role === 'admin' ? (
+          <span className="badge badge--success">
+            <IconShieldCheck size={12} /> {l(D.common.protected)}
+          </span>
+        ) : undefined
       }
     >
       <Shield reason={shieldReason} />
@@ -188,16 +191,24 @@ export function LessonPage() {
             style={{ marginTop: 'var(--space-8)', alignItems: 'center' }}
           >
             <span className="callout__icon">
-              <IconFingerprint size={18} />
+              {user?.role === 'admin' ? <IconFingerprint size={18} /> : <IconSparkle size={18} />}
             </span>
             <div style={{ flex: 1 }}>
               <div className="callout__title">
                 {personalise(
-                  l(done ? (pickVariant(D.coach.completion, lesson.id) ?? D.coach.personalNoteTitle) : D.coach.personalNoteTitle),
+                  l(
+                    done
+                      ? (pickVariant(D.coach.completion, lesson.id) ?? D.lesson.finishTitle)
+                      : user?.role === 'admin'
+                        ? D.coach.personalNoteTitle
+                        : D.lesson.finishTitle,
+                  ),
                   user?.firstName,
                 )}
               </div>
-              <span style={{ fontSize: '0.83rem' }}>{l(D.coach.personalNoteText)}</span>
+              <span style={{ fontSize: '0.83rem' }}>
+                {l(user?.role === 'admin' ? D.coach.personalNoteText : D.lesson.finishText)}
+              </span>
             </div>
             {!done ? (
               <button

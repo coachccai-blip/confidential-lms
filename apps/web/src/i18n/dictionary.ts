@@ -358,6 +358,12 @@ export const D = {
 
   lesson: {
     completed: t('Terminée', 'Completed', '已完成'),
+    finishTitle: t('Vous êtes au bout de la leçon', 'You have reached the end of the lesson', '本课已到结尾'),
+    finishText: t(
+      'Marquez-la comme terminée pour suivre votre progression.',
+      'Mark it as completed to track your progress.',
+      '标记为已完成，以记录你的学习进度。',
+    ),
     markDone: t('Marquer terminée', 'Mark as done', '标记为已完成'),
     onThisPage: t('Sur cette page', 'On this page', '本页目录'),
     previous: t('Précédent', 'Previous', '上一步'),

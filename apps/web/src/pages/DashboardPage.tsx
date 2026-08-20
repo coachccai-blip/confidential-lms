@@ -111,10 +111,12 @@ export function DashboardPage() {
               </div>
             </div>
           </div>
-          <div className="shield-bar" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderBottom: 'none' }}>
-            <IconShieldCheck size={14} />
-            {l(D.dashboard.protectedNotice(user?.email ?? ''))}
-          </div>
+          {user?.role === 'admin' ? (
+            <div className="shield-bar" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderBottom: 'none' }}>
+              <IconShieldCheck size={14} />
+              {l(D.dashboard.protectedNotice(user?.email ?? ''))}
+            </div>
+          ) : null}
         </section>
       ) : null}
 

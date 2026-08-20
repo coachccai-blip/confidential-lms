@@ -1,25 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { credentialsOfLearner, verifyLearnerPassword } from '@lms/core';
-import { DEMO_CREDENTIALS, SEED_ACCOUNTS, withSeedAccounts } from '../seed-accounts';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { SEED_ACCOUNTS, withSeedAccounts } from '../seed-accounts';
 
 describe('comptes de démonstration', () => {
-  it('accepte exactement les mots de passe annoncés sur l’écran de connexion', async () => {
-    for (const demo of DEMO_CREDENTIALS) {
-      const account = SEED_ACCOUNTS.find((entry) => entry.username === demo.username);
-      expect(account, `compte ${demo.username} introuvable`).toBeDefined();
-      if (!account) continue;
-      const credentials = credentialsOfLearner(account);
-      expect(await verifyLearnerPassword(credentials, demo.password)).toBe(true);
-      expect(await verifyLearnerPassword(credentials, `${demo.password}x`)).toBe(false);
-      expect(account.role).toBe(demo.role);
+  /*
+   * Les mots de passe ne vivent plus nulle part dans le dépôt — ni dans le
+   * code, ni ici : le dépôt est public, un test qui les connaîtrait les
+   * publierait. On vérifie donc la STRUCTURE : chaque compte porte un
+   * condensé et un sel de la bonne forme, et rien qui ressemble à un
+   * mot de passe en clair.
+   */
+  it('ne stocke que des condensés : 64 hexa de SHA-256 et un sel de 16 hexa', () => {
+    for (const account of SEED_ACCOUNTS) {
+      expect(account.passwordHash).toMatch(/^[0-9a-f]{64}$/);
+      expect(account.passwordSalt).toMatch(/^[0-9a-f]{16}$/);
     }
   });
 
-  it('n’expose aucun mot de passe en clair dans les comptes livrés', () => {
-    const serialized = JSON.stringify(SEED_ACCOUNTS);
-    for (const demo of DEMO_CREDENTIALS) {
-      expect(serialized).not.toContain(demo.password);
-    }
+  it('ne laisse aucun champ ni commentaire de mot de passe en clair dans la source', () => {
+    const source = readFileSync(join(__dirname, '..', 'seed-accounts.ts'), 'utf8');
+    expect(source).not.toMatch(/password\s*:/);
+    expect(source).not.toMatch(/\/\/\s*\S*12345/);
   });
 
   it('livre un compte apprenant et un compte d’administration', () => {

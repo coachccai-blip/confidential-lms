@@ -29,9 +29,8 @@ export const SEED_ACCOUNTS: readonly LearnerAccount[] = [
     firstName: 'Bob',
     lastName: '',
     email: 'bob@lumiere.demo',
-    // Bob12345+
-    passwordHash: '92ba77bee20bbb0fca7c1b5f0488751a6ae7493f9c5f4ddd18e264170078e13d',
-    passwordSalt: 'a1b2c3d4e5f60718',
+    passwordHash: '38dc1fba51299f0f1834864abe9b1c8be75dff646930d0361d950cd4439388d4',
+    passwordSalt: 'd45c4133db8713d7',
     targetLevel: 'A1',
     note: 'Compte de démonstration apprenant.',
     createdAt: CREATED_AT,
@@ -45,9 +44,8 @@ export const SEED_ACCOUNTS: readonly LearnerAccount[] = [
     firstName: 'SuperBob',
     lastName: '',
     email: 'superbob@lumiere.demo',
-    // SuperBob12345+
-    passwordHash: 'fae4287caaa6244ec4b14fd18a03da93fd9b48ebf9f44d03e05dabab711236bf',
-    passwordSalt: '9f8e7d6c5b4a3210',
+    passwordHash: '74a7c31b5a3bb77f967735718c0a0f97e3eac90adc440cbabee78b547cde6d74',
+    passwordSalt: '653760ea8b6b7ecb',
     targetLevel: null,
     note: 'Compte de démonstration enseignant.',
     createdAt: CREATED_AT,
@@ -55,11 +53,6 @@ export const SEED_ACCOUNTS: readonly LearnerAccount[] = [
   },
 ];
 
-/** Ce que l'écran de connexion affiche, pour que la démonstration soit visitable. */
-export const DEMO_CREDENTIALS = [
-  { username: 'Bob', password: 'Bob12345+', role: 'learner' as const },
-  { username: 'SuperBob', password: 'SuperBob12345+', role: 'admin' as const },
-];
 
 /**
  * Réinjecte les comptes livrés s'ils manquent. Un compte supprimé par
